@@ -8,6 +8,7 @@ const UserSchema = new Schema({
     family_name: { type: String, required: true, maxLength: 50 },
     date_of_birth: { type: Date, required: true },
     date_of_death: { type: Date },
+    address: { type: String},
     hourly_rate: { type: Number, required: true },
     status: { type: String, required: true, enum: ["employee", "admin"] },
     contract: { type: Schema.Types.ObjectId, ref: "Contract", required: true }, // maybe just store the contract here
