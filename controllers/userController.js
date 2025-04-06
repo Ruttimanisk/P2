@@ -9,6 +9,9 @@ exports.employee_list = asyncHandler(async (req, res, next) => {
         User.find({ status: 'admin'}).sort({ first_name: 1 }).exec(),
     ]);
 
-    res.render("user_list", { title: "User List", employees: allEmployees, admins: allAdmins,
+    res.render("user_list", {
+        title: "User List",
+        employees: allEmployees,
+        admins: allAdmins,
     });
 });
