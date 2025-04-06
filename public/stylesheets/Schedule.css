@@ -1,0 +1,66 @@
+#tableA {
+    font-family: Arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    position: relative;
+    left: 160px;
+    bottom: 400px;
+}
+#tableA tr:nth-child(2) {
+    background-color: greenyellow;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+#tableB {
+    font-family: Arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    position: relative;
+    left: 160px;
+    bottom: 370px;
+}
+#tableB tr:nth-child(2) {
+    background-color: greenyellow;
+}
+/*Legend position */
+.legend {
+    list-style: none;
+    position: relative;
+    bottom: 350px;
+    left: 120px;
+}
+.legend li {
+    float: left;
+    margin-right: 10px;
+}
+.legend span {
+    border: 1px solid #ccc;
+    float: left;
+    width: 12px;
+    height: 12px;
+    margin: 2px;
+}
+/*Legend farve og tekst*/
+.legend .You {
+    background-color: lightgreen;
+}
+.legend .Maternity {
+    background-color: yellow;
+}
+.legend .PTO {
+    background-color: blue;
+}
+.legend .sick {
+    background-color: red;
+}
+#tableEmployees {
+
+}

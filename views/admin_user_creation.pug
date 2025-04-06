@@ -1,0 +1,29 @@
+doctype html
+head
+    meta(charset='UTF-8')
+    title UserCreation
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' type='text/css' href='../../CSS/UserCreation.css')
+    script(type='text/javascript' src='../../JS/userCreation.js')
+h1 User Creation:
+.box
+    p
+        a.newUser
+            | Full Name:
+            input#newFullName(type='text' name='username')
+            br
+            label(for='newFullName')
+            |       Username:
+            input#newUsername(type='text' name='username')
+            br
+            label(for='newUsername')
+            |       Password:
+            input#newPassword(type='text' name='password')
+            br
+            label(for='newPassword')
+            |       Status:
+            input#newStatus(type='text' name='username')
+            br
+            label(for='newStatus')
+            // scriptet createUser() virker kun hvis websiten køres på node.js, mere info i js fil
+            button#submit(onclick='createUser()') Create user
