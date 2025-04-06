@@ -24,7 +24,7 @@ UserSchema.virtual("url").get(function () {
 UserSchema.virtual("name").get(function () {
     let fullname = "";
     if (this.first_name && this.family_name) {
-        fullname = `${this.family_name}, ${this.first_name}`;
+        fullname = `${this.first_name} ${this.family_name}`;
     }
     return fullname;
 });
