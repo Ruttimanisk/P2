@@ -26,4 +26,25 @@ table#tableEmployees
     tr
         td Mads
     tr
-        td Tue
+        td Tue -->
+
+// old ^^ new:
+
+extends layout
+
+block content
+    h1= title
+    if employees.length
+        ul
+            each user in employees
+                li
+                    a(href=user.url) !{user.fullname}
+                    |  (#{user.role})
+    if admins.length
+        ul
+            each user in admins
+                li
+                    a(href=user.url) !{user.fullname}
+                        |  (#{user.role})
+    else
+        p There are no users.
