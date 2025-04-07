@@ -18,7 +18,7 @@ const UserScheduleSchema = new Schema ({
 });
 
 UserScheduleSchema.virtual("url").get(function () {
-    return `/${this.status}/profile/${this.user}/${this._id}`;
+    return `/${this.user.status}_profile/${this.user}/schedule`;
 });
 // hope this works, can't really test it.
 UserScheduleSchema.virtual("hours_this_week").get(function () {
