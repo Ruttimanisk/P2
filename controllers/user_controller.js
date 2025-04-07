@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const UserSchedule = require("../models/userSchedule");
+const UserSchedule = require("../models/userschedule");
 const asyncHandler = require("express-async-handler");
 
 
