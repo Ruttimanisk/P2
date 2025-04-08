@@ -26,8 +26,8 @@ UserScheduleSchema.virtual("hours_this_week").get(function () {
     let week = [this.monday, this.tuesday, this.wednesday, this.thursday, this.friday]
 
     for(let i = 0; i < 5; i++){
-        let dur = week[i][0].diff(week[i][1])
-        sum += dur.as('hours')
+        let duration = week[i][0].diff(week[i][1])
+        sum += duration.as('hours')
     }
 
     return sum;
