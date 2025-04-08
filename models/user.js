@@ -12,7 +12,7 @@ const UserSchema = new Schema({
     hourly_rate: { type: Number, required: true },
     role: { type: String},
     status: { type: String, required: true, enum: ["employee", "admin"] },
-    contract: { type: Schema.Types.ObjectId, ref: "Contract", required: true }, // maybe just store the contract here
+    contract: { type: Schema.Types.ObjectId, ref: "Contract", required: true }, // maybe just store the contract here as binData (if file is < 16mb)
     username: { type: String, required: true, maxLength: 50 }, // not sure if we need a separate model for login details
     password: { type: String, required: true, maxLength: 50 },
 });
@@ -33,7 +33,7 @@ UserSchema.virtual("name").get(function () {
 UserSchema.virtual("lifespan").get(function() {
     return "" +(this.date_of_birth ? DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED) : '') +
         (this.date_of_death ? " - " + DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED) : '');
-})
+});
 
 // Export model
 module.exports = mongoose.model("User", UserSchema)
