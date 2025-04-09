@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ username: username.trim() });
         if (!user || user.password !== password) {
-            return res.status(401).send('Invalid credentials');
+            return res.status(401).render('login', { error: 'Invalid username or password' });
         }
 
         res.cookie('userId', user._id.toString(), {
