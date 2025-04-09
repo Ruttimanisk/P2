@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const { body } = require('express-validator');
 
 const user_controller = require('../controllers/user_controller');
 
-router.get("/login", user_controller.login)
+router.get('/login', user_controller.login)
 
 router.post(
     '/login',
@@ -18,7 +19,5 @@ router.post(
     ],
     user_controller.login
 );
-
-
 
 module.exports = router;
