@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 const {DateTime} = require("luxon");
-const {TIME_24_SIMPLE} = require("luxon/src/impl/formats");
-
 
 const Schema = mongoose.Schema;
 
@@ -10,11 +8,11 @@ const UserScheduleSchema = new Schema ({
    overtime: {type: Number, required: true},
    sick: {type: [Boolean, Number], default: [false, 0]}, // boolean and full days sick
    // start time, end time, optional comment - time uses format: xx:xx
-   monday: {type: [TIME_24_SIMPLE, TIME_24_SIMPLE, String], required: true},
-   tuesday: {type: [TIME_24_SIMPLE, TIME_24_SIMPLE, String], required: true},
-   wednesday: {type: [TIME_24_SIMPLE, TIME_24_SIMPLE, String], required: true},
-   thursday: {type: [TIME_24_SIMPLE, TIME_24_SIMPLE, String], required: true},
-   friday: {type: [TIME_24_SIMPLE, TIME_24_SIMPLE, String], required: true},
+   monday: {type: [DateTime.TIME_24_SIMPLE, DateTime.TIME_24_SIMPLE, String], required: true},
+   tuesday: {type: [DateTime.TIME_24_SIMPLE, DateTime.TIME_24_SIMPLE, String], required: true},
+   wednesday: {type: [DateTime.TIME_24_SIMPLE, DateTime.TIME_24_SIMPLE, String], required: true},
+   thursday: {type: [DateTime.TIME_24_SIMPLE, DateTime.TIME_24_SIMPLE, String], required: true},
+   friday: {type: [DateTime.TIME_24_SIMPLE, DateTime.TIME_24_SIMPLE, String], required: true},
 });
 
 UserScheduleSchema.virtual("url").get(function () {
