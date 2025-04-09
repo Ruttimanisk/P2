@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const UserSchedule = require("../models/userschedule");
 const asyncHandler = require("express-async-handler");
+const { validationResult } = require('express-validator');
 
 
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -15,3 +16,29 @@ exports.user_list = asyncHandler(async (req, res, next) => {
         admins: allAdmins,
     });
 });
+
+exports.login = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { username, password } = req.body;
+
+    try {
+        const user = await User.findOne({ username: username.trim() });
+        if (!user || user.password !== password) {
+            return res.status(401).send('Invalid credentials');
+        }
+
+        res.cookie('userId', user._id.toString(), {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        res.send('Login successful');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+};
