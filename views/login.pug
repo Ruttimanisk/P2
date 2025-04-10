@@ -13,7 +13,7 @@ html
             if error
                 .alert.alert-danger= error
 
-        form(action="/login" method="POST")
+        form(method="POST")
             .login
                 label.form-label(for="username") Username
                 input.form-control(type="text" name="username" id="username" required)
