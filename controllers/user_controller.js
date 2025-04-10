@@ -42,6 +42,7 @@ exports.login = async (req, res) => {
         res.redirect(`/${user.status}_home`);
 
     } catch (err) {
+        console.log('server error');
         console.error(err);
         res.status(500).send('Server error');
     }
