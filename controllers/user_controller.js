@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 
 
 exports.user_list = asyncHandler(async (req, res, next) => {
-    const [allEmployees, allAdmins] = await Promise.all([
+        const [allEmployees, allAdmins] = await Promise.all([
         User.find({ status: 'employee'}).sort({ first_name: 1 }).exec(),
         User.find({ status: 'admin'}).sort({ first_name: 1 }).exec(),
     ]);
@@ -19,7 +19,6 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 
 exports.login = async (req, res) => {
     const errors = validationResult(req);
-    console.log('palse')  // debug print
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
@@ -30,7 +29,6 @@ exports.login = async (req, res) => {
         // måske fejl pga ingen database (kan ikke finde user mappen)
         const user = await User.findOne({ username: username.trim() });
         if (!user || user.password !== password) {
-            console.log('Rendering login view'); // debug print
             return res.status(401).render('login', { errors: 'Invalid username or password' });
         }
 
@@ -39,11 +37,11 @@ exports.login = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        res.send('Login successful');
+        //res.send('Login successful');
         res.redirect(`/${user.status}`);
 
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server error - din mor');
+        res.status(500).send('Server error');
     }
 };
