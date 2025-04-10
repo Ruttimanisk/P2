@@ -30,7 +30,7 @@ exports.login = async (req, res) => {
         const user = await User.findOne({ username: username.trim() });
         if (!user || user.password !== password) {
             console.log('Rendering login view'); // debug print
-            //return res.status(401).render('login', { errors: 'Invalid username or password' });
+            return res.status(401).render('login', { errors: 'Invalid username or password' });
         }
 
         res.cookie('userId', user._id.toString(), {
@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
         });
 
         res.send('Login successful');
-        //res.redirect(`/${user.status}_home`);
+        res.redirect(`/${user.status}_home`);
 
     } catch (err) {
         console.error(err);
