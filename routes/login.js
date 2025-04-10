@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 });
 
 router.post(
-    '/login',
+    '/',
     [
         body('username')
             .trim()
