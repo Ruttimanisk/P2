@@ -62,3 +62,7 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
+button {
+    position: relative;
+    left: 200px;
+}
