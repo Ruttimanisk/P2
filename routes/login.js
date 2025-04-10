@@ -4,7 +4,7 @@ const { body } = require('express-validator');
 
 const user_controller = require('../controllers/user_controller');
 
-router.get('/login', function (req, res) {
+router.get('/', function (req, res) {
     // res.render('login');
     res.send("hej")
 });
