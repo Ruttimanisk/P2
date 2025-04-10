@@ -4,9 +4,8 @@ const { body } = require('express-validator');
 
 const user_controller = require('../controllers/user_controller');
 
-router.get('/', function (req, res) {
-    // res.render('login');
-    res.send("hej")
+router.get('/', (req, res) => {
+    res.render('login');
 });
 
 router.post(
