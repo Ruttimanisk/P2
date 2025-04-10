@@ -9,17 +9,16 @@ html
         img(src='../public/images/WFM.webp' alt='WFM logo')
         p.slogan WFM - Time is money
         h1 LOGIN
-        .box
-            p
-                if error
-                    .alert.alert-danger= error
+        p
+            if error
+                .alert.alert-danger= error
 
-            form(action="/login" method="POST")
-                .login
-                    label.form-label(for="username") Username
-                    input.form-control(type="text" name="username" id="username" required)
-                .login
-                    label.form-label(for="password") Password
-                    input.form-control(type="password" name="password" id="password" required)
+        form(action="/login" method="POST")
+            .login
+                label.form-label(for="username") Username
+                input.form-control(type="text" name="username" id="username" required)
+            .login
+                label.form-label(for="password") Password
+                input.form-control(type="password" name="password" id="password" required)
 
-            button.btn.btn-primary(type="submit") Log In
+        button.btn.btn-primary(type="submit") Log In
