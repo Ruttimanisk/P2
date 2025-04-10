@@ -2,7 +2,7 @@ const User = require("../models/user");
 const UserSchedule = require("../models/userschedule");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
-console.log('palse')
+
 
 exports.user_list = asyncHandler(async (req, res, next) => {
     const [allEmployees, allAdmins] = await Promise.all([
@@ -19,6 +19,7 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 
 exports.login = async (req, res) => {
     const errors = validationResult(req);
+    console.log('palse')
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
