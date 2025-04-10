@@ -27,6 +27,7 @@ exports.login = async (req, res) => {
     const { username, password } = req.body;
 
     try {
+        // måske fejl pga ingen database (kan ikke finde user mappen)
         const user = await User.findOne({ username: username.trim() });
         if (!user || user.password !== password) {
             console.log('Rendering login view'); // debug print
@@ -39,7 +40,7 @@ exports.login = async (req, res) => {
         });
 
         res.send('Login successful');
-        res.redirect(`/${user.status}_home`);
+        res.redirect(`/${user.status}`);
 
     } catch (err) {
         console.error(err);
