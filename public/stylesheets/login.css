@@ -6,9 +6,6 @@ h1 {
     left: 540px;
     bottom: 150px;
 }
-.login {
-    color: blue;
-}
 
 .box {
     width: 300px;
@@ -27,7 +24,11 @@ h1 {
     flex-direction: column;
     gap: 15px;
 }
-.login input {
+.form-label {
+    color: blue;
+    position: relative;
+}
+.form-control {
     margin-left: 10px
 }
 img {
