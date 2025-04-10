@@ -28,6 +28,7 @@ exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ username: username.trim() });
         if (!user || user.password !== password) {
+            console.log('Rendering login view');
             return res.status(401).render('login', { errors: 'Invalid username or password' });
         }
 
