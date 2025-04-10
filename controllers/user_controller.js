@@ -37,11 +37,12 @@ exports.login = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        //res.send('Login successful');
+        res.send('Login successful');
         res.redirect(`/${user.status}`);
 
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server error');
+        res.redirect('/');
+        //res.status(500).send('Server error');
     }
 };
