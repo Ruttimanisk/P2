@@ -9,10 +9,11 @@ const UserSchema = new Schema({
     date_of_birth: { type: Date, required: true },
     date_of_death: { type: Date },
     address: { type: String},
+    hours_per_week: { type: Number, required: true },
     hourly_rate: { type: Number, required: true },
     role: { type: String},
     status: { type: String, required: true, enum: ["employee", "admin"] },
-    contract: { type: Schema.Types.ObjectId, ref: "Contract", required: true }, // maybe just store the contract here
+    contract: { type: Schema.Types.ObjectId, ref: "Contract" }, // maybe just store the contract here - removed requirement until we know how to store the pdf
     username: { type: String, required: true, maxLength: 50 }, // not sure if we need a separate model for login details
     password: { type: String, required: true, maxLength: 50 },
 });
