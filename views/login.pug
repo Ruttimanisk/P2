@@ -1,24 +1,24 @@
 doctype html
-head
-    meta(charset='UTF-8')
-    title LOGIN
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    link(rel='stylesheet' type='text/css' href='/stylesheets/style.css')
-    script(type='text/javascript' src='../public/scripts/script.js')
-img(src='../public/images/WFM.webp' alt='WFM logo')
-p.slogan WFM - Time is money
-h1 LOGIN
-.box
-    p
-        a.login
-            | Username:
-            input#usernameInput(type='text' name='username')
-            label(for='usernameInput')
-            |             Password:
-            input#passwordInput(type='text' name='password')
-            label(for='passwordInput')
-            // Mads: beholder din knap som "admin" og laver submit som virker med checkLogin.
-            button#submit(onclick='fetchLogin()') Submit
-            button#admin(onclick='home_admin()') Admin
+html
+    head
+        meta(charset='UTF-8')
+        title LOGIN
+        meta(name='viewport' content='width=device-width, initial-scale=1')
+        link(rel='stylesheet' type='text/css' href='/stylesheets/login.css')
+    body
+        img(src='/images/WFM.webp' alt='WFM logo')
+        p.slogan WFM - Time is money
+        h1 LOGIN
+        p
+            if error
+                .alert.alert-danger= error
 
-// rebuild this using the login API guide in links
+        form(action="/login" method="POST")
+            .login
+                label.form-label(for="username") Username
+                input.form-control(type="text" name="username" id="username" required)
+            .login
+                label.form-label(for="password") Password
+                input.form-control(type="password" name="password" id="password" required)
+
+            button.btn.btn-primary(type="submit") Log In
