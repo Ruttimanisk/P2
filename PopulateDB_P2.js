@@ -1,13 +1,12 @@
+console.log('Populating users and userschedules.')
+
 const userArgs = process.argv.slice(2);
 
-// import models as const here
 const User = require("./models/user")
 const UserSchedule = require("./models/userschedule")
 
 users = [];
 userschedules = [];
-
-// make empty arrays for each model
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
