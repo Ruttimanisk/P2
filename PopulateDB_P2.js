@@ -79,7 +79,7 @@ async function createUsers() {
 
 
 async function createUserSchedules() {
-    console.log("adding users");
+    console.log("adding userschedules");
     await Promise.all([
         userscheduleCreate(0, users[0], 0, false, ["08:00", "10:00", ""], ["08:00", "10:00", ""], ["08:00", "10:00", ""], ["08:00", "10:00", ""], ["08:00", "10:00", ""]),
         userscheduleCreate(1, users[1], 0, false, ["08:00", "12:00", ""], ["08:00", "12:00", ""], ["08:00", "12:00", ""], ["08:00", "12:00", ""], ["08:00", "12:00", ""])
