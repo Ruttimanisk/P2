@@ -19,7 +19,7 @@ router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
 
 router.get('/employee_list', user_controller.admin_employee_list)
 
-router.get('/user_creation', (req, res) => { res.render('login') })
+router.get('/user_creation', (req, res) => { res.render('admin_user_creation') })
 
 router.post(
     '/user_creation',
