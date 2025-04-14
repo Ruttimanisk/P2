@@ -6,6 +6,9 @@ const userschedule_controller = require("../controllers/userschedule_controller"
 const {body} = require("express-validator");
 
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
+// tilføj requireAuth til alle når vi har fået login til at fungere
+// skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
+
 
 router.get('/home', user_controller.home)
 
