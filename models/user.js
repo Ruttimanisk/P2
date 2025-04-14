@@ -11,8 +11,8 @@ const UserSchema = new Schema({
     address: { type: String},
     hours_per_week: { type: Number, required: true },
     hourly_rate: { type: Number, required: true },
-    role: { type: String},
-    status: { type: String, required: true, enum: ["employee", "admin"] },
+    role: { type: String, required: true },
+    status: { type: String, required: true, enum: ["Employee", "Admin"] },
     contract: { type: Schema.Types.ObjectId, ref: "Contract" }, // maybe just store the contract here as binData (if file is < 16mb)
     username: { type: String, required: true, maxLength: 50 }, // not sure if we need a separate model for login details
     password: { type: String, required: true, maxLength: 50 },

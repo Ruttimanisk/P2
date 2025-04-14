@@ -14,11 +14,10 @@ html
                 .alert.alert-danger= error
 
         form(action="/login" method="POST")
-            .login
+            div.login
                 label.form-label(for="username") Username
                 input.form-control(type="text" name="username" id="username" required)
-            .login
+            div.login
                 label.form-label(for="password") Password
                 input.form-control(type="password" name="password" id="password" required)
-
             button.btn.btn-primary(type="submit") Log In
