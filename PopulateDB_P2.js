@@ -72,8 +72,8 @@ async function userscheduleCreate(index, overtime, user, sick, monday, tuesday, 
 async function createUsers() {
     console.log("adding users");
     await Promise.all([
-        userCreate(0, "Mads", "Cajar", "1010-10-10", undefined, "Tenstreet 10", "10", "10", "Servant", "employee", undefined, "mads1234", "1234"),
-        userCreate(1, "Peter", "Cornholio Rasmussen", "2020", undefined, "Twentystreet 20", "20", "20", "Big Boss", "admin", undefined, "peter12345", "12345")
+        userCreate(0, "Mads", "Cajar", "1010-10-10", undefined, "Tenstreet 10", "10", "10", "Servant", "Employee", undefined, "mads1234", "1234"),
+        userCreate(1, "Peter", "Cornholio Rasmussen", "2020", undefined, "Twentystreet 20", "20", "20", "Big Boss", "Admin", undefined, "peter12345", "12345")
     ]);
 }
 
