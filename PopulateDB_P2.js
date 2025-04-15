@@ -50,7 +50,7 @@ async function userCreate(index, first_name, family_name, date_of_birth, date_of
 }
 
 
-async function userscheduleCreate(index, overtime, user, sick, monday, tuesday, wednesday, thursday, friday) {
+async function userscheduleCreate(index, user, overtime, sick, monday, tuesday, wednesday, thursday, friday) {
     const userscheduledetail = {
         user: user,
         overtime: overtime,
