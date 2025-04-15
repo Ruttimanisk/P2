@@ -12,6 +12,26 @@ router.get('/home', user_controller.home)
 
 router.get('/schedule', userschedule_controller.schedule)
 
-router.get('/profile', user_controller.profile)
+router.get('/profile', (req, res) => {
+    const username = req.session.username;
+
+    if (!username) {
+        return res.redirect('/login');
+    }
+
+    const usersPath = path.join(__dirname, '../user_info.json'); // adjust as needed
+    const users = JSON.parse(fs.readFileSync(usersPath));
+
+    const user = users.find(u => u.username === username);
+
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    res.render('profile', {
+        name: user.first_name,
+        status: user.status
+    });
+});
 
 router.get('/logout', user_controller.logout)

@@ -1,29 +1,26 @@
-doctype html
-head
-    meta(charset='UTF-8')
-    title Profile_Employee
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    link(rel='stylesheet' type='text/css' href='../../CSS/HOME%20ADMIN.css')
-    link(rel='stylesheet' type='text/css' href='../../CSS/Employees.css')
-.topnav
-    a(href='Home_Employee.html') Home
-    a(href='Schedule_Employee.html') Schedule
-    a.active(href='Profile_Employee.html') Profile
-    a(href='/P2_TEST/HTML/LOGIN.html') Logout
-img(src='../../Images/WFM.webp' alt='WFM logo')
-.box
-    p.Message_box_header(style='text-align: center') Message box
-    p.Messages(style='text-align: center') You have 3 pending requests
-table#Profile
-    tr
-        td Name
-        td John Doe
-    tr
-        td Address
-        td Villavej 1
-    tr
-        td Base Salary
-        td 350kr/hour
-    tr
-        td Weekly hours
-        td 37
+extends layout_employee
+
+block content
+    head
+    link(rel='stylesheet' type='text/css' href='/CSS/Schedule.css')
+    .box
+        p.Message_box_header(style='text-align: center') Message box
+        p.Messages(style='text-align: center') You have 3 pending requests
+
+    table#Profile
+        tr
+            th Name
+            td #{first_name}
+        tr
+            th Status
+            td= status
+        tr
+            th Address
+            td ordbilndvej 1
+        tr
+            th Base Salary
+            td 350kr/hour
+        tr
+            th Weekly hours
+            td 37
+

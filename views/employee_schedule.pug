@@ -1,176 +1,74 @@
-doctype html
-head
-    meta(charset='UTF-8')
-    title Schedule_Employee
-    meta(name='viewport' content='width=device-width, initial-scale=1')
-    link(rel='stylesheet' type='text/css' href='../../CSS/HOME%20ADMIN.css')
-    link(rel='stylesheet' type='text/css' href='../../CSS/Schedule.css')
-.topnav
-    a(href='Home_Employee.html') Home
-    a.active(href='Schedule_Employee.html') Schedule
-    a(href='Profile_Employee.html') Profile
-    a(href='/P2_TEST/HTML/LOGIN.html') Logout
-img(src='../../Images/WFM.webp' alt='WFM logo')
-.box
-    p.Message_box_header(style='text-align: center') Message box
-    p.Messages(style='text-align: center') You have 3 pending requests
-h2 Schedule
-table#tableA
-    tr
-        th WEEK #/A
-        th Monday
-        th Tuesday
-        th Wednesday
-        th Thursday
-        th Friday
-        th Saturday
-        th Sunday
-        th Norm
-        th Flex-Week
-        th Flex-Bank
-    tr
-        td Self
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 37
-        td +3
-        td 12
-    tr
-        td Poul
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 37
-        td +3
-        td 12
-    tr
-        td Ida
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 32
-        td -3
-        td 22
-    tr
-        td Bent
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 37
-        td +3
-        td 12
-    tr
-        td Arne
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 37
-        td +3
-        td 12
-table#tableB
-    tr
-        th WEEK #/B
-        th Monday
-        th Tuesday
-        th Wednesday
-        th Thursday
-        th Friday
-        th Saturday
-        th Sunday
-        th Norm
-        th Flex-Week
-        th Flex-Bank
-    tr
-        td Self
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 37
-        td +3
-        td 12
-    tr
-        td Poul
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 37
-        td +3
-        td 12
-    tr
-        td Ida
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 32
-        td -3
-        td 22
-    tr
-        td Bent
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 37
-        td +3
-        td 12
-    tr
-        td Arne
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 8-16
-        td 0
-        td 0
-        td 37
-        td +3
-        td 12
-ul.legend
-    li
-        span.You
-        |  Your shifts
-    li
-        span.Maternity
-        |  M/Paternity leave
-    li
-        span.PTO
-        |  PTO/vacation
-    li
-        span.sick
-        |  Sick
+extends layout_employee
+
+block content
+    head
+        link(rel='stylesheet' href='/CSS/Schedule.css')
+        script(src='/scripts/interactiveSchedule.js')
+
+    .box
+        p.Message_box_header(style='text-align: center') Message box
+        p.Messages(style='text-align: center') Editing: #{username}'s Schedule
+
+    h2 Schedule for #{username}
+
+    - var safeSchedule = typeof schedule !== 'undefined' ? schedule : {};
+
+    table#tableA
+        tr
+            th WEEK #/A
+            each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                th= day
+            th Norm
+            th Flex-Week
+            th Flex-Bank
+        tr
+            td Self
+            each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                - var value = safeSchedule[day] || ''
+                td.shift-cell(
+                    data-day=day,
+                    onclick='showStatusMenu(this)',
+                    class=value.toLowerCase()
+                )= value
+            td 37
+            td +3
+            td 12
+
+    table#tableB
+        tr
+            th WEEK #/B
+            each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                th= day
+            th Norm
+            th Flex-Week
+            th Flex-Bank
+        tr
+            td Self
+            each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                - var value = safeSchedule[day] || ''
+                td.shift-cell(
+                    data-day=day,
+                    onclick='showStatusMenu(this)',
+                    class=value.toLowerCase()
+                )= value
+            td 37
+            td +3
+            td 12
+
+    form(method='POST' action=`/admin_edit_employee_schedule/${username}`)
+        input(type='hidden' name='schedule' id='scheduleInput')
+        button(type='submit') Save Schedule
+
+    ul.legend
+        li
+            span.Available
+            |  Available
+        li
+            span.Maternity
+            |  M/Paternity leave
+        li
+            span.PTO
+            |  PTO/vacation
+        li
+            span.Sick
+            |  Sick
