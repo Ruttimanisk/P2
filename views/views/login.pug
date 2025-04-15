@@ -4,7 +4,7 @@ html
         meta(charset='UTF-8')
         title LOGIN
         meta(name='viewport' content='width=device-width, initial-scale=1')
-        link(rel='stylesheet' type='text/css' href='/stylesheets/login.css')
+        link(rel='stylesheet' type='text/css' href='/CSS/login.css')
     body
         img(src='/images/WFM.webp' alt='WFM logo')
         p.slogan WFM - Time is money
@@ -14,10 +14,11 @@ html
                 .alert.alert-danger= error
 
         form(action="/login" method="POST")
-            div.login
+            .login
                 label.form-label(for="username") Username
                 input.form-control(type="text" name="username" id="username" required)
-            div.login
+            .login
                 label.form-label(for="password") Password
                 input.form-control(type="password" name="password" id="password" required)
+
             button.btn.btn-primary(type="submit") Log In

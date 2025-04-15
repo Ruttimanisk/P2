@@ -1,0 +1,39 @@
+[
+  {
+    "username": "Bob1",
+    "password": "Bob123",
+    "first_name": "Bob",
+    "last_name": "Le Builder",
+    "status": "employee"
+  },
+  {
+    "username": "Sponge1",
+    "password": "Sponge123",
+    "first_name": "Spongey",
+    "last_name": "Cunty",
+    "status": "admin"
+  },
+  {
+    "username": "viktor",
+    "password": "test",
+    "first_name": "Viktor",
+    "last_name": "Tester",
+    "status": "employee"
+  },
+  {
+    "id": 1,
+    "username": "jdoe",
+    "password": "1234",
+    "first_name": "John",
+    "last_name": "Doe",
+    "status": "employee"
+  },
+  {
+    "id": 2,
+    "username": "admin",
+    "password": "admin",
+    "first_name": "Alice",
+    "last_name": "Smith",
+    "status": "employee"
+  }
+]

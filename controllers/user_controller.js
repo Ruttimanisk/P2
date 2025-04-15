@@ -2,6 +2,8 @@ const User = require("../models/user");
 const UserSchedule = require("../models/userschedule");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
+const fs = require("fs");
+const path = require("path");
 
 
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -38,7 +40,7 @@ exports.login = asyncHandler(async (req, res) => {
         });
 
         res.send('Login successful');
-        res.redirect(`/${user.status}`);
+        res.redirect(`/${user.status}/home`);
 
     } catch (err) {
         console.error(err);
@@ -76,3 +78,83 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
         res.redirect(`/profile/${user._id}`)
     }
 });
+
+// (Additional functions for scheduling can be implemented similarly)
+exports.list_employees_for_schedule_edit = async (req, res) => {
+    const filePath = path.join(__dirname, "../user_info.json");
+
+    try {
+        const data = await fs.promises.readFile(filePath, "utf8");
+        const users = JSON.parse(data);
+        const employees = users.filter(u => u.status === "employee");
+
+        res.render("admin_edit_employee_list", {
+            title: "Edit Employee Schedules",
+            employees: employees
+        });
+    } catch (err) {
+        console.error("Error loading users for schedule edit:", err);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+exports.show_employee_schedule = async (req, res) => {
+    const username = req.params.id;
+    const filePath = path.join(__dirname, "../user_info.json");
+
+    try {
+        const data = await fs.promises.readFile(filePath, "utf8");
+        const users = JSON.parse(data);
+        const user = users.find(u => u.username === username);
+
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        res.render("admin_edit_employee_schedule", {
+            title: `Edit Schedule for ${user.first_name} ${user.last_name}`,
+            employee: employee
+        });
+
+    } catch (err) {
+        console.error("Failed to load user:", err);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+exports.save_employee_schedule = async (req, res) => {
+    const userId = req.params.id;
+    const newSchedule = req.body.schedule; // expecting schedule to be an object
+    const scheduleFile = path.join(__dirname, "../schedule.json");
+
+    try {
+        let schedule = {};
+        if (fs.existsSync(scheduleFile)) {
+            const data = await fs.promises.readFile(scheduleFile, "utf8");
+            schedule = JSON.parse(data);
+        }
+
+        schedule[userId] = newSchedule;
+
+        await fs.promises.writeFile(scheduleFile, JSON.stringify(schedule, null, 2));
+        res.redirect(`/admin/edit_employee_schedule/${userId}`);
+    } catch (err) {
+        console.error("Error saving schedule:", err);
+        res.status(500).send("Failed to save schedule");
+    }
+};
+
+exports.profile = (req, res) => {
+    const username = req.session.username;
+    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
+    const user = users.find(u => u.username === username);
+
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    res.render('profile', {
+        name: user.first_name,  // Make sure the JSON contains "firstName"
+        status: user.status     // Ensure it's "status", not "role"
+    });
+};

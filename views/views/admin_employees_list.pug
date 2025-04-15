@@ -1,0 +1,17 @@
+extends layout_admin
+
+block content
+    head
+        link(rel='stylesheet' type='text/css' href='/CSS/Schedule.css')
+
+    h1= title
+
+    if employees && employees.length
+        ul
+            each employee in employees
+                li
+                    a(href=`/admin_edit_employee_schedule/${employee.username}`) #{employee.first_name} #{employee.last_name}
+    else
+        p No employees found.
+
+
