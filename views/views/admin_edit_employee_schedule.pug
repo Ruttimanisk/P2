@@ -1,0 +1,18 @@
+extends layout_admin
+
+block content
+    head
+    link(rel='stylesheet' type='text/css' href='/CSS/Schedule.css')
+    h1= title
+
+    form(action=`/admin_edit_employee_schedule/${employee.username}`, method="POST")
+        p Name: #{employee.first_name} #{employee.last_name}
+        p
+            label(for="monday") Monday:
+            input(type="text", name="monday", id="monday", value=employee.schedule?.monday || "")
+        p
+            label(for="tuesday") Tuesday:
+            input(type="text", name="tuesday", id="tuesday", value=employee.schedule?.tuesday || "")
+        // Add other weekdays...
+
+        button(type="submit") Save Schedule
