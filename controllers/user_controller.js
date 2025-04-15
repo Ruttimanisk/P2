@@ -40,7 +40,7 @@ exports.login = asyncHandler(async (req, res) => {
         });
 
         res.send('Login successful');
-        res.redirect(`/${user.status}`);
+        res.redirect(`/${user.status}/home`);
 
     } catch (err) {
         console.error(err);
