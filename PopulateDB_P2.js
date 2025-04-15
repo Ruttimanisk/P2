@@ -59,7 +59,7 @@ async function userscheduleCreate(index, overtime, user, sick, monday, tuesday, 
         tuesday: tuesday,
         wednesday: wednesday,
         thursday: thursday,
-        firday: friday,
+        friday: friday,
     };
 
     const userschedule = new UserSchedule(userscheduledetail);
