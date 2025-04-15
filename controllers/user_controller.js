@@ -6,8 +6,8 @@ const { validationResult } = require('express-validator');
 
 exports.user_list = asyncHandler(async (req, res, next) => {
         const [allEmployees, allAdmins] = await Promise.all([
-        User.find({ status: 'employee'}).sort({ first_name: 1 }).exec(),
-        User.find({ status: 'admin'}).sort({ first_name: 1 }).exec(),
+        User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec(),
+        User.find({ status: 'Admin'}).sort({ first_name: 1 }).exec(),
     ]);
 
     res.render("admin_employees", {
