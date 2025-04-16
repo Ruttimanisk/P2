@@ -8,11 +8,12 @@ const {body} = require("express-validator");
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
+// router der stå som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
 
 router.get('/home', user_controller.home)
 
-router.get('/schedule', userschedule_controller.schedule)
+// router.get('/schedule', userschedule_controller.schedule)
 
 router.get('/profile', user_controller.profile)
 
@@ -21,7 +22,7 @@ router.get('/profile_database', user_controller.profile_from_database);
 
 router.get('/logout', user_controller.logout)
 
-router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
+// router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
 
 router.get('/admin_edit_employee_schedule/:username', (req, res) => {
         const username = req.params.username;
@@ -58,7 +59,7 @@ router.post('/admin_edit_employee_schedule/:username', (req, res) => {
         res.redirect(`/admin_edit_employee_schedule/${username}`);
 });
 
-router.get('/employee_list', user_controller.admin_employee_list)
+// router.get('/employee_list', user_controller.admin_employee_list)
 
 router.get('/user_creation', (req, res) => { res.render('admin_user_creation') })
 

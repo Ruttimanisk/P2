@@ -10,7 +10,7 @@ const userschedule_controller = require("../controllers/userschedule_controller"
 
 router.get('/home', user_controller.home)
 
-router.get('/schedule', userschedule_controller.schedule)
+// router.get('/schedule', userschedule_controller.schedule)
 
 router.get('/profile', (req, res) => {
     const username = req.session.username;
