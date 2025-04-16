@@ -22,7 +22,11 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 exports.login = asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).render('login', { errors: errors.array() });
+        let error = ""
+        for (const key in errors) {
+            error += `${errors.array()[key].msg}\n`
+        }
+        return res.status(400).render('login', { error: error });
     }
 
     const { username, password } = req.body;
@@ -31,7 +35,7 @@ exports.login = asyncHandler(async (req, res) => {
         // måske fejl pga ingen database (kan ikke finde user mappen)
         const user = await User.findOne({ username: username.trim() });
         if (!user || user.password !== password) {
-            return res.status(401).render('login', { errors: 'Invalid username or password' });
+            return res.status(401).render('login', { error: 'Invalid username or password' });
         }
 
         res.cookie('userId', user._id.toString(), {
