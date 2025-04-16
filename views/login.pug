@@ -10,8 +10,8 @@ html
         p.slogan WFM - Time is money
         h1 LOGIN
         p
-            if error
-                .alert.alert-danger= error
+            if errors
+                .alert.alert-danger= errors
 
         form(action="/login" method="POST")
             .login
