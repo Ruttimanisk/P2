@@ -16,6 +16,9 @@ router.get('/schedule', userschedule_controller.schedule)
 
 router.get('/profile', user_controller.profile)
 
+// recreated profile
+router.get('/profile_database', user_controller.profile_from_database);
+
 router.get('/logout', user_controller.logout)
 
 router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)

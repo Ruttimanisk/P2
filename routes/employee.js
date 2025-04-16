@@ -34,4 +34,7 @@ router.get('/profile', (req, res) => {
     });
 });
 
+// recreated profile
+router.get('/profile_database', user_controller.profile_from_database);
+
 router.get('/logout', user_controller.logout)
