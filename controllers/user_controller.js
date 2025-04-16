@@ -22,7 +22,7 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 exports.login = asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).render('login', { errors: errors.array() });
     }
 
     const { username, password } = req.body;
