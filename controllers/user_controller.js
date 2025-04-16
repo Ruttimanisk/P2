@@ -54,6 +54,11 @@ exports.login = asyncHandler(async (req, res) => {
 
 // ---------------------- ADMIN PAGES ---------------------- //
 
+exports.home = asyncHandler( async(req,res,next) => {
+    res.render("admin_home", {title: "Home Page"});
+});
+
+
 exports.admin_user_creation = asyncHandler(async (req,res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -144,7 +149,7 @@ exports.save_employee_schedule = async (req, res) => {
     }
 };
 
-exports.profile = (req, res) => {
+exports.profile = asyncHandler(async (req, res) => {
     const username = req.session.username;
     const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
     const user = users.find(u => u.username === username);
@@ -156,5 +161,6 @@ exports.profile = (req, res) => {
     res.render('profile', {
         name: user.first_name,  // Make sure the JSON contains "firstName"
         status: user.status     // Ensure it's "status", not "role"
-    });
-};
+    })
+});
+
