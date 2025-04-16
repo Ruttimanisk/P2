@@ -39,8 +39,7 @@ exports.login = asyncHandler(async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        res.send('Login successful');
-        res.redirect(`/${user.status}/home`);
+        return res.redirect(`/${user.status}/home`);
 
     } catch (err) {
         console.error(err);
@@ -48,8 +47,12 @@ exports.login = asyncHandler(async (req, res) => {
     }
 });
 
-
-
+exports.logout = asyncHandler(async (req, res) => {
+    if (confirm("Are you sure you want to log out?") === true) {
+        res.clearCookie('userId');
+        res.render('login')
+    }
+});
 
 // ---------------------- ADMIN PAGES ---------------------- //
 
