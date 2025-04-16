@@ -4,6 +4,7 @@ const userArgs = process.argv.slice(2);
 
 const User = require("./models/user")
 const UserSchedule = require("./models/userschedule")
+require('dotenv').config();
 
 users = [];
 userschedules = [];
