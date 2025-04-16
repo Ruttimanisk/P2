@@ -38,3 +38,6 @@ router.get('/profile', (req, res) => {
 router.get('/profile_database', user_controller.profile_from_database);
 
 router.get('/logout', user_controller.logout)
+
+
+module.exports = router;

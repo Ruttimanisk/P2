@@ -39,7 +39,7 @@ exports.login = asyncHandler(async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        return res.redirect(`/${user.status}/home`);
+        return res.redirect(`/${user.status.toLowerCase()}/home`);
 
     } catch (err) {
         console.error(err);
