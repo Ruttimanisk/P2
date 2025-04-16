@@ -148,7 +148,7 @@ exports.save_employee_schedule = async (req, res) => {
     }
 };
 
-exports.profile = asyncHandler(async (req, res) => {
+exports.profile = (req, res) => {
     const username = req.session.username;
     const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
     const user = users.find(u => u.username === username);
@@ -161,5 +161,26 @@ exports.profile = asyncHandler(async (req, res) => {
         name: user.first_name,  // Make sure the JSON contains "firstName"
         status: user.status     // Ensure it's "status", not "role"
     })
-});
+};
 
+// remaking profile with database - Mads
+
+exports.profile_from_database = asyncHandler(async (req, res) => {
+    const userId = req.cookies.userId;
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    res.render('profile', {
+        first_name: user.first_name,
+        fullname: user.fullname,
+        lifespan: user.lifespan,
+        statuss: user.status,
+        address: user.address,
+        hourly_rate: user.hourly_rate,
+        hours_per_week: user.hours_per_week,
+
+    })
+})

@@ -23,7 +23,7 @@ UserSchema.virtual("url").get(function () {
     return `/${this.status}/profile/${this._id}`;
 });
 
-UserSchema.virtual("name").get(function () {
+UserSchema.virtual("fullname").get(function () {
     let fullname = "";
     if (this.first_name && this.family_name) {
         fullname = `${this.first_name} ${this.family_name}`;
