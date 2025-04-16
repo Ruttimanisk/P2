@@ -28,6 +28,7 @@ h1 {
     color: blue;
     position: relative;
     left: 200px;
+    right: 10px;
 
 }
 .form-control {
