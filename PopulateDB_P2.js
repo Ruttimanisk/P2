@@ -17,7 +17,7 @@ main().catch((err) => console.log(err));
 
 async function main() {
     console.log("Debug: About to connect");
-    await mongoose.connect(mongoDB);
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Debug: Should be connected?");
 
     await createUsers();
