@@ -11,13 +11,13 @@ userschedules = [];
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
-const mongoDB = userArgs[0];
-
+const mongoDB = process.env.MONGODB_URI
+console.log(typeof(mongoDB))
 main().catch((err) => console.log(err));
 
 async function main() {
     console.log("Debug: About to connect");
-    await mongoose.connect(process.env.MONGODB_URI.slice(2));
+    await mongoose.connect(mongoDB);
     console.log("Debug: Should be connected?");
 
     await createUsers();
