@@ -39,20 +39,27 @@ exports.login = asyncHandler(async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        res.send('Login successful');
-        res.redirect(`/${user.status}/home`);
+        return res.redirect(`/${user.status}/home`);
 
     } catch (err) {
         console.error(err);
-        res.redirect('/');
-        //res.status(500).send('Server error');
+        res.status(500).send('Server error');
     }
 });
 
-
-
+exports.logout = asyncHandler(async (req, res) => {
+    if (confirm("Are you sure you want to log out?") === true) {
+        res.clearCookie('userId');
+        res.render('login')
+    }
+});
 
 // ---------------------- ADMIN PAGES ---------------------- //
+
+exports.home = asyncHandler( async(req,res,next) => {
+    res.render("admin_home", {title: "Home Page"});
+});
+
 
 exports.admin_user_creation = asyncHandler(async (req,res) => {
     const errors = validationResult(req);
@@ -156,5 +163,27 @@ exports.profile = (req, res) => {
     res.render('profile', {
         name: user.first_name,  // Make sure the JSON contains "firstName"
         status: user.status     // Ensure it's "status", not "role"
-    });
+    })
 };
+
+// remaking profile with database - Mads
+
+exports.profile_from_database = asyncHandler(async (req, res) => {
+    const userId = req.cookies.userId;
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    res.render('profile', {
+        first_name: user.first_name,
+        fullname: user.fullname,
+        lifespan: user.lifespan,
+        statuss: user.status,
+        address: user.address,
+        hourly_rate: user.hourly_rate,
+        hours_per_week: user.hours_per_week,
+
+    })
+})

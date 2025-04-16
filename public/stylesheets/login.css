@@ -25,20 +25,21 @@ h1 {
     gap: 15px;
 }
 .form-label {
-    color: blue;
-    position: relative;
+    display: inline-block;
+    width: 140px;
+    text-align: left;
     left: 200px;
 
 }
 .form-control {
     width: 200px;
-    margin-left: 10px;
+    margin-left: 15px;
     position: relative;
     left: 200px
 }
 img {
     width: 15%;
-    height: auto;
+    height: 400px;
     position: relative;
 }
 .slogan {
