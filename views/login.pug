@@ -13,7 +13,7 @@ html
         if errors
             ul.error-list
                 each err in errors
-                    li.error-item= err.msg ? error.msg : error[0]
+                    li.error-item= typeof err === 'object' && err.msg ? err.msg : err
 
         form(action="/login" method="POST")
             .login
