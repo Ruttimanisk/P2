@@ -12,7 +12,7 @@ html
         if errors
             ul.error-list
                 each err in errors
-                    li.error-item= err.msg
+                    li.error-item= err.msg ? error.msg : error[0]
 
         form(action="/login" method="POST")
             .login
