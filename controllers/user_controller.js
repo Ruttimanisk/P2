@@ -22,14 +22,14 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 exports.login = asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).render('login', { errors: errors.array()[0].msg });
+        return res.status(400).render('login', { errors: errors.array() });
     }
 
     const { username, password } = req.body;
 
     try {
         // måske fejl pga ingen database (kan ikke finde user mappen)
-        const user = await User.findOne({ username: username.trim() });
+        const user = await User.findOne({ username: username });
         if (!user || user.password !== password) {
             return res.status(401).render('login', { errors: ['Invalid username or password'] });
         }
@@ -39,7 +39,7 @@ exports.login = asyncHandler(async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000,
         });
 
-        return res.redirect(`/${user.status.toLowerCase()}/home`);
+        return res.redirect(`/${(user.status || '').toLowerCase()}/home`);
 
     } catch (err) {
         console.error(err);
