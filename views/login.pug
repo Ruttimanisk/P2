@@ -9,9 +9,10 @@ html
         img(src='/images/WFM.webp' alt='WFM logo')
         p.slogan WFM - Time is money
         h1 LOGIN
-        p
-            if error
-                .alert.alert-danger= error
+        if errors
+            ul.error-list
+                each err in errors
+                    li.error-item= err.msg
 
         form(action="/login" method="POST")
             .login
