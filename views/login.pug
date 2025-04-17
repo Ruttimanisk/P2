@@ -14,7 +14,7 @@ html
                 each err in errors
                     li.error-item= err.msg
 
-        form(action="/login" method="POST")
+        form(action="/" method="POST")
             .login
                 label.form-label(for="username") Username
                 input.form-control(type="text" name="username" id="username" required)
