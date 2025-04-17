@@ -28,15 +28,12 @@ exports.login = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        console.log('Login attempt for:', username);
         const user = await User.findOne({ username: username });
 
         if (!user || user.password !== password) {
-            console.log('Authentication failed for user:', username);
             return res.status(401).render('login', { errors: ['Invalid username or password'] });
         }
 
-        console.log('Successful login for user:', username);
         res.cookie('userId', user._id.toString(), {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
@@ -46,13 +43,8 @@ exports.login = asyncHandler(async (req, res) => {
 
     } catch (err) {
         // Make sure we haven't already sent a response
-        if (!res.headersSent) {
-            console.error('Login error:', err.name, err.message);
-            return res.status(500).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
-        } else {
-            console.error('Error after headers sent:', err.name, err.message);
+        return res.status(500).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
         }
-    }
 });
 
 exports.logout = asyncHandler(async (req, res) => {
