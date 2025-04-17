@@ -28,8 +28,10 @@ exports.login = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        // måske fejl pga ingen database (kan ikke finde user mappen)
+        console.log('Attempting to find user:', username);
         const user = await User.findOne({ username: username });
+        console.log('User found:', !!user);
+
         if (!user || user.password !== password) {
             return res.status(401).render('login', { errors: ['Invalid username or password'] });
         }
@@ -42,6 +44,7 @@ exports.login = asyncHandler(async (req, res) => {
         return res.redirect(`/${(user.status || '').toLowerCase()}/home`);
 
     } catch (err) {
+        console.error('Specific error:', err.name, err.message);
         console.error(err);
     }
 });
