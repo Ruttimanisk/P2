@@ -48,7 +48,7 @@ exports.login = asyncHandler(async (req, res) => {
         // Make sure we haven't already sent a response
         if (!res.headersSent) {
             console.error('Login error:', err.name, err.message);
-            return res.status(500).render('login', { errors: ['An unexpected error occurred'] });
+            return res.status(500).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
         } else {
             console.error('Error after headers sent:', err.name, err.message);
         }
