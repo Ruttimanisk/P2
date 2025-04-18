@@ -36,12 +36,7 @@ async function userCreate(index, first_name, family_name, date_of_birth, date_of
         role: role,
         status: status,
         contract: contract,
-        username: {
-          type: String,
-          required: true,
-          unique: true,
-          index: true // Add this
-        },
+        username: username,
         password: password,
     };
     if (date_of_death !== false) userdetail.date_of_death = date_of_death
@@ -77,7 +72,7 @@ async function createUsers() {
     console.log("adding users");
     await Promise.all([
         userCreate(0, "Mads", "Cajar", "2010-10-10", undefined, "Tenstreet 10", 10, 10, "Servant", "Employee", undefined, "mads1234", "1234"),
-        userCreate(1, "Peter", "Cornholio Rasmussen", "2020-10-10", undefined, "Twentystreet 20", "20", "20", "Big Boss", "Admin", undefined, "peter12345", "12345")
+        userCreate(1, "Peter", "Cornholio Rasmussen", "2020-10-10", undefined, "Twentystreet 20", 20, 20, "Big Boss", "Admin", undefined, "peter12345", "12345")
     ]);
 }
 
