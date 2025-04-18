@@ -1,7 +1,5 @@
 console.log('Populating users and userschedules.')
 
-const userArgs = process.argv.slice(2);
-
 const User = require("./models/user")
 const UserSchedule = require("./models/userschedule")
 require('dotenv').config();
@@ -25,7 +23,7 @@ async function main() {
     await createUserSchedules();
 
     console.log("Debug: Closing mongoose");
-    mongoose.connection.close();
+    await mongoose.connection.close();
 }
 
 async function userCreate(index, first_name, family_name, date_of_birth, date_of_death, address,hours_per_week, hourly_rate, role, status, contract, username, password) {
@@ -38,7 +36,12 @@ async function userCreate(index, first_name, family_name, date_of_birth, date_of
         role: role,
         status: status,
         contract: contract,
-        username: username,
+        username: {
+          type: String,
+          required: true,
+          unique: true,
+          index: true // Add this
+        },
         password: password,
     };
     if (date_of_death !== false) userdetail.date_of_death = date_of_death
@@ -73,8 +76,8 @@ async function userscheduleCreate(index, user, overtime, sick, monday, tuesday, 
 async function createUsers() {
     console.log("adding users");
     await Promise.all([
-        userCreate(0, "Mads", "Cajar", "1010-10-10", undefined, "Tenstreet 10", "10", "10", "Servant", "Employee", undefined, "mads1234", "1234"),
-        userCreate(1, "Peter", "Cornholio Rasmussen", "2020", undefined, "Twentystreet 20", "20", "20", "Big Boss", "Admin", undefined, "peter12345", "12345")
+        userCreate(0, "Mads", "Cajar", "2010-10-10", undefined, "Tenstreet 10", 10, 10, "Servant", "Employee", undefined, "mads1234", "1234"),
+        userCreate(1, "Peter", "Cornholio Rasmussen", "2020-10-10", undefined, "Twentystreet 20", "20", "20", "Big Boss", "Admin", undefined, "peter12345", "12345")
     ]);
 }
 
