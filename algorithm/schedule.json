@@ -6,43 +6,7 @@
         "end": "15:00"
     },
     {
-        "employee": "Tue",
-        "day": "Thursday",
-        "start": "18:00",
-        "end": "17:00"
-    },
-    {
         "employee": "Mads",
-        "day": "Monday",
-        "start": "07:30",
-        "end": "15:00"
-    },
-    {
-        "employee": "Mads",
-        "day": "Tuesday",
-        "start": "08:00",
-        "end": "17:00"
-    },
-    {
-        "employee": "Mads",
-        "day": "Friday",
-        "start": "08:00",
-        "end": "15:00"
-    },
-    {
-        "employee": "Peter",
-        "day": "Friday",
-        "start": "18:00",
-        "end": "15:30"
-    },
-    {
-        "employee": "Viktor",
-        "day": "Monday",
-        "start": "08:00",
-        "end": "17:00"
-    },
-    {
-        "employee": "Viktor",
         "day": "Tuesday",
         "start": "07:30",
         "end": "15:00"
@@ -50,29 +14,35 @@
     {
         "employee": "Viktor",
         "day": "Wednesday",
-        "start": "08:00",
-        "end": "17:00"
+        "start": "07:30",
+        "end": "15:00"
     },
     {
         "employee": "Viktor",
         "day": "Friday",
-        "start": "09:00",
+        "start": "08:00",
         "end": "15:30"
     },
     {
         "employee": "Shoaib",
         "day": "Monday",
-        "start": "09:00",
-        "end": "19:00"
-    },
-    {
-        "employee": "Shoaib",
-        "day": "Wednesday",
-        "start": "09:00",
-        "end": "19:00"
+        "start": "07:30",
+        "end": "15:00"
     },
     {
         "employee": "Adam",
+        "day": "Monday",
+        "start": "09:00",
+        "end": "19:00"
+    },
+    {
+        "employee": "Mikkel",
+        "day": "Monday",
+        "start": "08:00",
+        "end": "17:00"
+    },
+    {
+        "employee": "Mikkel",
         "day": "Tuesday",
         "start": "09:00",
         "end": "17:00"
@@ -80,7 +50,37 @@
     {
         "employee": "Mikkel",
         "day": "Wednesday",
-        "start": "07:30",
+        "start": "09:00",
+        "end": "19:00"
+    },
+    {
+        "employee": "Mikkel",
+        "day": "Thursday",
+        "start": "08:00",
+        "end": "17:00"
+    },
+    {
+        "employee": "Louise",
+        "day": "Wednesday",
+        "start": "08:00",
+        "end": "17:00"
+    },
+    {
+        "employee": "Louise",
+        "day": "Friday",
+        "start": "09:00",
+        "end": "15:30"
+    },
+    {
+        "employee": "Jens",
+        "day": "Tuesday",
+        "start": "08:00",
+        "end": "17:00"
+    },
+    {
+        "employee": "Jens",
+        "day": "Friday",
+        "start": "08:00",
         "end": "15:00"
     }
 ]
