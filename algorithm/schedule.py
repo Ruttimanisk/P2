@@ -1,6 +1,7 @@
 import pulp
 import csv
 import os
+import json
 
 os.chdir(os.path.dirname(__file__))
 
@@ -117,12 +118,20 @@ for e in employees:
             print(f"{e} works on {s[0]} from {s[1]} to {s[2]}")
 print("Current working directory:", os.getcwd())
 
-print(f"Found {len(shifts)} valid shifts:")
-for s in shifts:
-    print(s)
+schedule_output = []
 
-print("\nAll shifts (before filtering):")
-with open(shifts_file, "r", encoding="utf-8") as file:
-    reader = csv.DictReader(file)
-    for row in reader:
-        print(row)
+for e in employees:
+    for s in shifts:
+        if x[e][s].value() == 1:
+            shift = {
+                "employee": e,
+                "day": s[0],
+                "start": s[1],
+                "end": s[2]
+            }
+            schedule_output.append(shift)
+
+with open("schedule.json", "w", encoding="utf-8") as f:
+    json.dump(schedule_output, f, indent=4)
+
+print("\nSchedule saved to schedule.json")
