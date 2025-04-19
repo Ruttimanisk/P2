@@ -57,7 +57,7 @@ exports.logout = asyncHandler(async (req, res) => {
 // ---------------------- ADMIN PAGES ---------------------- //
 
 exports.home = asyncHandler( async(req,res,next) => {
-    res.render("admin_home", {title: "Home Page"});
+    res.render('admin_home', {title: "Home Page"});
 });
 
 

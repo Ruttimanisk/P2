@@ -1,5 +1,6 @@
 // Import the mongoose module
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 // Set `strictQuery: false` to globally opt into filtering by properties that aren't in the schema
 // Included because it removes preparatory warnings for Mongoose 7.
