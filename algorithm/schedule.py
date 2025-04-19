@@ -2,6 +2,7 @@ import pulp
 import csv
 import os
 import json
+from pymongo import MongoClient
 
 os.chdir(os.path.dirname(__file__))
 
@@ -133,5 +134,18 @@ for e in employees:
 
 with open("schedule.json", "w", encoding="utf-8") as f:
     json.dump(schedule_output, f, indent=4)
-
 print("\nSchedule saved to schedule.json")
+
+try:
+    client = MongoClient("mongodb+srv://prasm24:p2gruppe7@wfm-test.nvx2k.mongodb.net/")
+    db = client["WFM-Database"]
+    collection = db["Schedule"]
+
+    collection.delete_many({})
+
+    collection.insert_many(schedule_output)
+
+    print("Schedule uploaded to MongoDB successfully.")
+
+except Exception as e:
+    print("Failed to upload to MongoDB:", e)
