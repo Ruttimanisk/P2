@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
     const shiftCells = document.querySelectorAll('.shift-cell');
     const statuses = ['Available', 'Sick', 'PTO', 'Maternity'];
     const colors = {
