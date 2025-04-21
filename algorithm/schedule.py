@@ -34,10 +34,6 @@ employees_file = os.path.join(base_dir, "Employees.csv")
 absence_file = os.path.join(base_dir, "Absence.csv")
 shifts_file = os.path.join(base_dir, "Shifts.csv")
 
-print("Trying to open Employees.csv at:", employees_file)
-print("Trying to open Absence.csv at:", absence_file)
-print("Trying to open Shifts.csv at:", shifts_file)
-
 max_hours = {}
 employees = []
 
