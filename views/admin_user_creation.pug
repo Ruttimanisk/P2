@@ -22,26 +22,34 @@ block content
             div.form-group
                 label(for='first_name') First Name:
                 input#first_name.form-control(type='text', placeholder='First name (Christian)' name='first_name' required)
+                br
                 label(for='family_name') Family Name:
                 input#family_name.form-control(type='text', placeholder='Family name (Surname)' name='family_name' required)
+                br
                 label(for='date_of_birth') Date of birth:
                 input#date_of_birth.form-control(type='date' name='date_of_birth' required)
+                br
                 label(for='date_of_death') Date of death:
                 input#date_of_death.form-control(type='date' name='date_of_death')
+                br
                 label(for='address') Address:
                 input#address.form-control(type='text', placeholder='Address (twostreet 2)' name='address')
+                br
                 label(for='hours_per_week') Hours per week:
                 input#hours_per_week.form-control(type='number', name='hours_per_week', required)
+                br
                 label(for='hourly_rate') Hourly rate in dkk:
                 input#hourly_rate.form-control(type='number', name='hourly_rate', required)
+                br
                 label(for='role') Role:
                 input#role.form-control(type='text', placeholder='Your title' name='role' required)
+                br
                 label(for='contract') Contract:
                 input#contract.form-control(type='file', name='contract')
                 br
-            div.form-group
                 label(for="username") Username
                 input#username.form-control(type="text" name="username" required)
+                br
                 label(for="password") Password
                 input#password.form-control(type='password', name='password' required)
             button.btn.btn-primary(type='submit') Submit
