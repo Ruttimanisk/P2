@@ -175,7 +175,7 @@ exports.profile = (req, res) => {
 exports.profile_from_database = asyncHandler(async (req, res, next) => {
     try {
         const userId = req.cookies.userId;
-        const user = await User.findOne({ _id: userId }).maxTimeMS(5000).exec();
+        const user = await User.findOne({ _id: userId });
 
         if (!user) {
             return res.status(404).send('User not found');
