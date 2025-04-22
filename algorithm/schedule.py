@@ -113,7 +113,6 @@ for e in employees:
     for s in shifts:
         if x[e][s].value() == 1:
             print(f"{e} works on {s[0]} from {s[1]} to {s[2]}")
-print("Current working directory:", os.getcwd())
 
 schedule_output = []
 
