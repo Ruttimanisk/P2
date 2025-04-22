@@ -15,7 +15,7 @@ router.get('/home', user_controller.admin_home)
 
 // router.get('/schedule', userschedule_controller.schedule)
 
-router.get('/profile_old', user_controller.profile)
+router.get('/prof_old', user_controller.profile)
 
 // recreated profile
 router.get('/profile', user_controller.profile_from_database);

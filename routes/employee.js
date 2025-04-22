@@ -13,7 +13,7 @@ router.get('/home', user_controller.employee_home)
 // router.get('/schedule', userschedule_controller.schedule)
 
 
-router.get('/profile_old', (req, res) => {
+router.get('/prof_old', (req, res) => {
     const username = req.session.username;
 
     if (!username) {
