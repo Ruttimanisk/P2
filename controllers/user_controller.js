@@ -173,33 +173,38 @@ exports.profile = (req, res) => {
 // remaking profile with database - Mads
 
 exports.profile_from_database = asyncHandler(async (req, res) => {
-    const userId = req.cookies.userId;
-    const user = await User.findOne({ _id: userId });
+    try {
+        const userId = req.cookies.userId;
+        const user = await User.findOne({ _id: userId });
 
-    if (!user) {
-        return res.status(404).send('User not found');
-    }
-    if (user.status === 'employee'){
-        res.render('employee_profile', {
-        first_name: user.first_name,
-        fullname: user.fullname,
-        lifespan: user.lifespan,
-        statuss: user.status,
-        address: user.address,
-        hourly_rate: user.hourly_rate,
-        hours_per_week: user.hours_per_week,
-        })
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        if (user.status === 'employee'){
+            res.render('employee_profile', {
+            first_name: user.first_name,
+            fullname: user.fullname,
+            lifespan: user.lifespan,
+            statuss: user.status,
+            address: user.address,
+            hourly_rate: user.hourly_rate,
+            hours_per_week: user.hours_per_week,
+            })
+        }
+
+        else if (user.status === 'admin'){
+            res.render('admin_profile', {
+            first_name: user.first_name,
+            fullname: user.fullname,
+            lifespan: user.lifespan,
+            statuss: user.status,
+            address: user.address,
+            hourly_rate: user.hourly_rate,
+            hours_per_week: user.hours_per_week,
+            })
+        }
+    } catch (err) {
+        return res.status(500).send(`profile error in catch: ${err.name}, ${err.message}`)
     }
 
-    else if (user.status === 'admin'){
-        res.render('admin_profile', {
-        first_name: user.first_name,
-        fullname: user.fullname,
-        lifespan: user.lifespan,
-        statuss: user.status,
-        address: user.address,
-        hourly_rate: user.hourly_rate,
-        hours_per_week: user.hours_per_week,
-        })
-    }
 })
