@@ -4,8 +4,8 @@ html
         meta(charset='utf-8')
         title WFM App
         meta(name='viewport' content='width=device-width, initial-scale=1')
-        link(rel='stylesheet' href='/CSS/HOME%20ADMIN.css')
-        link(rel='stylesheet' href='/CSS/Shared.css')
+        link(rel='stylesheet' href='/stylesheets/HOME%20ADMIN.css')
+        link(rel='stylesheet' href='/stylesheets/Shared.css')
     body
         script.
             function confirmLogout() {
@@ -16,5 +16,5 @@ html
             a(href='/employee/profile') Profile
             a(href='/employee/schedule') Schedule
             a(href="/login", onclick= "confirmLogout()") Logout
-        img(src='/Images/WFM.webp' alt='WFM Logo')
+        img(src='/images/WFM.webp' alt='WFM Logo')
     block content
