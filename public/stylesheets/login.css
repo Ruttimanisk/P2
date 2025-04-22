@@ -24,11 +24,11 @@ h1 {
 .form-label {
     width: 50px;
     text-align: left;
-
+    left: 20px;
 }
 .form-control {
     width: 170px;
-    margin-left: 15px;
+    margin-left: 10px;
     position: relative;
 }
 img {
