@@ -28,7 +28,7 @@ h1 {
 }
 .form-control {
     width: 170px;
-    margin: 10px;
+    margin: 6px;
     position: relative;
 }
 img {
@@ -43,6 +43,6 @@ img {
 
 button {
     position: relative;
-    margin: 10px;
-    left: 50px;
+    margin: 6px;
+    left: 80px;
 }
