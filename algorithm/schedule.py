@@ -65,6 +65,13 @@ with open(shifts_file, "r", encoding="utf-8") as file:
             open_start, open_end = opening_hours[day]
             if time_to_minutes(start) >= time_to_minutes(open_start) and time_to_minutes(end) <= time_to_minutes(open_end):
                 shifts.append((day, start, end))
+            else:
+                raise ValueError(
+                    f"Shift on {day} from {start} to {end} is outside opening hours ({open_start}–{open_end})"
+                )
+        else:
+            raise ValueError(f"Incorrect weekday: {day}")
+
 
 if not os.path.exists("Employees.csv"):
     print("Employees.csv file not found!")
