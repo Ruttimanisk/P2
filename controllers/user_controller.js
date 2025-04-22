@@ -180,7 +180,7 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
         if (!user) {
             return res.status(404).send('User not found');
         }
-        if (user.status === 'employee'){
+        if (user.status === 'Employee'){
             return res.render('employee_profile', {
                 first_name: user.first_name,
                 fullname: user.fullname,
@@ -192,7 +192,7 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
             })
         }
 
-        else if (user.status === 'admin'){
+        else if (user.status === 'Admin'){
             return res.render('admin_profile', {
                 first_name: user.first_name,
                 fullname: user.fullname,
