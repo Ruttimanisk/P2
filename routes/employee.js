@@ -12,7 +12,8 @@ router.get('/home', user_controller.employee_home)
 
 // router.get('/schedule', userschedule_controller.schedule)
 
-router.get('/profile', (req, res) => {
+
+router.get('/profile_old', (req, res) => {
     const username = req.session.username;
 
     if (!username) {
@@ -35,7 +36,7 @@ router.get('/profile', (req, res) => {
 });
 
 // recreated profile
-router.get('/profile_database', user_controller.profile_from_database);
+router.get('/profile', user_controller.profile_from_database);
 
 router.get('/logout', user_controller.logout)
 
