@@ -29,7 +29,7 @@ h1 {
 .form-control {
     width: 170px;
     margin: 6px;
-    position: absolute;
+    position: relative;
 }
 img {
     width: 15%;
