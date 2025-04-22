@@ -28,7 +28,7 @@ h1 {
 }
 .form-control {
     width: 170px;
-    margin-left: 10px;
+    margin: 10px;
     position: relative;
 }
 img {
@@ -41,23 +41,8 @@ img {
     left: 17px;
 }
 
-table {
-    font-family: Arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-    position: relative;
-}
-
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-
-tr:nth-child(even) {
-    background-color: #dddddd;
-}
 button {
     position: relative;
-    left: 200px;
+    margin: 10px;
+    left: 50px;
 }
