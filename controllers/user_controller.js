@@ -181,30 +181,34 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
             return res.status(404).send('User not found');
         }
         if (user.status === 'employee'){
-            res.render('employee_profile', {
-            first_name: user.first_name,
-            fullname: user.fullname,
-            lifespan: user.lifespan,
-            statuss: user.status,
-            address: user.address,
-            hourly_rate: user.hourly_rate,
-            hours_per_week: user.hours_per_week,
+            return res.render('employee_profile', {
+                first_name: user.first_name,
+                fullname: user.fullname,
+                lifespan: user.lifespan,
+                statuss: user.status,
+                address: user.address,
+                hourly_rate: user.hourly_rate,
+                hours_per_week: user.hours_per_week,
             })
         }
 
         else if (user.status === 'admin'){
-            res.render('admin_profile', {
-            first_name: user.first_name,
-            fullname: user.fullname,
-            lifespan: user.lifespan,
-            statuss: user.status,
-            address: user.address,
-            hourly_rate: user.hourly_rate,
-            hours_per_week: user.hours_per_week,
+            return res.render('admin_profile', {
+                first_name: user.first_name,
+                fullname: user.fullname,
+                lifespan: user.lifespan,
+                statuss: user.status,
+                address: user.address,
+                hourly_rate: user.hourly_rate,
+                hours_per_week: user.hours_per_week,
             })
         }
+
+        else {
+            return res.status(400).send('Invalid user status');
+        }
+
     } catch (err) {
         return res.status(500).send(`profile error in catch: ${err.name}, ${err.message}`)
     }
-
 })
