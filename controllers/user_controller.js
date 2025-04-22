@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 
-exports.user_list = asyncHandler(async (req, res, next) => {
+exports.user_list = asyncHandler(async (req, res) => {
         const [allEmployees, allAdmins] = await Promise.all([
         User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec(),
         User.find({ status: 'Admin'}).sort({ first_name: 1 }).exec(),
@@ -56,7 +56,7 @@ exports.logout = asyncHandler(async (req, res) => {
 
 // ---------------------- ADMIN PAGES ---------------------- //
 
-exports.home = asyncHandler( async(req,res,next) => {
+exports.home = asyncHandler( async(req, res) => {
     res.render('admin_home', {title: "Home Page"});
 });
 
