@@ -22,13 +22,12 @@ h1 {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 .form-label {
     display: inline;
-    width: 140px;
+    width: 50px;
     text-align: left;
-    left: 200px;
 
 }
 .form-control {
