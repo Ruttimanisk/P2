@@ -8,7 +8,7 @@ const userschedule_controller = require("../controllers/userschedule_controller"
 // tilføj requireAuth til alle når vi har fået login til at fungere
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 
-router.get('/home', user_controller.home)
+router.get('/home', user_controller.employee_home)
 
 // router.get('/schedule', userschedule_controller.schedule)
 

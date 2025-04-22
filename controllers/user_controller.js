@@ -54,9 +54,13 @@ exports.logout = asyncHandler(async (req, res) => {
     }
 });
 
+exports.employee_home = asyncHandler( async(req, res) => {
+    res.render('employee_home', {title: "Home Page"});
+});
+
 // ---------------------- ADMIN PAGES ---------------------- //
 
-exports.home = asyncHandler( async(req, res) => {
+exports.admin_home = asyncHandler( async(req, res) => {
     res.render('admin_home', {title: "Home Page"});
 });
 

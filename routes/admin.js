@@ -11,7 +11,7 @@ const {body} = require("express-validator");
 // router der stå som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
 
-router.get('/home', user_controller.home)
+router.get('/home', user_controller.admin_home)
 
 // router.get('/schedule', userschedule_controller.schedule)
 
