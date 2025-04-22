@@ -20,6 +20,7 @@ h1 {
 }
 .login {
     gap: 10px;
+    position: absolute;
 }
 .form-label {
     width: 50px;
@@ -43,6 +44,5 @@ img {
 
 button {
     position: relative;
-    margin: 6px;
-    left: 80px;
+    margin: auto;
 }
