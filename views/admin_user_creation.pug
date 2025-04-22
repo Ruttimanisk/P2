@@ -9,16 +9,17 @@ html
         link(rel='stylesheet' type='text/css' href='/stylesheets/login.css')
     body
         h1 User Creation
-        p
-            if error
-                .alert.alert-danger= error
+        if errors
+            ul.error-list
+                each err in errors
+                    li.error-item= err.msg
 
         label(for='status') Status:
-            select#status(name='status' form='loginform')
+            select#status(name='status' form='usercreation_form')
                 option(value='Employee') Employee
                 option(value='Admin') Admin
 
-        form(action="/login" method="POST" id="loginform")
+        form(action="/user_creation" method="POST" id="usercreation_form")
             div.form-group
                 label(for='first_name') First Name:
                 input#first_name.form-control(type='text', placeholder='First name (Christian)' name='first_name' required)
