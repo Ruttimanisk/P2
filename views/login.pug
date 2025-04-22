@@ -14,13 +14,13 @@ html
             ul.error-list
                 each err in errors
                     li.error-item= typeof err === 'object' && err.msg ? err.msg : err
+        .box
+            form(action="/login" method="POST")
+                .login
+                    label.form-label(for="username") Username:&nbsp;
+                    input#username.form-control(type="text" name="username" required)
+                .login
+                    label.form-label(for="password") Password:&nbsp;&nbsp;
+                    input#password.form-control(type="password" name="password" required)
 
-        form(action="/login" method="POST")
-            .login
-                label.form-label(for="username") Username:&nbsp;
-                input#username.form-control(type="text" name="username" required)
-            .login
-                label.form-label(for="password") Password:&nbsp;&nbsp;
-                input#password.form-control(type="password" name="password" required)
-
-            button.btn.btn-primary(type="submit") Log In
+                button.btn.btn-primary(type="submit") Log In
