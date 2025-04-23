@@ -78,7 +78,6 @@ router.post(
             .trim()
             .isLength({ min: 1 })
             .escape(),
-        body("date_of_death").escape(),
         body("address").escape(),
         body("hours_per_week", "hours per week must not be empty.")
             .trim()

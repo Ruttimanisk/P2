@@ -11,7 +11,6 @@ h1 {
     margin-bottom: 20px;
     transform: translateY(-100px);
 }
-
 .box {
     width: 300px;
     height: 200px;
@@ -44,7 +43,6 @@ button {
     left: 78px;
     margin: 6px;
 }
-
 img {
     width: 15%;
     height: 400px;
