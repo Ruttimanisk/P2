@@ -1,0 +1,22 @@
+extends layout
+
+block content
+    h1 Vagtplan
+
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css')
+    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js')
+
+    div#calendar(style="max-width: 900px; margin: 40px auto;")
+
+    script.
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                allDaySlot: false,
+                slotMinTime: "07:00:00",
+                slotMaxTime: "20:00:00",
+                events: !{events}
+            });
+            calendar.render();
+        });

@@ -35,6 +35,25 @@ app.use('/login', loginRouter);
 app.use('/admin', adminRouter);
 app.use('/employee', employeeRouter);
 
+const { ObjectId } = require('mongodb');
+
+app.get('/calendar', async (req, res) => {
+  const db = mongoose.connection;
+  const collection = db.collection('shifts'); // Tilpas til din samling
+  const shifts = await collection.find().toArray();
+
+  // Eksempel: lav dato + tid i ISO-format – husk at din database skal have en "date" eller "day" felt!
+  const events = shifts.map(shift => {
+    const day = shift.day || "2024-04-08"; // midlertidig fallback
+    return {
+      title: shift.employee,
+      start: `${day}T${shift.start}`,
+      end: `${day}T${shift.end}`,
+    };
+  });
+
+  res.render('calendar', { events: JSON.stringify(events) });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
