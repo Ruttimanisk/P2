@@ -52,6 +52,7 @@ app.get('/calendar', async (req, res) => {
     };
   });
 
+
   res.render('calendar', { events: JSON.stringify(events) });
 });
 
