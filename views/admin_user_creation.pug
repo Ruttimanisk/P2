@@ -25,6 +25,11 @@ block content
             form(action="/user_creation" method="POST" id="usercreation_form")
                 .creation-form
                     .form-group
+                        label.form-label(for='status') Status:
+                            select#status(name='status')
+                                option(value='Employee') Employee
+                                option(value='Admin') Admin
+                    .form-group
                         label.form-label(for='first_name') First Name:
                         input#first_name.form-control(type='text', placeholder='First name (Christian)' name='first_name' required)
                     .form-group
