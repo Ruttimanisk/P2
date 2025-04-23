@@ -14,12 +14,13 @@ h1 {
     border: 2px solid blue;
     padding: 20px;
     margin: 20px;
-    position: relative;
-    left: 400px;
-    bottom: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .login {
     gap: 10px;
+    position: relative;
 }
 .form-label {
     width: 50px;
