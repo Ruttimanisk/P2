@@ -6,7 +6,7 @@ h1 {
 
 .box {
     width: 300px;
-    height: 150px;
+    height: 200px;
     background-color: lightblue;
     border: 2px solid blue;
     padding: 20px;
@@ -15,6 +15,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+
 }
 .login {
     gap: 10px;
@@ -24,6 +25,7 @@ h1 {
     width: 50px;
     text-align: left;
     left: 20px;
+    font-size: 17px;
 }
 .form-control {
     width: 170px;
