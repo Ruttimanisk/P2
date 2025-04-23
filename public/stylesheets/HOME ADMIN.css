@@ -1,11 +1,6 @@
 p {
     color: darkred;
 }
-h1 {
-    position: relative;
-    left: 540px;
-    bottom: 150px;
-}
 .login {
     color: blue;
 }
