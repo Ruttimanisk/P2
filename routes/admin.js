@@ -8,7 +8,7 @@ const {body} = require("express-validator");
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
-// router der stå som kommentare er ting der ikke er lavet en controller funktion til endnu.
+// router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
 router.get('/calendar', function(req, res, next) {
         res.render('calendar');
@@ -94,10 +94,7 @@ router.post(
             .trim()
             .isLength({ min: 1 })
             .escape(),
-        body("status", "Status must not be empty.")
-            .trim()
-            .isLength({ min: 1 })
-            .escape(),
+        body("status").escape(),
         body("contract").escape(),
         body('username')
             .trim()
