@@ -15,11 +15,12 @@ block content
                     li.error-item= err.msg
 
         .box
-            .form-group
-                label.form-label(for='status') Status:
-                    select#status(name='status' form='usercreation_form')
-                        option(value='Employee') Employee
-                        option(value='Admin') Admin
+            .creation-form
+                .form-group
+                    label.form-label(for='status') Status:
+                        select#status(name='status' form='usercreation_form')
+                            option(value='Employee') Employee
+                            option(value='Admin') Admin
 
             form(action="/user_creation" method="POST" id="usercreation_form")
                 .creation-form
