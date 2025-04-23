@@ -42,3 +42,9 @@
     padding: 6px 8px;
     font-size: 16px;
 }
+
+.user-creation-wrapper button {
+    position: relative;
+    left: 78px;
+    margin: 6px;
+}
