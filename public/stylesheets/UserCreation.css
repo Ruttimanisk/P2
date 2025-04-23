@@ -36,11 +36,6 @@
     border: 1px solid #aaa;
     border-radius: 4px;
 }
-.user-creation-wrapper #status {
-    flex: 1;
-    padding: 6px 8px;
-    font-size: 16px;
-}
 
 .user-creation-wrapper #contract {
     flex: 1;
