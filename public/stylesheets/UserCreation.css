@@ -36,13 +36,11 @@
     border: 1px solid #aaa;
     border-radius: 4px;
 }
-
 .user-creation-wrapper #contract {
     flex: 1;
     padding: 6px 8px;
     font-size: 16px;
 }
-
 .user-creation-wrapper button {
     position: relative;
     left: 83px;

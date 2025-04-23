@@ -74,7 +74,7 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
         first_name: req.body.first_name,
         family_name: req.body.family_name,
         date_of_birth: req.body.date_of_birth,
-        date_of_death: req.body.date_of_death,
+        date_of_death: undefined,
         address: req.body.address,
         hours_per_week: req.body.hours_per_week,
         hourly_rate: req.body.hourly_rate,
@@ -184,7 +184,7 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
             return res.render('employee_profile', {
                 first_name: user.first_name,
                 fullname: user.fullname,
-                lifespan: user.lifespan,
+                date_of_birth: user.date_of_birth,
                 statuss: user.status,
                 address: user.address,
                 hourly_rate: user.hourly_rate,
@@ -196,7 +196,7 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
             return res.render('admin_profile', {
                 first_name: user.first_name,
                 fullname: user.fullname,
-                lifespan: user.lifespan,
+                date_of_birth: user.date_of_birth,
                 statuss: user.status,
                 address: user.address,
                 hourly_rate: user.hourly_rate,
