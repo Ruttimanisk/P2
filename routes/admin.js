@@ -10,9 +10,7 @@ const {body} = require("express-validator");
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
-router.get('/calendar', function(req, res, next) {
-        res.render('calendar');
-});
+router.get('/calendar', (req, res) => { res.render('calendar') })
 
 router.get('/home', user_controller.admin_home)
 
