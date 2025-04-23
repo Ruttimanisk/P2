@@ -17,7 +17,7 @@ block content
         .box
             .form-group
                 label.form-label(for='status') Status:
-                    select#status.contract(name='status' form='usercreation_form')
+                    select#status(name='status' form='usercreation_form')
                         option(value='Employee') Employee
                         option(value='Admin') Admin
 
@@ -48,13 +48,13 @@ block content
                         label.form-label(for='role') Role:
                         input#role.form-control(type='text', placeholder='Your title' name='role' required)
                     .form-group
-                        label.form-label(for='contract') Contract:
-                        input#contract.contract(type='file', name='contract')
+                        label.form-label(for='contract') Contract:&nbsp;&nbsp;
+                        input#contract(type='file', name='contract')
                     .form-group
-                        label.form-label(for="username") Username
+                        label.form-label(for="username") Username:
                         input#username.form-control(type="text" name="username" required)
                     .form-group
-                        label.form-label(for="password") Password
+                        label.form-label(for="password") Password:
                         input#password.form-control(type='password', name='password' required)
                     .form-group
                         button.btn.btn-primary(type='submit') Submit
