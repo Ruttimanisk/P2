@@ -1,41 +1,54 @@
-.user-creation-wrapper {
+body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     margin: 0;
-    font-family: sans-serif;
 }
-.user-creation-wrapper h1 {
+h1 {
     text-align: center;
     margin-bottom: 20px;
+    transform: translateY(-100px);
 }
-.user-creation-wrapper .box {
-    width: 320px;
-    border: 2px solid black;
+.box {
+    width: 300px;
+    height: 200px;
+    background-color: lightblue;
+    border: 2px solid blue;
     padding: 20px;
-    border-radius: 8px;
-}
-.user-creation-wrapper .form-group {
+    margin: 20px;
     display: flex;
     align-items: center;
-    margin: 10px 0;
+    justify-content: center;
+    transform: translateY(-100px);
 }
-.user-creation-wrapper .form-label {
-    width: 90px;
-    font-size: 17px;
+.login {
+    gap: 10px;
+    position: relative;
+}
+.form-label {
+    width: 50px;
     text-align: left;
+    left: 20px;
+    font-size: 17px;
 }
-.user-creation-wrapper .form-control {
-    flex: 1;
-    padding: 6px 8px;
-    font-size: 16px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
+.form-control {
+    width: 170px;
+    margin: 6px;
+    position: relative;
 }
-.user-creation-wrapper .contract {
-    flex: 1;
-    padding: 6px 8px;
-    font-size: 16px;
+button {
+    position: relative;
+    left: 78px;
+    margin: 6px;
+}
+img {
+    width: 15%;
+    height: 400px;
+    position: relative;
+}
+.slogan {
+    position: relative;
+    left: 17px;
 }
