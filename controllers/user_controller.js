@@ -184,7 +184,7 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
             return res.render('employee_profile', {
                 first_name: user.first_name,
                 fullname: user.fullname,
-                date_of_birth: user.date_of_birth,
+                lifespan: user.lifespan,
                 statuss: user.status,
                 address: user.address,
                 hourly_rate: user.hourly_rate,
