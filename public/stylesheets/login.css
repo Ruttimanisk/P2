@@ -41,8 +41,7 @@ h1 {
 }
 button {
     position: relative;
-    margin: 6px;
-    left: 70px;
+    margin: 6px 0;
 }
 
 img {
