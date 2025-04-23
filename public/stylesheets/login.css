@@ -21,6 +21,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    transform: translateY(-50px);
 
 }
 .login {
