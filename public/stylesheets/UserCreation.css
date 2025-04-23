@@ -34,3 +34,8 @@ h1 {
     border: 1px solid #aaa;
     border-radius: 4px;
 }
+.contract {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 16px;
+}

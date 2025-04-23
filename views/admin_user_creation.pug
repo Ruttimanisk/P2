@@ -6,7 +6,8 @@ block content
         title User Creation
         meta(name='viewport' content='width=device-width, initial-scale=1')
         link(rel='stylesheet' type='text/css' href='/stylesheets/UserCreation.css')
-    body
+
+    .user-creation-wrapper
         h1 User Creation
         if errors
             ul.error-list
@@ -48,7 +49,7 @@ block content
                         input#role.form-control(type='text', placeholder='Your title' name='role' required)
                     .form-group
                         label.form-label(for='contract') Contract:
-                        input#contract.form-control(type='file', name='contract')
+                        input#contract.contract(type='file', name='contract')
                     .form-group
                         label.form-label(for="username") Username
                         input#username.form-control(type="text" name="username" required)
