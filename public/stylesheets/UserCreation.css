@@ -10,12 +10,14 @@
 .user-creation-wrapper h1 {
     text-align: center;
     margin-bottom: 20px;
+    transform: translateY(-150px);
 }
 .user-creation-wrapper .box {
     width: 320px;
     border: 2px solid black;
     padding: 20px;
     border-radius: 8px;
+    transform: translateY(-150px);
 }
 .user-creation-wrapper .form-group {
     display: flex;
@@ -40,8 +42,6 @@
     font-size: 16px;
     height: 38px;
     border: none;
-    background-color: #fff;
-    appearance: none;
     box-sizing: border-box;
 }
 
