@@ -80,7 +80,7 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
         hourly_rate: req.body.hourly_rate,
         role: req.body.role,
         status: req.body.status,
-        contract: req.body.contract,
+        contract: req.file ? req.file.path : undefined,
         username: req.body.username,
         password: req.body.password,
         });
