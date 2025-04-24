@@ -13,18 +13,15 @@ const {body} = require("express-validator");
 router.get('/calendar', (req, res) => {
         const events = [
                 {
-                        title: 'Møde med teamet',
-                        start: '2025-04-25T10:00:00',
-                        end: '2025-04-25T12:00:00'
-                },
-                {
-                        title: 'Frokost',
-                        start: '2025-04-26T12:00:00',
-                        end: '2025-04-26T13:00:00'
+                        title: 'Test Event',
+                        start: '2025-04-24T10:00:00',
+                        end: '2025-04-24T11:00:00'
                 }
         ];
 
-        res.render('calendar', { events: JSON.stringify(events) });
+        res.render('calendar', {
+                events: JSON.stringify(events)
+        });
 });
 
 
