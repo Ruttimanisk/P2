@@ -5,9 +5,6 @@ const user_controller = require("../controllers/user_controller");
 const userschedule_controller = require("../controllers/userschedule_controller");
 const {body} = require("express-validator");
 
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
-
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
@@ -69,7 +66,6 @@ router.get('/user_creation', (req, res) => { res.render('admin_user_creation') }
 
 router.post(
     '/user_creation',
-    upload.single('contract'),
     [
         body("first_name", "First name must not be empty.")
             .trim()
