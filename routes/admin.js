@@ -20,9 +20,10 @@ router.get('/calendar', (req, res) => {
         ];
 
         res.render('calendar', {
-                events: JSON.stringify(events)  // 👈 vigtigt at den ikke er tom
+                events: JSON.stringify(events)
         });
 });
+
 
 
 

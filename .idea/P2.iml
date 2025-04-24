@@ -16,5 +16,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="LocalLibrary" />
     <orderEntry type="library" name="Python 3.12 (P2) interpreter library" level="application" />
+    <orderEntry type="library" name="fullcalendar" level="application" />
   </component>
 </module>
