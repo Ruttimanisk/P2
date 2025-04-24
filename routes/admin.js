@@ -19,7 +19,9 @@ app.get('/calendar', (req, res) => {
                 }
         ];
 
+        console.log("📦 Events before render:", events);
         res.render('calendar', { events: JSON.stringify(events) });
+
 });
 
 
