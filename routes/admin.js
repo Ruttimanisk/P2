@@ -92,8 +92,8 @@ router.post(
             .trim()
             .isLength({ min: 1 })
             .escape(),
-        body("status").escape(),
         body("contract").escape(),
+        body("status").escape(),
         body('username')
             .trim()
             .notEmpty().withMessage('Username is required')
@@ -104,7 +104,6 @@ router.post(
     ],
     user_controller.admin_user_creation
 );
-
 
 
 module.exports = router;

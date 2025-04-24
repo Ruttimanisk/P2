@@ -15,7 +15,7 @@ block content
                     li.error-item= err.msg
 
         .box
-            form(action="/user_creation" method="POST" id="usercreation_form")
+            form(action="/admin/user_creation" method="POST")
                 .creation-form
                     .form-group
                         label.form-label(for='status') Status:
@@ -44,8 +44,8 @@ block content
                         label.form-label(for='role') Role:
                         input#role.form-control(type='text', placeholder='Your title' name='role' required)
                     .form-group
-                        label.form-label(for='contract') Contract:&nbsp;&nbsp;&nbsp;
-                        input#contract(type='file', name='contract')
+                        label.form-label(for='contract') Contract:
+                        input#contract.form-control(type='text', name='contract' required)
                     .form-group
                         label.form-label(for="username") Username:
                         input#username.form-control(type="text" name="username" required)
