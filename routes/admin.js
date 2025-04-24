@@ -19,11 +19,9 @@ router.get('/calendar', (req, res) => {
                 }
         ];
 
-        // Log JSON-strengen til konsollen
-        console.log("Events JSON: ", JSON.stringify(events));
-
+        // Her sørger vi for at sende JSON-strengen korrekt til Pug
         res.render('calendar', {
-                events: events // Ingen grund til at ændre her, da Pug håndterer JSON korrekt
+                events: JSON.stringify(events) // JSON.stringify() gør dataene til en streng
         });
 });
 

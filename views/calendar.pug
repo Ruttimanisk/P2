@@ -1,16 +1,16 @@
-exextends layout_admin
+extends layout_admin
 
 block content
     h1 Vagtplan
 
-    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css')
-    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js')
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js')
+    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js')
 
     div#calendar(style="max-width: 900px; margin: 40px auto;")
 
     script.
         // 👇 Inject events som string og parse det korrekt
-        const events = JSON.parse(`!{JSON.stringify(events)}`);
+        const events = JSON.parse(`!{events}`);
 
     script.
         document.addEventListener('DOMContentLoaded', function () {
