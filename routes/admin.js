@@ -19,8 +19,11 @@ router.get('/calendar', (req, res) => {
                 }
         ];
 
+        // Log JSON-strengen til konsollen
+        console.log("Events JSON: ", JSON.stringify(events));
+
         res.render('calendar', {
-                events: JSON.stringify(events).replace(/\\/g, '\\\\').replace(/`/g, '\\`')
+                events: events // Ingen grund til at ændre her, da Pug håndterer JSON korrekt
         });
 });
 
