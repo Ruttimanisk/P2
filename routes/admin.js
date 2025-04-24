@@ -10,18 +10,29 @@ const {body} = require("express-validator");
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
-app.get('/calendar', (req, res) => {
-        const events = [
-                {
-                        title: 'Test Vagt',
-                        start: '2025-04-24T10:00:00',
-                        end: '2025-04-24T11:00:00'
-                }
-        ];
+app.get('/calendar', async (req, res) => {
+        const db = mongoose.connection;
+        const collection = db.collection('shifts'); // Tilpas til din samling
+        const shifts = await collection.find().toArray();
 
-        console.log("📦 Events before render:", events);
+        // Log dataen for at sikre, at den er korrekt
+        console.log("📦 Shifts data from DB:", shifts);
+
+        const events = shifts.map(shift => {
+                const day = shift.day || "2024-04-08"; // midlertidig fallback
+                return {
+                        title: shift.employee,
+                        start: `${day}T${shift.start}`,
+                        end: `${day}T${shift.end}`,
+                };
+        });
+
+        // Log de events, der skal sendes til view
+        console.log("📦 Events to send to calendar.pug:", events);
+
         res.render('calendar', { events: JSON.stringify(events) });
 });
+
 
 
 
