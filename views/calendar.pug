@@ -1,12 +1,13 @@
-extends layout_admin
+extends layout
 
 block content
-    head
-        link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css')
-        script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js')
     h1 Vagtplan
 
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css')
+    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js')
+
     div#calendar(style="max-width: 900px; margin: 40px auto;")
+
 
     script.
         document.addEventListener('DOMContentLoaded', function () {
@@ -20,3 +21,4 @@ block content
             });
             calendar.render();
         });
+
