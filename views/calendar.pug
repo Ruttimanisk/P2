@@ -3,14 +3,12 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // FullCalendar JS (inkluderer styling internt)
     script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js')
 
     div#calendar(style="max-width: 900px; margin: 40px auto;")
 
     script.
-        // Inject events fra server
-        const events = !{events};
+        const events = JSON.parse('!{events}'); // ✅ korrekt indsprøjtning
 
     script.
         document.addEventListener('DOMContentLoaded', function () {
