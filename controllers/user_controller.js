@@ -86,7 +86,7 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
         });
 
         await user.save();
-        res.redirect(`/home`)
+        res.redirect(`/admin/home`)
     }
 });
 
