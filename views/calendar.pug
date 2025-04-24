@@ -3,31 +3,26 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js')
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css')
+    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js')
 
     div#calendar(style="max-width: 900px; margin: 40px auto;")
 
     script.
-        let events = [];
+        console.log("💬 Events JSON string:", `!{events}`);
         try {
-            const raw = '!{events}';
-            console.log("💬 Events JSON string:", raw);
-            events = JSON.parse(raw);
-        } catch (e) {
-            console.error("❌ Fejl i JSON.parse:", e);
-        }
-
-
-
-    script.
-        document.addEventListener('DOMContentLoaded', function () {
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
-                allDaySlot: false,
-                slotMinTime: "07:00:00",
-                slotMaxTime: "20:00:00",
-                events: events
+            const events = JSON.parse(`!{events}`);
+            document.addEventListener('DOMContentLoaded', function () {
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'timeGridWeek',
+                    allDaySlot: false,
+                    slotMinTime: "07:00:00",
+                    slotMaxTime: "20:00:00",
+                    events: events
+                });
+                calendar.render();
             });
-            calendar.render();
-        });
+        } catch (err) {
+            console.error("❌ Fejl i JSON.parse:", err);
+        }
