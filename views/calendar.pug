@@ -1,31 +1,23 @@
-extends layout_admin
+extends layout
 
 block content
     h1 Vagtplan
 
-    #calendar(style="margin-top: 20px")
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css')
+    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js')
 
-block scripts
+    div#calendar(style="max-width: 900px; margin: 40px auto;")
+
+
     script.
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
-
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'da',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                events: [
-                    {
-                        title: 'Eksempelvagt',
-                        start: '2025-04-18T10:00:00',
-                        end: '2025-04-18T16:00:00'
-                    }
-                ]
+                initialView: 'timeGridWeek',
+                allDaySlot: false,
+                slotMinTime: "07:00:00",
+                slotMaxTime: "20:00:00",
+                events: !{events}
             });
-
             calendar.render();
         });
