@@ -66,6 +66,7 @@ router.get('/user_creation', (req, res) => { res.render('admin_user_creation') }
 
 router.post(
     '/user_creation',
+    upload.single('contract'),
     [
         body("first_name", "First name must not be empty.")
             .trim()
