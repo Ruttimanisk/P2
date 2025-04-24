@@ -6,11 +6,17 @@ html
         meta(name='viewport' content='width=device-width, initial-scale=1')
         link(rel='stylesheet' href='/stylesheets/HOME%20ADMIN.css')
         link(rel='stylesheet' href='/stylesheets/Shared.css')
+
+        link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css')
+
+        block head
+
     body
         script.
             function confirmLogout() {
                 return confirm("Are you sure you want to log out?");
             }
+
         .topnav
             a(href='/admin/home') Home
             a(href='/admin/profile') Profile
@@ -19,5 +25,11 @@ html
             a(href='/admin/edit_employee_schedule') Edit Employee Schedule
             a(href='/admin/user_creation') User Creation
             a(href='/login', onclick="return confirmLogout()") Logout
+
         img(src='/images/WFM.webp' alt='WFM Logo')
-    block content
+
+        block content
+
+        script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js')
+
+        block scripts
