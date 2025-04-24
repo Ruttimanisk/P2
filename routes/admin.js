@@ -92,6 +92,7 @@ router.post(
             .trim()
             .isLength({ min: 1 })
             .escape(),
+        body("contract").escape(),
         body("status").escape(),
         body('username')
             .trim()
