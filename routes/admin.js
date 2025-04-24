@@ -10,7 +10,23 @@ const {body} = require("express-validator");
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
-router.get('/calendar', (req, res) => { res.render('calendar') })
+router.get('/calendar', (req, res) => {
+        const events = [
+                {
+                        title: 'Møde med teamet',
+                        start: '2025-04-25T10:00:00',
+                        end: '2025-04-25T12:00:00'
+                },
+                {
+                        title: 'Frokost',
+                        start: '2025-04-26T12:00:00',
+                        end: '2025-04-26T13:00:00'
+                }
+        ];
+
+        res.render('calendar', { events: JSON.stringify(events) });
+});
+
 
 router.get('/home', user_controller.admin_home)
 
