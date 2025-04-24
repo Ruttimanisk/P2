@@ -8,8 +8,15 @@ block content
     div#calendar(style="max-width: 900px; margin: 40px auto;")
 
     script.
-        console.log("Events JSON string: ", '!{events}');
-        const events = JSON.parse('!{events}');
+        let events = [];
+        try {
+            const raw = '!{events}';
+            console.log("💬 Events JSON string:", raw);
+            events = JSON.parse(raw);
+        } catch (e) {
+            console.error("❌ Fejl i JSON.parse:", e);
+        }
+
 
 
     script.

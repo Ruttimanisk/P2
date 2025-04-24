@@ -39,22 +39,25 @@ const { ObjectId } = require('mongodb');
 
 app.get('/calendar', async (req, res) => {
   const db = mongoose.connection;
-  const collection = db.collection('shifts'); // Tilpas til din samling
+  const collection = db.collection('shifts');
   const shifts = await collection.find().toArray();
 
-  // Eksempel: lav dato + tid i ISO-format – husk at din database skal have en "date" eller "day" felt!
+  console.log("🔍 Found shifts:", shifts); // ← tilføj denne
+
   const events = shifts.map(shift => {
-    const day = shift.day || "2024-04-08"; // midlertidig fallback
+    const day = shift.day || "2024-04-08"; // fallback til dummy-dato
     return {
-      title: shift.employee,
+      title: shift.employee || "Ukendt", // fallback
       start: `${day}T${shift.start}`,
       end: `${day}T${shift.end}`,
     };
   });
 
+  console.log("📆 Parsed events:", events); // ← og denne
 
   res.render('calendar', { events: JSON.stringify(events) });
 });
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
