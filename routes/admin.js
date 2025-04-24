@@ -20,7 +20,7 @@ router.get('/calendar', (req, res) => {
         ];
 
         res.render('calendar', {
-                events: JSON.stringify(events)
+                events: JSON.stringify(events).replace(/\\/g, '\\\\').replace(/`/g, '\\`')
         });
 });
 
