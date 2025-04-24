@@ -19,11 +19,11 @@ router.get('/calendar', (req, res) => {
                 }
         ];
 
-        // Her sørger vi for at sende JSON-strengen korrekt til Pug
         res.render('calendar', {
-                events: JSON.stringify(events) // JSON.stringify() gør dataene til en streng
+                events: JSON.stringify(events)  // 👈 vigtigt at den ikke er tom
         });
 });
+
 
 
 router.get('/home', user_controller.admin_home)

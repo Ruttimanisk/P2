@@ -3,19 +3,19 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // Link til FullCalendar JS
-    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/main.min.js')
+    // FullCalendar JS (inkluderer styling internt)
+    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js')
 
     div#calendar(style="max-width: 900px; margin: 40px auto;")
 
     script.
-        // 👇 Inject events som string og parse det korrekt
-        const events = JSON.parse(`!{events}`);
+        // Inject events fra server
+        const events = !{events};
 
     script.
         document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
                 allDaySlot: false,
                 slotMinTime: "07:00:00",
@@ -24,4 +24,3 @@ block content
             });
             calendar.render();
         });
-
