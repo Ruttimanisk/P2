@@ -93,7 +93,6 @@ router.post(
             .isLength({ min: 1 })
             .escape(),
         body("status").escape(),
-        body("contract").escape(),
         body('username')
             .trim()
             .notEmpty().withMessage('Username is required')
