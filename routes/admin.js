@@ -11,10 +11,10 @@ const requireAuth = require('../middleware/auth');
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
-
+// burde måske gøre det her i controller
 router.get('/calendar', async (req, res) => {
-        const db = mongoose.connection;
-        const collection = db.collection('shifts'); // Tilpas til din samling
+        const db = mongoose.connection; // mangler require mongoose, men server crashede da jeg prøvede at tilføje det.
+        const collection = db.collection('Schedule'); // Mads: ændret fra "shifts" til "Schedule" så det matcher navn i database.
         const shifts = await collection.find().toArray();
 
         // Log dataen for at sikre, at den er korrekt
