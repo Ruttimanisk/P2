@@ -12,8 +12,6 @@ p {
     <!-- border: 2px solid blue; -->
     padding: 10px;
     margin: 10px;
-
-    bottom: 15px;
 }
 .login {
     position: relative;
@@ -28,6 +26,7 @@ img {
     width: auto;
     height: 128px;
     display: block;
+    padding: 10px;
 }
 body {
     margin: 0;
