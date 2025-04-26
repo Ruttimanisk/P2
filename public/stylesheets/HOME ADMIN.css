@@ -11,6 +11,7 @@ p {
     background-color: greenyellow;
     <!-- border: 2px solid blue; -->
     padding: 10px;
+    transform: translateY(-10px);
 }
 .login {
     position: relative;
@@ -26,6 +27,7 @@ img {
     height: 128px;
     display: block;
     padding: 10px;
+    margin: 10px;
 }
 body {
     margin: 0;
@@ -65,7 +67,7 @@ h2 {
 }
 
 .sidebar {
-    width: 148px;
+    width: 158px;
     float: left;
 }
 
