@@ -15,7 +15,7 @@ exports.requireAuth = async (req, res, next) => {
         if (!user) {
             return res.status(401).send('User not found');
         }
-
+        /*
         if (path.startsWith('/admin') && user.status.toLowerCase() !== 'admin') {
             return res.status(403).send('Access denied: Admins only');
         }
@@ -23,7 +23,7 @@ exports.requireAuth = async (req, res, next) => {
         if (path.startsWith('/employee') && user.status.toLowerCase() !== 'employee') {
             return res.status(403).send('Access denied: Employees only');
         }
-
+        */
         req.user = user;
         next();
     } catch (err) {
