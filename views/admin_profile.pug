@@ -3,42 +3,28 @@ extends layout_admin
 block content
     head
     link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
-    .msgbox
-        p.Message_box_header(style='text-align: center') Message box
-        p.Messages(style='text-align: center') You have 3 pending requests
+    .sidebar
+        .msgbox
+            p.Message_box_header(style='text-align: center') Message box
+            p.Messages(style='text-align: center') You have 3 pending requests
 
-    //
-        table#Profile
+    .main-content
+        table#ProfileMads
             tr
-                td Name
-                td BOSS
+                th Name:
+                td #{fullname}
             tr
-                td Address
-                td CEOalle 1
+                th Date of Birth:
+                td #{lifespan}
             tr
-                td Base Salary
-                td MONEYkr/hour
+                th Status:
+                td #{statuss}
             tr
-                td Weekly hours
-                td -1
-
-    // table using database:
-    table#ProfileMads
-        tr
-            th Name:
-            td #{fullname}
-        tr
-            th Date of Birth:
-            td #{lifespan}
-        tr
-            th Status:
-            td #{statuss}
-        tr
-            th Address:
-            td #{address}
-        tr
-            th Hourly Rate:
-            td #{hourly_rate}kr/hour
-        tr
-            th Hours per Week:
-            td #{hours_per_week}
+                th Address:
+                td #{address}
+            tr
+                th Hourly Rate:
+                td #{hourly_rate}kr/hour
+            tr
+                th Hours per Week:
+                td #{hours_per_week}

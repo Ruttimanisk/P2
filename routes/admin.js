@@ -14,7 +14,7 @@ const mongoose = require('mongoose')
 
 // burde måske gøre det her i controller
 router.get('/calendar', async (req, res) => {
-        const db = mongoose.connection; // mangler require mongoose, men server crashede da jeg prøvede at tilføje det.
+        const db = mongoose.connection; // Mads: Tilføjet require mongoose.
         const collection = db.collection('Schedule'); // Mads: ændret fra "shifts" til "Schedule" så det matcher navn i database.
         const shifts = await collection.find().toArray();
 

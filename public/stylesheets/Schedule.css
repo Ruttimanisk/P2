@@ -64,3 +64,14 @@ tr:nth-child(even) {
 #tableEmployees {
 
 }
+
+.sidebar {
+    width: 250px;
+    float: left;
+    min-height: 100vh;
+}
+
+.main-content {
+    margin-left: 270px;
+    padding: 10px;
+}
