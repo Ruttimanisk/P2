@@ -3,47 +3,31 @@ extends layout_employee
 block content
     head
     link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
-    .msgbox
-        p.Message_box_header(style='text-align: center') Message box
-        p.Messages(style='text-align: center') You have 3 pending requests
 
-    //
-        table#Profile
-            tr
-                th Name
-                td #{first_name}
-            tr
-                th Status
-                td= status
-            tr
-                th Address
-                td ordbilndvej 1
-            tr
-                th Base Salary
-                td 350kr/hour
-            tr
-                th Weekly hours
-                td 37
+    .sidebar
+        .msgbox
+            p.Message_box_header(style='text-align: center') Message box
+            p.Messages(style='text-align: center') You have 3 pending requests
 
-    // table using database:
-    table#ProfileMads
-        tr
-            th Name:
-            td #{fullname}
-        tr
-            th Date of Birth:
-            td #{lifespan}
-        tr
-            th Status:
-            td #{statuss}
-        tr
-            th Address:
-            td #{address}
-        tr
-            th Hourly Rate:
-            td #{hourly_rate}kr/hour
-        tr
-            th Hours per Week:
-            td #{hours_per_week}
+    .main-content
+        table#ProfileMads
+            tr
+                th Name:
+                td #{fullname}
+            tr
+                th Date of Birth:
+                td #{lifespan}
+            tr
+                th Status:
+                td #{statuss}
+            tr
+                th Address:
+                td #{address}
+            tr
+                th Hourly Rate:
+                td #{hourly_rate}kr/hour
+            tr
+                th Hours per Week:
+                td #{hours_per_week}
 
 

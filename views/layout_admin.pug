@@ -26,8 +26,9 @@ html
             a(href='/admin/user_creation') User Creation
             a(href='/login', onclick="return confirmLogout()") Logout
 
-        .sidebar
-            img(src='/images/WFM.webp' alt='WFM Logo')
+        .sidebar-container
+            .sidebar
+                img(src='/images/WFM.webp' alt='WFM Logo')
 
         block content
 

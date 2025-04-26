@@ -30,6 +30,7 @@ img {
     width: auto;
     height: 128px;
     padding: 10px;
+    display: block;
 }
 body {
     margin: 0;
@@ -70,11 +71,16 @@ h2 {
 
 .sidebar {
     width: 200px;
-    float: left;
-    min-height: 100vh;
 }
 
 .main-content {
     margin-left: 100px;
     padding: 10px;
+}
+
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    float: left;
 }
