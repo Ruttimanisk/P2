@@ -1,5 +1,3 @@
-// tilføj check for user status, afhængig af path. fx /admin/ eller /employee/
-
 const User = require('../models/user');
 
 exports.requireAuth = async (req, res, next) => {
