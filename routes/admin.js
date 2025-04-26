@@ -5,6 +5,7 @@ const user_controller = require("../controllers/user_controller");
 const userschedule_controller = require("../controllers/userschedule_controller");
 const {body} = require("express-validator");
 const requireAuth = require('../middleware/auth');
+const mongoose = require('mongoose')
 
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
