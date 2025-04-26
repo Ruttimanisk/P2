@@ -26,8 +26,8 @@ p {
     margin-left: 10px
 }
 img {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 128px;
     display: block;
 }
 body {
@@ -72,7 +72,7 @@ h2 {
 }
 
 .main-content {
-    margin-left: 100px;
+    margin-left: 150px;
     padding: 10px;
 }
 
