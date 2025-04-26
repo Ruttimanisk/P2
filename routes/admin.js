@@ -11,7 +11,7 @@ const requireAuth = require('../middleware/auth');
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
-app.get('/calendar', async (req, res) => {
+router.get('/calendar', async (req, res) => {
         const db = mongoose.connection;
         const collection = db.collection('shifts'); // Tilpas til din samling
         const shifts = await collection.find().toArray();
