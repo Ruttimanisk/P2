@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require('mongoose')
 
 const user_controller = require("../controllers/user_controller");
 const userschedule_controller = require("../controllers/userschedule_controller");
@@ -92,7 +93,7 @@ router.post('/admin_edit_employee_schedule/:username', (req, res) => {
 
 // router.get('/employee_list', user_controller.admin_employee_list)
 
-router.get('/user_creation', (req, res) => { res.render('admin_user_creation') })
+router.get('/user_creation', requireAuth, (req, res) => { res.render('admin_user_creation') })
 
 router.post(
     '/user_creation',
