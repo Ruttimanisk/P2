@@ -4,7 +4,7 @@ const User = require('../models/user');
 
 exports.requireAuth = async (req, res, next) => {
     const userId = req.cookies.userId;
-    const path = req.path
+    const path = req.path.toLowerCase()
 
     if (!userId) {
         return res.status(401).send('Not logged in');
