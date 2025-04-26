@@ -26,11 +26,13 @@ html
             a(href='/admin/user_creation') User Creation
             a(href='/login', onclick="return confirmLogout()") Logout
 
-        .sidebar-container
-            .sidebar
-                img(src='/images/WFM.webp' alt='WFM Logo')
+        .sidebar
+            img(src='/images/WFM.webp' alt='WFM Logo')
+            .msgbox
+                p.Message_box_header(style='text-align: center') Message box
+                p.Messages(style='text-align: center') You have 3 pending requests
 
-            block content
+        block content
 
         script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js')
 

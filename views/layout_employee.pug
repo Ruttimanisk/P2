@@ -17,8 +17,10 @@ html
             a(href='/employee/schedule') Schedule
             a(href="/login", onclick= "confirmLogout()") Logout
 
-        .sidebar-container
-            .sidebar
-                img(src='/images/WFM.webp' alt='WFM Logo')
+        .sidebar
+            img(src='/images/WFM.webp' alt='WFM Logo')
+            .msgbox
+                p.Message_box_header(style='text-align: center') Message box
+                p.Messages(style='text-align: center') You have 3 pending requests
 
         block content
