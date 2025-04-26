@@ -37,6 +37,7 @@ app.use('/employee', employeeRouter);
 
 const { ObjectId } = require('mongodb');
 
+/* -- Burde nok ikke være i app.js? --
 app.get('/calendar', async (req, res) => {
   const db = mongoose.connection;
   const collection = db.collection('shifts');
@@ -57,7 +58,7 @@ app.get('/calendar', async (req, res) => {
 
   res.render('calendar', { events: JSON.stringify(events) });
 });
-
+*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
