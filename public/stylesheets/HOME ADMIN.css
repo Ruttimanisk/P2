@@ -70,12 +70,11 @@ h2 {
 }
 
 .sidebar {
-    width: 128px;
-    float: left;
+    width: 150px;
     min-height: 100vh;
 }
 
 .main-content {
-    margin-left: 50px;
+    margin-left: 100px;
     padding: 10px;
 }
