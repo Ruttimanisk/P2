@@ -4,23 +4,22 @@ block content
     head
     link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
 
-    .main-content
-        table#ProfileMads
-            tr
-                th Name:
-                td #{fullname}
-            tr
-                th Date of Birth:
-                td #{lifespan}
-            tr
-                th Status:
-                td #{statuss}
-            tr
-                th Address:
-                td #{address}
-            tr
-                th Hourly Rate:
-                td #{hourly_rate}kr/hour
-            tr
-                th Hours per Week:
-                td #{hours_per_week}
+    table(style="padding: 10px;")#Profile
+        tr
+            th Name:
+            td #{fullname}
+        tr
+            th Date of Birth:
+            td #{lifespan}
+        tr
+            th Status:
+            td #{statuss}
+        tr
+            th Address:
+            td #{address}
+        tr
+            th Hourly Rate:
+            td #{hourly_rate}kr/hour
+        tr
+            th Hours per Week:
+            td #{hours_per_week}
