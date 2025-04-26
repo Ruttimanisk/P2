@@ -68,3 +68,14 @@ h2 {
     left: 163px;
     bottom: 380px;
 }
+
+.sidebar {
+    width: 128px;
+    float: left;
+    min-height: 100vh;
+}
+
+.main-content {
+    margin-left: 50px;
+    padding: 10px;
+}
