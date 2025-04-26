@@ -4,6 +4,7 @@ const router = express.Router();
 const user_controller = require("../controllers/user_controller");
 const userschedule_controller = require("../controllers/userschedule_controller");
 const {body} = require("express-validator");
+const requireAuth = require('../middleware/auth');
 
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
@@ -91,7 +92,7 @@ router.post('/admin_edit_employee_schedule/:username', (req, res) => {
 
 // router.get('/employee_list', user_controller.admin_employee_list)
 
-router.get('/user_creation', (req, res) => { res.render('admin_user_creation') })
+router.get('/user_creation', requireAuth, (req, res) => { res.render('admin_user_creation') })
 
 router.post(
     '/user_creation',
