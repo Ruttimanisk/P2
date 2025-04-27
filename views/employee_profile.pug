@@ -1,11 +1,18 @@
 extends layout_employee
 
 block content
-    head
-    link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
+    style.
+        #Profile {
+            margin-top: 10px;
+        }
+        #Profile td, #Profile th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
     h1 Profile
 
-    table(style="margin-top: 10px;")#Profile
+    table#Profile
         tr
             th Name:
             td #{fullname}
