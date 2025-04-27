@@ -52,3 +52,6 @@ img {
     position: relative;
     left: 17px;
 }
+.error-list {
+    transform: translateY(-200px);
+}
