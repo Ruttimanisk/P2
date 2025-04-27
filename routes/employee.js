@@ -36,7 +36,7 @@ router.get('/prof_old', (req, res) => {
 });
 
 // recreated profile
-router.get('/profile', user_controller.profile_from_database);
+router.get('/profile', user_controller.profile);
 
 router.get('/logout', user_controller.logout)
 
