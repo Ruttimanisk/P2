@@ -53,6 +53,6 @@ img {
     left: 17px;
 }
 .error-list {
-    transform: translateY(-30px);
+    transform: translateY(-15px);
     z-index: 1;
 }
