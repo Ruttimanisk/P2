@@ -155,7 +155,7 @@ exports.save_employee_schedule = async (req, res) => {
     }
 };
 
-exports.profile = (req, res) => {
+exports.profile_old = (req, res) => {
     const username = req.session.username;
     const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
     const user = users.find(u => u.username === username);
@@ -172,7 +172,7 @@ exports.profile = (req, res) => {
 
 // remaking profile with database - Mads
 
-exports.profile_from_database = asyncHandler(async (req, res, next) => {
+exports.profile = asyncHandler(async (req, res, next) => {
     try {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
@@ -210,5 +210,30 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
 
     } catch (err) {
         return res.status(500).send(`profile error in catch: ${err.name}, ${err.message}`)
+    }
+})
+
+exports.view_profile = asyncHandler(async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findOne({_id: userId});
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        else {
+            return res.render('admin_profile', {
+                first_name: user.first_name,
+                fullname: user.fullname,
+                lifespan: user.lifespan,
+                statuss: user.status,
+                address: user.address,
+                hourly_rate: user.hourly_rate,
+                hours_per_week: user.hours_per_week,
+            })
+        }
+
+    } catch (err) {
+        return res.status(500).send(`view profile error in catch: ${err.name}, ${err.message}`)
     }
 })

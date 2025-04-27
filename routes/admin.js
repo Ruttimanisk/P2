@@ -49,7 +49,9 @@ router.get('/home', user_controller.admin_home)
 router.get('/prof_old', user_controller.profile)
 
 // recreated profile
-router.get('/profile', user_controller.profile_from_database);
+router.get('/profile/', user_controller.profile);
+
+router.get('/view_profile/:userId', user_controller.view_profile)
 
 router.get('/logout', user_controller.logout)
 
