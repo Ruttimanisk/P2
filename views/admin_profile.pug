@@ -2,10 +2,10 @@ extends layout_admin
 
 block content
     head
-    link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
     h1 Profile
 
-    table(style="margin-top: 10px;")#Profile
+    table(style="margin-top: 10px;" + "td, th { border: 1px solid #dddddd; text-align: left; padding: 8px;")#Profile
+
         tr
             th Name:
             td #{fullname}
