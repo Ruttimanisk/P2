@@ -172,7 +172,7 @@ exports.profile_old = (req, res) => {
 
 // remaking profile with database - Mads
 
-exports.profile = asyncHandler(async (req, res, next) => {
+exports.profile = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
@@ -213,7 +213,7 @@ exports.profile = asyncHandler(async (req, res, next) => {
     }
 })
 
-exports.view_profile = asyncHandler(async (req, res, next) => {
+exports.view_profile = asyncHandler(async (req, res) => {
     try {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
