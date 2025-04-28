@@ -6,7 +6,7 @@ exports.requireAuth = async (req, res, next) => {
     const path = req.path.toLowerCase()
 
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-        return res.status(401).send('Not logged in');
+        return res.status(401).send('Not logged in or invalid user ID');
     }
 
     try {
