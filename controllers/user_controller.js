@@ -31,7 +31,7 @@ exports.login = asyncHandler(async (req, res) => {
         const user = await User.findOne({ username: username }).maxTimeMS(5000).exec();
 
         if (!user || user.password !== password) {
-            return res.status(401).render('login', { errors: ['Invalid username or password'] });
+                return res.status(401).render('login', { errors: ['Invalid username or password'] });
         }
 
         res.cookie('userId', user._id.toString(), {
@@ -42,7 +42,7 @@ exports.login = asyncHandler(async (req, res) => {
         return res.redirect(`/${(user.status || '').toLowerCase()}/home`);
 
     } catch (err) {
-        return res.status(400).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
+        return res.status(500).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
         }
 });
 
