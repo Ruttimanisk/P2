@@ -4,7 +4,7 @@ block content
     h1= title
 
     .userlist
-        h2= "Employees:"
+        p.p= "Employees:"
         if employees && employees.length
             ul
                 each employee in employees
@@ -13,7 +13,7 @@ block content
         else
             p No employees found.
         hr
-        h2= "Admins:"
+        p.p= "Admins:"
         if admins && admins.length
             ul
                 each admin in admins
