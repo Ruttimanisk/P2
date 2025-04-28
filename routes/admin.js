@@ -27,16 +27,18 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
         // Her sikrer vi, at vi får den rigtige dato fra MongoDB
         const events = shifts.map(shift => {
-                // Her skal du sikre dig, at 'shift.date' findes og er korrekt
-                const date = shift.date || "2024-04-08";  // Standard dato, hvis ikke findes
-                console.log("📅 Event date:", date); // Log datoen for at fejlsøge
-
+                console.log("👀 shift:", shift); // Til fejlfinding
+                if (!shift.date || !shift.start || !shift.end) {
+                        console.warn("⚠️ Manglende data:", shift);
+                        return null;
+                }
                 return {
-                        title: shift.employee || "Ukendt", // medarbejderens navn
-                        start: `${date}T${shift.start}`,  // start dato og tid
-                        end: `${date}T${shift.end}`,  // slut dato og tid
+                        title: shift.employee,
+                        start: `${shift.date}T${shift.start}`,
+                        end: `${shift.date}T${shift.end}`
                 };
-        });
+        }).filter(e => e !== null);
+
 
         console.log("📦 Events to send to calendar.pug:", events);
 
