@@ -19,6 +19,11 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const shifts = await collection.find().toArray();
 
         console.log("📦 Shifts data from DB:", shifts);
+        shifts.forEach(shift => {
+                console.log("🔎 Raw shift:", shift);
+                console.log("📅 shift.date:", shift.date);
+        });
+
 
         // Her sikrer vi, at vi får den rigtige dato fra MongoDB
         const events = shifts.map(shift => {
