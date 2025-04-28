@@ -17,11 +17,11 @@ exports.requireAuth = async (req, res, next) => {
 
         const userStatus = (user.status || '').toLowerCase();
 
-        if (path.startsWith('/admin') && userStatus !== 'admin') {
+        if (req.baseUrl === '/admin' && userStatus !== 'admin') {
             return res.status(403).send('Access denied: Admins only');
         }
 
-        if (path.startsWith('/employee') && userStatus !== 'employee') {
+        if (req.baseUrl === '/employee' && userStatus !== 'employee') {
             return res.status(403).send('Access denied: Employees only');
         }
 
