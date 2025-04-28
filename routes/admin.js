@@ -14,24 +14,22 @@ const mongoose = require('mongoose')
 
 // burde måske gøre det her i controller
 router.get('/calendar', requireAuth, async (req, res) => {
-        const db = mongoose.connection; // Mads: Tilføjet require mongoose.
-        const collection = db.collection('Schedule'); // Mads: ændret fra "shifts" til "Schedule" så det matcher navn i database.
+        const db = mongoose.connection;
+        const collection = db.collection('Schedule');
         const shifts = await collection.find().toArray();
 
-        // Log dataen for at sikre, at den er korrekt
         console.log("📦 Shifts data from DB:", shifts);
 
         const events = shifts.map(shift => {
-                const day = shift.day || "2024-04-08"; // midlertidig fallback
+                const date = shift.date || "2024-04-08"; // fallback, just in case
                 return {
-                        title: shift.employee,
-                        start: `${day}T${shift.start}`,
-                        end: `${day}T${shift.end}`,
+                        title: shift.employee || "Ukendt",
+                        start: `${date}T${shift.start}`,
+                        end: `${date}T${shift.end}`,
                 };
         });
 
-        // Log de events, der skal sendes til view
-        console.log("📦 Events to send to calendar.pug:", events);
+        console.log("📆 Events to send to calendar.pug:", events);
 
         res.render('calendar', { events: JSON.stringify(events) });
 });
