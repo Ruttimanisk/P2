@@ -11,7 +11,7 @@ block content
     script.
         console.log("💬 Events JSON string:", `!{events}`);
         try {
-            const events = JSON.parse(`!{events}`);
+            const events = !{events};
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
