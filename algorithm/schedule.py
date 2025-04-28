@@ -28,6 +28,14 @@ opening_hours = {
     "Friday": ("08:00", "15:30"),
 }
 
+weekday_to_date = {
+    "Monday": "2025-04-28",
+    "Tuesday": "2025-04-29",
+    "Wednesday": "2025-04-30",
+    "Thursday": "2025-05-01",
+    "Friday": "2025-05-02"
+}
+
 base_dir = os.path.dirname(__file__)
 
 employees_file = os.path.join(base_dir, "Employees.csv")
@@ -126,7 +134,7 @@ for e in employees:
         if x[e][s].value() == 1:
             shift = {
                 "employee": e,
-                "day": s[0],
+                "date": weekday_to_date.get(s[0], "2025-04-28"),
                 "start": s[1],
                 "end": s[2]
             }
