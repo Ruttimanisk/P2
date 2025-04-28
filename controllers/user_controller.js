@@ -42,8 +42,7 @@ exports.login = asyncHandler(async (req, res) => {
         return res.redirect(`/${(user.status || '').toLowerCase()}/home`);
 
     } catch (err) {
-        // Make sure we haven't already sent a response
-        return res.status(500).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
+        return res.status(400).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
         }
 });
 
