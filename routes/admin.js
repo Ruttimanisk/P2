@@ -19,21 +19,25 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const shifts = await collection.find().toArray();
 
         console.log("📦 Shifts data from DB:", shifts);
-        console.log("🔎 Eksempel shift:", shifts[0]);
 
+        // Her sikrer vi, at vi får den rigtige dato fra MongoDB
         const events = shifts.map(shift => {
-                const date = shift.date || "2025-04-28"; // fallback kun hvis noget går galt
+                // Her skal du sikre dig, at 'shift.date' findes og er korrekt
+                const date = shift.date || "2024-04-08";  // Standard dato, hvis ikke findes
+                console.log("📅 Event date:", date); // Log datoen for at fejlsøge
+
                 return {
-                        title: shift.employee,
-                        start: `${date}T${shift.start}`,
-                        end: `${date}T${shift.end}`,
+                        title: shift.employee || "Ukendt", // medarbejderens navn
+                        start: `${date}T${shift.start}`,  // start dato og tid
+                        end: `${date}T${shift.end}`,  // slut dato og tid
                 };
         });
 
-        console.log("📆 Events to send to calendar.pug:", events);
+        console.log("📦 Events to send to calendar.pug:", events);
 
         res.render('calendar', { events: JSON.stringify(events) });
 });
+
 
 router.get('/home', requireAuth, user_controller.admin_home)
 
