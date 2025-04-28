@@ -175,6 +175,8 @@ exports.profile = asyncHandler(async (req, res) => {
                 address: user.address,
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
+                userId: userId,
+                view_profile: false,
             })
         }
 
@@ -187,6 +189,8 @@ exports.profile = asyncHandler(async (req, res) => {
                 address: user.address,
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
+                userId: userId,
+                view_profile: false,
             })
         }
 
@@ -216,6 +220,8 @@ exports.view_profile = asyncHandler(async (req, res) => {
                 address: user.address,
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
+                userId: userId,
+                view_profile: true,
             })
         }
 

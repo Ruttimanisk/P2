@@ -31,3 +31,6 @@ block content
         tr
             th Hours per Week:
             td #{hours_per_week}
+
+    if view_profile === true
+        a(href=`/admin_edit_employee_schedule/#{userId}`)
