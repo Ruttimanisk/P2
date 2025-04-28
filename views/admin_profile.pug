@@ -9,6 +9,7 @@ block content
             background-color: #FAFAFA;
         }
         #Profile td {min-width: 170px;}
+        #see_schedule {padding: 10px; text-decoration-line: none;}
 
     h1 Profile
 
@@ -33,4 +34,4 @@ block content
             td #{hours_per_week}
 
     if view_profile
-        a(href=`/admin_edit_employee_schedule/#{userId}` style="padding: 10px;") - See schedule
+        a#see_schedule(href=`/admin_edit_employee_schedule/#{userId}`) - See schedule
