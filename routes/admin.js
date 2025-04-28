@@ -19,6 +19,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const shifts = await collection.find().toArray();
 
         console.log("📦 Shifts data from DB:", shifts);
+        console.log("🔎 Eksempel shift:", shifts[0]);
 
         const events = shifts.map(shift => {
                 const date = shift.date || "2025-04-28"; // fallback kun hvis noget går galt
