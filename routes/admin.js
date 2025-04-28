@@ -21,9 +21,9 @@ router.get('/calendar', requireAuth, async (req, res) => {
         console.log("📦 Shifts data from DB:", shifts);
 
         const events = shifts.map(shift => {
-                const date = shift.date || "2025-04-28"; // fallback, just in case
+                const date = shift.date || "2025-04-28"; // fallback kun hvis noget går galt
                 return {
-                        title: shift.employee || "Ukendt",
+                        title: shift.employee,
                         start: `${date}T${shift.start}`,
                         end: `${date}T${shift.end}`,
                 };
