@@ -13,7 +13,7 @@ const mongoose = require('mongoose')
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
 // burde måske gøre det her i controller
-router.get('/calendar', async (req, res) => {
+router.get('/calendar', requireAuth, async (req, res) => {
         const db = mongoose.connection; // Mads: Tilføjet require mongoose.
         const collection = db.collection('Schedule'); // Mads: ændret fra "shifts" til "Schedule" så det matcher navn i database.
         const shifts = await collection.find().toArray();
@@ -42,22 +42,22 @@ router.get('/calendar', async (req, res) => {
 
 
 
-router.get('/home', user_controller.admin_home)
+router.get('/home', requireAuth, user_controller.admin_home)
 
 // router.get('/schedule', userschedule_controller.schedule)
 
-router.get('/prof_old', user_controller.profile)
+router.get('/prof_old', requireAuth, user_controller.profile)
 
 // recreated profile
-router.get('/profile/', user_controller.profile);
+router.get('/profile/', requireAuth, user_controller.profile);
 
-router.get('/view_profile/:userId', user_controller.view_profile)
+router.get('/view_profile/:userId', requireAuth, user_controller.view_profile)
 
 router.get('/logout', user_controller.logout)
 
 // router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
 
-router.get('/admin_edit_employee_schedule/:username', (req, res) => {
+router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) => {
         const username = req.params.username;
 
         const userPath = path.join(__dirname, "../user_info.json");
