@@ -31,7 +31,7 @@ exports.login = asyncHandler(async (req, res) => {
         const user = await User.findOne({ username: username }).maxTimeMS(5000).exec();
 
         if (!user || user.password !== password) {
-                return res.status(401).render('login', { errors: ['Invalid username or password'] });
+            return res.status(401).render('login', { errors: ['Invalid username or password'] });
         }
 
         res.cookie('userId', user._id.toString(), {
