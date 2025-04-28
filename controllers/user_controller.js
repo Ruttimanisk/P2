@@ -6,19 +6,6 @@ const fs = require("fs");
 const path = require("path");
 
 
-exports.user_list = asyncHandler(async (req, res) => {
-        const [allEmployees, allAdmins] = await Promise.all([
-        User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec(),
-        User.find({ status: 'Admin'}).sort({ first_name: 1 }).exec(),
-    ]);
-
-    res.render("admin_employees", {
-        title: "User List",
-        employees: allEmployees,
-        admins: allAdmins,
-    });
-});
-
 exports.login = asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -236,3 +223,16 @@ exports.view_profile = asyncHandler(async (req, res) => {
         return res.status(500).send(`view profile error in catch: ${err.name}, ${err.message}`)
     }
 })
+
+exports.admin_employee_list = asyncHandler(async (req, res) => {
+        const [allEmployees, allAdmins] = await Promise.all([
+        User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec(),
+        User.find({ status: 'Admin'}).sort({ first_name: 1 }).exec(),
+    ]);
+
+    res.render("admin_employee_list", {
+        title: "Employee List",
+        employees: allEmployees,
+        admins: allAdmins,
+    });
+});

@@ -92,7 +92,7 @@ router.post('/admin_edit_employee_schedule/:username', (req, res) => {
         res.redirect(`/admin_edit_employee_schedule/${username}`);
 });
 
-// router.get('/employee_list', user_controller.admin_employee_list)
+router.get('/employee_list', requireAuth, user_controller.admin_employee_list)
 
 router.get('/user_creation', requireAuth, (req, res) => { res.render('admin_user_creation') })
 
