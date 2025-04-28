@@ -4,21 +4,21 @@ block content
     h1= title
 
     .userlist
-        p.p= "Employees:"
+        p= "Employees:"
         if employees && employees.length
             ul
                 each employee in employees
                     li
                         a(href=`/admin/view_profile/${employee._id}`) !{employee.fullname}
         else
-            p No employees found.
+            p.error No employees found.
         hr
-        p.p= "Admins:"
+        p= "Admins:"
         if admins && admins.length
             ul
                 each admin in admins
                     li
                         a(href=`/admin/view_profile/${admin._id}`) !{admin.fullname}
         else
-            p No admins found.
+            p.error No admins found.
 
