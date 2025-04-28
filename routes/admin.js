@@ -21,7 +21,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
         console.log("📦 Shifts data from DB:", shifts);
 
         const events = shifts.map(shift => {
-                const date = shift.date || "2024-04-08"; // fallback, just in case
+                const date = shift.date || "2025-04-28"; // fallback, just in case
                 return {
                         title: shift.employee || "Ukendt",
                         start: `${date}T${shift.start}`,
@@ -33,12 +33,6 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
         res.render('calendar', { events: JSON.stringify(events) });
 });
-
-
-
-
-
-
 
 router.get('/home', requireAuth, user_controller.admin_home)
 
