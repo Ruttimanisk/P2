@@ -42,21 +42,23 @@ app.get('/calendar', async (req, res) => {
   const collection = db.collection('shifts');
   const shifts = await collection.find().toArray();
 
-  console.log("🔍 Found shifts:", shifts); // ← tilføj denne
+  console.log("🔍 Found shifts:", shifts); // Vis hele objektet
 
   const events = shifts.map(shift => {
-    const day = shift.date || "2024-04-08"; // fallback til dummy-dato
+    console.log("⏱️ Shift object:", shift); // ← log hver shift individuelt
+    const date = shift.date || "2024-04-08";
     return {
-      title: shift.employee || "Ukendt", // fallback
+      title: shift.employee || "Ukendt",
       start: `${date}T${shift.start}`,
       end: `${date}T${shift.end}`,
     };
   });
 
-  console.log("📆 Parsed events:", events); // ← og denne
+  console.log("📆 Parsed events:", events);
 
   res.render('calendar', { events: JSON.stringify(events) });
 });
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
