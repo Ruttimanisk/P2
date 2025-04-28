@@ -1,24 +1,25 @@
 extends layout_admin
 
 block content
+    style.
+        ul {margin: 10px;}
     h1= title
 
-    .userlist
-        p= "Employees:"
-        if employees && employees.length
-            ul
-                each employee in employees
-                    li
-                        a(href=`/admin/view_profile/${employee._id}`) !{employee.fullname}
-        else
-            p.error No employees found.
-        hr
-        p= "Admins:"
-        if admins && admins.length
-            ul
-                each admin in admins
-                    li
-                        a(href=`/admin/view_profile/${admin._id}`) !{admin.fullname}
-        else
-            p.error No admins found.
+    p= "Employees:"
+    if employees && employees.length
+        ul
+            each employee in employees
+                li
+                    a(href=`/admin/view_profile/${employee._id}`) !{employee.fullname}
+    else
+        p.error No employees found.
+    hr
+    p= "Admins:"
+    if admins && admins.length
+        ul
+            each admin in admins
+                li
+                    a(href=`/admin/view_profile/${admin._id}`) !{admin.fullname}
+    else
+        p.error No admins found.
 
