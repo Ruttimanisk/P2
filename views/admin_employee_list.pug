@@ -1,24 +1,24 @@
 extends layout_admin
 
 block content
-    head
-        link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
-
     h1= title
 
-    if employees && employees.length
-        ul
-            each employee in employees
-                li
-                    a(href=`/admin/view_profile/${employee._id}`) !{employee.fullname}
-    else
-        p No employees found.
-    hr
-    if admins && admins.length
-        ul
-            each admin in admins
-                li
-                    a(href=`/admin/view_profile/${admin._id}`) !{admin.fullname}
-    else
-        p No admins found.
+    .userlist(style= "margin-left: 20px;")
+        h2= "Employees:"
+        if employees && employees.length
+            ul
+                each employee in employees
+                    li
+                        a(href=`/admin/view_profile/${employee._id}`) !{employee.fullname}
+        else
+            p No employees found.
+        hr
+        h2= "Admins:"
+        if admins && admins.length
+            ul
+                each admin in admins
+                    li
+                        a(href=`/admin/view_profile/${admin._id}`) !{admin.fullname}
+        else
+            p No admins found.
 
