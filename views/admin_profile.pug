@@ -32,5 +32,5 @@ block content
             th Hours per Week:
             td #{hours_per_week}
 
-    if view_profile === true
-        a(href=`/admin_edit_employee_schedule/#{userId}`)
+    if view_profile
+        a(href=`/admin_edit_employee_schedule/#{userId}`) See schedule ->
