@@ -1,10 +1,11 @@
 const User = require('../models/user');
+const mongoose = require('mongoose');
 
 exports.requireAuth = async (req, res, next) => {
     const userId = req.cookies.userId;
     const path = req.path.toLowerCase()
 
-    if (!userId) {
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(401).send('Not logged in');
     }
 
@@ -14,11 +15,13 @@ exports.requireAuth = async (req, res, next) => {
             return res.status(401).send('User not found');
         }
 
-        if (path.startsWith('/admin') && user.status.toLowerCase() !== 'admin') {
+        const userStatus = (user.status || '').toLowerCase();
+
+        if (path.startsWith('/admin') && userStatus !== 'admin') {
             return res.status(403).send('Access denied: Admins only');
         }
 
-        if (path.startsWith('/employee') && user.status.toLowerCase() !== 'employee') {
+        if (path.startsWith('/employee') && userStatus !== 'employee') {
             return res.status(403).send('Access denied: Employees only');
         }
 
