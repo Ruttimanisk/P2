@@ -125,7 +125,7 @@ exports.list_employees_for_schedule_edit = async (req, res) => {
 };
 
 exports.show_employee_schedule = async (req, res) => {
-    const username = req.params.id;
+    const userId = req.cookies.userId;
     const filePath = path.join(__dirname, "../user_info.json");
 
     try {
