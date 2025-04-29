@@ -5,10 +5,6 @@ block content
         link(rel='stylesheet' href='/stylesheets/Schedule.css')
         script(src='/scripts/interactiveSchedule.js')
 
-    .msgbox
-        p.Message_box_header(style='text-align: center') Message box
-        p.Messages(style='text-align: center') Editing: #{username}'s Schedule
-
     h2 Schedule for #{username}
 
     - var safeSchedule = typeof schedule !== 'undefined' ? schedule : {};
