@@ -69,8 +69,11 @@ router.get('/view_profile/:userId', requireAuth, user_controller.view_profile)
 router.get('/logout', user_controller.logout)
 
 // router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
-router.get('/edit-schedule', userscheduleController.renderEditSchedule);
-router.post('/edit-schedule/save', userscheduleController.saveEditedSchedule);
+
+router.get('/edit-schedule', requireAuth, userschedule_controller.renderEditSchedule);
+
+router.post('/edit-schedule/save', requireAuth, userschedule_controller.saveEditedSchedule);
+
 
 router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) => {
         const username = req.params.username;
