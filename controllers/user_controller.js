@@ -6,19 +6,6 @@ const fs = require("fs");
 const path = require("path");
 
 
-exports.user_list = asyncHandler(async (req, res) => {
-        const [allEmployees, allAdmins] = await Promise.all([
-        User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec(),
-        User.find({ status: 'Admin'}).sort({ first_name: 1 }).exec(),
-    ]);
-
-    res.render("admin_employees", {
-        title: "User List",
-        employees: allEmployees,
-        admins: allAdmins,
-    });
-});
-
 exports.login = asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -42,7 +29,6 @@ exports.login = asyncHandler(async (req, res) => {
         return res.redirect(`/${(user.status || '').toLowerCase()}/home`);
 
     } catch (err) {
-        // Make sure we haven't already sent a response
         return res.status(500).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
         }
 });
@@ -155,7 +141,7 @@ exports.save_employee_schedule = async (req, res) => {
     }
 };
 
-exports.profile = (req, res) => {
+exports.profile_old = (req, res) => {
     const username = req.session.username;
     const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
     const user = users.find(u => u.username === username);
@@ -172,7 +158,7 @@ exports.profile = (req, res) => {
 
 // remaking profile with database - Mads
 
-exports.profile_from_database = asyncHandler(async (req, res, next) => {
+exports.profile = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
@@ -189,6 +175,8 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
                 address: user.address,
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
+                userId: userId,
+                view_profile: false,
             })
         }
 
@@ -201,6 +189,8 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
                 address: user.address,
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
+                userId: userId,
+                view_profile: false,
             })
         }
 
@@ -212,3 +202,43 @@ exports.profile_from_database = asyncHandler(async (req, res, next) => {
         return res.status(500).send(`profile error in catch: ${err.name}, ${err.message}`)
     }
 })
+
+exports.view_profile = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findOne({_id: userId});
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        else {
+            return res.render('admin_profile', {
+                first_name: user.first_name,
+                fullname: user.fullname,
+                lifespan: user.lifespan,
+                statuss: user.status,
+                address: user.address,
+                hourly_rate: user.hourly_rate,
+                hours_per_week: user.hours_per_week,
+                userId: userId,
+                view_profile: true,
+            })
+        }
+
+    } catch (err) {
+        return res.status(500).send(`view profile error in catch: ${err.name}, ${err.message}`)
+    }
+})
+
+exports.admin_employee_list = asyncHandler(async (req, res) => {
+        const [allEmployees, allAdmins] = await Promise.all([
+        User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec(),
+        User.find({ status: 'Admin'}).sort({ first_name: 1 }).exec(),
+    ]);
+
+    res.render("admin_employee_list", {
+        title: "Employee List",
+        employees: allEmployees,
+        admins: allAdmins,
+    });
+});

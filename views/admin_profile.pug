@@ -1,29 +1,19 @@
 extends layout_admin
 
 block content
-    head
-    link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
-    .msgbox
-        p.Message_box_header(style='text-align: center') Message box
-        p.Messages(style='text-align: center') You have 3 pending requests
+    style.
+        #Profile td, #Profile th {
+            border: 1px solid #707070;
+            text-align: left;
+            padding: 8px;
+            background-color: #FAFAFA;
+        }
+        #Profile td {min-width: 170px;}
+        #see_schedule {padding: 5px; text-decoration-line: none; font-size: 17px;}
 
-    //
-        table#Profile
-            tr
-                td Name
-                td BOSS
-            tr
-                td Address
-                td CEOalle 1
-            tr
-                td Base Salary
-                td MONEYkr/hour
-            tr
-                td Weekly hours
-                td -1
+    h1 Profile
 
-    // table using database:
-    table#ProfileMads
+    table#Profile
         tr
             th Name:
             td #{fullname}
@@ -38,7 +28,10 @@ block content
             td #{address}
         tr
             th Hourly Rate:
-            td #{hourly_rate}kr/hour
+            td #{hourly_rate} dkk/h
         tr
             th Hours per Week:
             td #{hours_per_week}
+
+    if view_profile
+        a#see_schedule(href=`/admin_edit_employee_schedule/${userId}`) - See schedule

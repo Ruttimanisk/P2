@@ -1,4 +1,4 @@
-p {
+p.error {
     color: darkred;
 }
 .login {
@@ -12,9 +12,7 @@ p {
     <!-- border: 2px solid blue; -->
     padding: 10px;
     margin: 10px;
-    position: relative;
-
-    bottom: 15px;
+    transform: translateY(-10px);
 }
 .login {
     position: relative;
@@ -26,10 +24,9 @@ p {
     margin-left: 10px
 }
 img {
-    z-index: 1;
     width: auto;
     height: 128px;
-    position: relative;
+    display: block;
     padding: 10px;
 }
 body {
@@ -67,4 +64,9 @@ h2 {
     position: relative;
     left: 163px;
     bottom: 380px;
+}
+
+.sidebar {
+    width: 148px;
+    float: left;
 }

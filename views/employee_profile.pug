@@ -1,32 +1,18 @@
 extends layout_employee
 
 block content
-    head
-    link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
-    .msgbox
-        p.Message_box_header(style='text-align: center') Message box
-        p.Messages(style='text-align: center') You have 3 pending requests
+    style.
+        #Profile td, #Profile th {
+            border: 1px solid #707070;
+            text-align: left;
+            padding: 8px;
+            background-color: #FAFAFA;
+        }
+        #Profile td {min-width: 170px;}
 
-    //
-        table#Profile
-            tr
-                th Name
-                td #{first_name}
-            tr
-                th Status
-                td= status
-            tr
-                th Address
-                td ordbilndvej 1
-            tr
-                th Base Salary
-                td 350kr/hour
-            tr
-                th Weekly hours
-                td 37
+    h1 Profile
 
-    // table using database:
-    table#ProfileMads
+    table#Profile
         tr
             th Name:
             td #{fullname}
@@ -41,7 +27,7 @@ block content
             td #{address}
         tr
             th Hourly Rate:
-            td #{hourly_rate}kr/hour
+            td #{hourly_rate} dkk/h
         tr
             th Hours per Week:
             td #{hours_per_week}

@@ -4,57 +4,64 @@ const router = express.Router();
 const user_controller = require("../controllers/user_controller");
 const userschedule_controller = require("../controllers/userschedule_controller");
 const {body} = require("express-validator");
+const { requireAuth } = require('../middleware/auth');
+const mongoose = require('mongoose')
 
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
-app.get('/calendar', async (req, res) => {
+// burde måske gøre det her i controller
+router.get('/calendar', requireAuth, async (req, res) => {
         const db = mongoose.connection;
-        const collection = db.collection('shifts'); // Tilpas til din samling
+        const collection = db.collection('Schedule');
         const shifts = await collection.find().toArray();
 
-        // Log dataen for at sikre, at den er korrekt
         console.log("📦 Shifts data from DB:", shifts);
-
-        const events = shifts.map(shift => {
-                const day = shift.day || "2024-04-08"; // midlertidig fallback
-                return {
-                        title: shift.employee,
-                        start: `${day}T${shift.start}`,
-                        end: `${day}T${shift.end}`,
-                };
+        shifts.forEach(shift => {
+                console.log("🔎 Raw shift:", shift);
+                console.log("📅 shift.date:", shift.date);
         });
 
-        // Log de events, der skal sendes til view
+
+        // Her sikrer vi, at vi får den rigtige dato fra MongoDB
+        const events = shifts.map(shift => {
+                console.log("👀 shift:", shift); // Til fejlfinding
+                if (!shift.date || !shift.start || !shift.end) {
+                        console.warn("⚠️ Manglende data:", shift);
+                        return null;
+                }
+                return {
+                        title: shift.employee,
+                        start: `${shift.date}T${shift.start}`,
+                        end: `${shift.date}T${shift.end}`
+                };
+        }).filter(e => e !== null);
+
+
         console.log("📦 Events to send to calendar.pug:", events);
 
         res.render('calendar', { events: JSON.stringify(events) });
 });
 
 
-
-
-
-
-
-
-
-router.get('/home', user_controller.admin_home)
+router.get('/home', requireAuth, user_controller.admin_home)
 
 router.get('/schedule', userschedule_controller.schedule)
 
-router.get('/prof_old', user_controller.profile)
+router.get('/prof_old', requireAuth, user_controller.profile)
 
 // recreated profile
-router.get('/profile', user_controller.profile_from_database);
+router.get('/profile/', requireAuth, user_controller.profile);
+
+router.get('/view_profile/:userId', requireAuth, user_controller.view_profile)
 
 router.get('/logout', user_controller.logout)
 
 // router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
 
-router.get('/admin_edit_employee_schedule/:username', (req, res) => {
+router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) => {
         const username = req.params.username;
 
         const userPath = path.join(__dirname, "../user_info.json");
@@ -89,12 +96,12 @@ router.post('/admin_edit_employee_schedule/:username', (req, res) => {
         res.redirect(`/admin_edit_employee_schedule/${username}`);
 });
 
-// router.get('/employee_list', user_controller.admin_employee_list)
+router.get('/employee_list', requireAuth, user_controller.admin_employee_list)
 
-router.get('/user_creation', (req, res) => { res.render('admin_user_creation') })
+router.get('/user_creation', requireAuth, (req, res) => { res.render('admin_user_creation') })
 
-router.post(
-    '/user_creation',
+router.post('/user_creation',
+    requireAuth,
     [
         body("first_name", "First name must not be empty.")
             .trim()

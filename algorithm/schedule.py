@@ -3,6 +3,7 @@ import csv
 import os
 import json
 from pymongo import MongoClient
+from datetime import datetime, timedelta
 
 os.chdir(os.path.dirname(__file__))
 
@@ -20,6 +21,21 @@ def shifts_overlap(s1, s2):
     s2_start, s2_end = time_to_minutes(s2[1]), time_to_minutes(s2[2])
     return s1_start < s2_end and s2_start < s1_end
 
+# Funktion til at generere datoer for en uge baseret på en given mandagsdato
+def generate_weekday_date_mapping(start_date_str):
+    start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+    return {
+        "Monday": (start_date + timedelta(days=0)).date().isoformat(),
+        "Tuesday": (start_date + timedelta(days=1)).date().isoformat(),
+        "Wednesday": (start_date + timedelta(days=2)).date().isoformat(),
+        "Thursday": (start_date + timedelta(days=3)).date().isoformat(),
+        "Friday": (start_date + timedelta(days=4)).date().isoformat(),
+    }
+
+# Vælg hvilken uge du vil generere (mandagsdato)
+week_start = "2025-04-28"
+weekday_to_date = generate_weekday_date_mapping(week_start)
+
 opening_hours = {
     "Monday": ("07:30", "19:00"),
     "Tuesday": ("07:30", "17:00"),
@@ -29,7 +45,6 @@ opening_hours = {
 }
 
 base_dir = os.path.dirname(__file__)
-
 employees_file = os.path.join(base_dir, "Employees.csv")
 absence_file = os.path.join(base_dir, "Absence.csv")
 shifts_file = os.path.join(base_dir, "Shifts.csv")
@@ -44,7 +59,6 @@ with open(employees_file, "r") as file:
         hours = float(row["HoursContract"])
         employees.append(name)
         max_hours[name] = hours
-
 
 days_off = {}
 with open(absence_file, "r", encoding="utf-8") as file:
@@ -70,24 +84,14 @@ with open(shifts_file, "r", encoding="utf-8") as file:
         else:
             raise ValueError(f"Incorrect weekday: {day}")
 
-
-if not os.path.exists("Employees.csv"):
-    print("Employees.csv file not found!")
-else:
-    print("Employees.csv found.")                
-
-if not os.path.exists("Absence.csv"):
-    print("Absence.csv file not found!")
-else:
-    print("Absence.csv found.") 
-
-if not os.path.exists("Shifts.csv"):
-    print("Shifts.csv file not found!")
-else:
-    print("Shifts.csv found.") 
+# Tjek at alle CSV-filer er der
+for file, name in zip([employees_file, absence_file, shifts_file], ["Employees.csv", "Absence.csv", "Shifts.csv"]):
+    if not os.path.exists(file):
+        print(f"{name} file not found!")
+    else:
+        print(f"{name} found.")
 
 model = pulp.LpProblem("Shift_Scheduling", pulp.LpMinimize)
-
 x = pulp.LpVariable.dicts("x", (employees, shifts), 0, 1, pulp.LpBinary)
 
 model += 0
@@ -114,10 +118,6 @@ model.solve()
 
 print("Status:", pulp.LpStatus[model.status])
 print("\nShift Plan:")
-for e in employees:
-    for s in shifts:
-        if x[e][s].value() == 1:
-            print(f"{e} works on {s[0]} from {s[1]} to {s[2]}")
 
 schedule_output = []
 
@@ -126,23 +126,24 @@ for e in employees:
         if x[e][s].value() == 1:
             shift = {
                 "employee": e,
-                "day": s[0],
+                "date": weekday_to_date.get(s[0], week_start),
                 "start": s[1],
                 "end": s[2]
             }
             schedule_output.append(shift)
+            print(f"{e} works on {shift['date']} from {s[1]} to {s[2]}")
 
 with open("schedule.json", "w", encoding="utf-8") as f:
     json.dump(schedule_output, f, indent=4)
 print("\nSchedule saved to schedule.json")
 
+# Upload til MongoDB
 try:
     client = MongoClient("mongodb+srv://prasm24:p2gruppe7@wfm-test.nvx2k.mongodb.net/")
     db = client["WFM-Database"]
     collection = db["Schedule"]
 
     collection.delete_many({})
-
     collection.insert_many(schedule_output)
 
     print("Schedule uploaded to MongoDB successfully.")

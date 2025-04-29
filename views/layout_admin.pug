@@ -21,12 +21,16 @@ html
             a(href='/admin/home') Home
             a(href='/admin/profile') Profile
             a(href='/admin/schedule') Schedule
-            a(href='/admin/employees_list') List of Employees
+            a(href='/admin/employee_list') List of Employees
             a(href='/admin/edit_employee_schedule') Edit Employee Schedule
             a(href='/admin/user_creation') User Creation
             a(href='/login', onclick="return confirmLogout()") Logout
 
-        img(src='/images/WFM.webp' alt='WFM Logo')
+        .sidebar
+            img(src='/images/WFM.webp' alt='WFM Logo')
+            .msgbox
+                p.Message_box_header(style='text-align: center') Message box
+                p.Messages(style='text-align: center') You have 3 pending requests
 
         block content
 
