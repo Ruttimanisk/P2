@@ -50,16 +50,16 @@ tr:nth-child(even) {
 }
 /*Legend farve og tekst*/
 .legend .Available {
-    background-color: lightgreen;
+    background-color: #70ff70;
 }
 .legend .Maternity {
-    background-color: yellow;
+    background-color: #fff055;
 }
 .legend .PTO {
-    background-color: blue;
+    background-color: #546fff;
 }
 .legend .Sick {
-    background-color: red;
+    background-color: #fc3f4d;
 }
 #tableEmployees {
 
