@@ -43,7 +43,7 @@ app.get('/calendar', async (req, res) => {
 
 router.get('/home', user_controller.admin_home)
 
-// router.get('/schedule', userschedule_controller.schedule)
+router.get('/schedule', userschedule_controller.schedule)
 
 router.get('/prof_old', user_controller.profile)
 
