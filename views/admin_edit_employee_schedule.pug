@@ -1,18 +1,29 @@
 extends layout_admin
 
 block content
-    head
-    link(rel='stylesheet' type='text/css' href='/stylesheets/Schedule.css')
-    h1= title
+    h1 Edit Employee Schedules
 
-    form(action=`/admin_edit_employee_schedule/${employee.username}`, method="POST")
-        p Name: #{employee.first_name} #{employee.last_name}
-        p
-            label(for="monday") Monday:
-            input(type="text", name="monday", id="monday", value=employee.schedule?.monday || "")
-        p
-            label(for="tuesday") Tuesday:
-            input(type="text", name="tuesday", id="tuesday", value=employee.schedule?.tuesday || "")
-        // Add other weekdays...
+        form(action="/admin/edit-schedule/save" method="POST")
+            table(border="1")
+                thead
+                    tr
+                        th Name
+                        each day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            th= day
+                tbody
+                    each employee in employees
+                        tr
+                            td= employee.firstname + ' ' + employee.lastname
+                            each day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+                                - var currentValue = schedules[employee.username]?.[day] || ''
+                                td
+                                    select(name=`${employee.username}.${day}`)
+                                        option(value="") Select
+                                        option(value="08:00-16:00" selected=(currentValue === '08:00-16:00')) 08:00–16:00
+                                        option(value="10:00-18:00" selected=(currentValue === '10:00-18:00')) 10:00–18:00
+                                        option(value="SICK" selected=(currentValue === 'SICK')) SICK
+                                        option(value="PTO" selected=(currentValue === 'PTO')) PTO
+                                        option(value="OFF" selected=(currentValue === 'OFF')) OFF
 
-        button(type="submit") Save Schedule
+            br
+            button(type="submit")
