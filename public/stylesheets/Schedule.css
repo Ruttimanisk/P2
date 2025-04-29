@@ -49,7 +49,7 @@ tr:nth-child(even) {
     margin: 2px;
 }
 /*Legend farve og tekst*/
-.legend .You {
+.legend .Available {
     background-color: lightgreen;
 }
 .legend .Maternity {
@@ -58,7 +58,7 @@ tr:nth-child(even) {
 .legend .PTO {
     background-color: blue;
 }
-.legend .sick {
+.legend .Sick {
     background-color: red;
 }
 #tableEmployees {
