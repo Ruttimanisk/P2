@@ -34,7 +34,7 @@ tr:nth-child(even) {
 .legend {
     list-style: none;
     position: relative;
-    bottom: 350px;
+    bottom: 250px;
     left: 120px;
 }
 .legend li {
