@@ -6,6 +6,8 @@ block content
     link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline/index.global.min.css')
     script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js')
     script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/index.global.min.js')
+    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js')
+    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.8/index.global.min.js')
 
     div#calendar(style="max-width: 900px; margin: 40px auto;")
 
@@ -13,19 +15,21 @@ block content
         console.log("💬 Events JSON string:", !{events});
         console.log("📋 Resources JSON string:", !{resources});
         try {
-            const events = !{events};
-            const resources = !{resources};
+            const events = !{JSON.stringify(events)};
+            const resources = !{JSON.stringify(resources)};
 
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'resourceTimelineWeek',
-                    allDaySlot: false,
+                    plugins: [FullCalendar.ResourceTimeline, FullCalendar.DayGrid, FullCalendar.Interaction],
                     slotMinTime: "07:00:00",
                     slotMaxTime: "20:00:00",
-                    events: events,
-                    resources: resources
+                    allDaySlot: false,
+                    resources: resources,
+                    events: events
                 });
+
 
                 calendar.render();
             });
