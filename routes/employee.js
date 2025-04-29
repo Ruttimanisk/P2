@@ -12,7 +12,7 @@ const mongoose = require("mongoose");
 
 router.get('/home',  requireAuth, user_controller.employee_home)
 
-// router.get('/schedule', userschedule_controller.schedule)
+router.get('/schedule', requireAuth, user_controller.show_employee_schedule)
 
 router.get('/calendar', requireAuth, async (req, res) => {
     const db = mongoose.connection;
