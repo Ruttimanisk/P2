@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const shiftCells = document.querySelectorAll('.shift-cell');
     const statuses = ['Choose an option', 'Default', 'Available', 'Sick', 'PTO', 'Maternity'];
     const colors = {
-        'Available': 'green',
-        'Sick': 'red',
-        'PTO': 'blue',
-        'Maternity': 'yellow'
+        'Available': '#90EE90FF',
+        'Sick': '#f4081a',
+        'PTO': '#1a27b8',
+        'Maternity': '#e3ff79'
     };
 
     shiftCells.forEach(cell => {
