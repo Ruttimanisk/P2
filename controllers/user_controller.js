@@ -77,8 +77,7 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
 });
 
 exports.show_admin_schedule = asyncHandler(async (req, res) => {
-    const userId = req.cookies.userId;
-
+    const userId = req.cookie.userId;
     const scheduleFile = path.join(__dirname, "../schedule.json");
     let scheduleData = {};
 
