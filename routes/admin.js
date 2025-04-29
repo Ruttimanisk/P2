@@ -19,34 +19,43 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const shifts = await collection.find().toArray();
 
         console.log("📦 Shifts data from DB:", shifts);
-        shifts.forEach(shift => {
-                console.log("🔎 Raw shift:", shift);
-                console.log("📅 shift.date:", shift.date);
-        });
 
-
-        // Her sikrer vi, at vi får den rigtige dato fra MongoDB
         const events = shifts.map(shift => {
-                console.log("👀 shift:", shift); // Til fejlfinding
-                if (!shift.date || !shift.start || !shift.end) {
+                if (!shift.date || !shift.start || !shift.end || !shift.employee) {
                         console.warn("⚠️ Manglende data:", shift);
                         return null;
                 }
+
                 return {
                         title: shift.employee,
                         start: `${shift.date}T${shift.start}`,
-                        end: `${shift.date}T${shift.end}`
+                        end: `${shift.date}T${shift.end}`,
+                        resourceId: shift.employee
                 };
         }).filter(e => e !== null);
 
+        // Udtræk unikke medarbejdernavne
+        const uniqueEmployees = [...new Set(shifts.map(shift => shift.employee))];
 
-        console.log("📦 Events to send to admin_calendar.pug:", events);
+        // Lav resources ud fra de unikke navne
+        const resources = uniqueEmployees.map(name => ({
+                id: name,
+                title: name
+        }));
 
-        res.render('admin_calendar', { events: JSON.stringify(events) });
+        console.log("📅 Events:", events);
+        console.log("🧑‍🤝‍🧑 Resources:", resources);
+
+        res.render('admin_calendar', {
+                events: JSON.stringify(events),
+                resources: JSON.stringify(resources)
+        });
 });
 
 
-router.get('/home', requireAuth, user_controller.admin_home)
+
+
+        router.get('/home', requireAuth, user_controller.admin_home)
 
 router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
 
