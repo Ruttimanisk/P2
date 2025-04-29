@@ -40,9 +40,9 @@ router.get('/calendar', requireAuth, async (req, res) => {
         }).filter(e => e !== null);
 
 
-        console.log("📦 Events to send to calendar.pug:", events);
+        console.log("📦 Events to send to admin_calendar.pug:", events);
 
-        res.render('calendar', { events: JSON.stringify(events) });
+        res.render('admin_calendar', { events: JSON.stringify(events) });
 });
 
 
