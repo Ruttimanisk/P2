@@ -4,7 +4,7 @@
     width: 100%;
     position: relative;
     left: 160px;
-    bottom: 400px;
+    bottom: 300px;
 }
 #tableA tr:nth-child(2) {
     background-color: greenyellow;
@@ -25,7 +25,7 @@ tr:nth-child(even) {
     width: 100%;
     position: relative;
     left: 160px;
-    bottom: 370px;
+    bottom: 270px;
 }
 #tableB tr:nth-child(2) {
     background-color: greenyellow;
