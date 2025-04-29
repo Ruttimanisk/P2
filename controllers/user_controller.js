@@ -92,7 +92,7 @@ exports.show_admin_schedule = async (req, res) => {
             Friday: "", Saturday: "", Sunday: ""
         };
 
-        res.render("admin/schedule", {
+        res.render("admin_schedule", {
             schedule: schedule,
             userId: userId
         });
