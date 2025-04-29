@@ -76,6 +76,34 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
     }
 });
 
+exports.show_admin_schedule = async (req, res) => {
+    const userId = req.session.id;
+    const scheduleFile = path.join(__dirname, "../schedule.json");
+    let scheduleData = {};
+
+    try {
+        if (fs.existsSync(scheduleFile)) {
+            const fileData = await fs.promises.readFile(scheduleFile, "utf8");
+            scheduleData = JSON.parse(fileData);
+        }
+
+        const schedule = scheduleData[userId] || {
+            Monday: "", Tuesday: "", Wednesday: "", Thursday: "",
+            Friday: "", Saturday: "", Sunday: ""
+        };
+
+        res.render("admin_schedule", {
+            schedule: schedule,
+            userId: userId
+        });
+
+    } catch (err) {
+        console.error("Error loading admin schedule:", err);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
 // (Additional functions for scheduling can be implemented similarly)
 exports.list_employees_for_schedule_edit = async (req, res) => {
     const filePath = path.join(__dirname, "../user_info.json");
