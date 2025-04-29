@@ -48,7 +48,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
 router.get('/home', requireAuth, user_controller.admin_home)
 
-router.get('/schedule', userschedule_controller.schedule)
+router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
 
 router.get('/prof_old', requireAuth, user_controller.profile)
 

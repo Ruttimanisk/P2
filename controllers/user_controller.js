@@ -76,8 +76,8 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
     }
 });
 
-exports.show_admin_schedule = async (req, res) => {
-    const userId = req.session.id;
+exports.show_admin_schedule = asyncHandler(async (req, res) => {
+    const userId = req.cookie.userId;
     const scheduleFile = path.join(__dirname, "../schedule.json");
     let scheduleData = {};
 
@@ -101,7 +101,7 @@ exports.show_admin_schedule = async (req, res) => {
         console.error("Error loading admin schedule:", err);
         res.status(500).send("Internal Server Error");
     }
-};
+});
 
 
 // (Additional functions for scheduling can be implemented similarly)
