@@ -75,7 +75,7 @@ router.get('/edit_schedule', requireAuth, userschedule_controller.renderEditSche
 router.post('/edit_schedule/save', requireAuth, userschedule_controller.saveEditedSchedule);
 
 
-router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) => {
+router.get('/edit_employee_schedule/:username', requireAuth, (req, res) => {
         const username = req.params.username;
 
         const userPath = path.join(__dirname, "../user_info.json");
@@ -91,13 +91,13 @@ router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) =>
                 return res.status(404).send("User not found");
         }
 
-        res.render("admin_edit_employee_schedule", {
+        res.render("edit_employee_schedule", {
                 username: user.username,
                 schedule: userSchedule
         });
 });
 
-router.post('/admin_edit_employee_schedule/:username', (req, res) => {
+router.post('/edit_employee_schedule/:username', (req, res) => {
         const username = req.params.username;
         const schedulePath = path.join(__dirname, "../schedule.json");
 
@@ -107,7 +107,7 @@ router.post('/admin_edit_employee_schedule/:username', (req, res) => {
         schedules[username] = newSchedule;
 
         fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
-        res.redirect(`/admin_edit_employee_schedule/${username}`);
+        res.redirect(`/edit_employee_schedule/${username}`);
 });
 
 router.get('/employee_list', requireAuth, user_controller.admin_employee_list)
