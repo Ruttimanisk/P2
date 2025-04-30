@@ -49,3 +49,7 @@
     margin: 6px;
     font-size: 16px;
 }
+.user-creation-wrapper .error-list {
+    transform: translate(-15px, -4px);
+    z-index: 1;
+}
