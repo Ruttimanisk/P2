@@ -100,8 +100,16 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).render('admin_user_creation', { errors: errors.array() });
-    } else {
-        const user = new User({
+    }
+
+    const userExists = await User.findOne({ first_name: req.body.first_name, family_name: req.body.family_name })
+        .collation({ locale: "en", strength: 2 })
+        .exec();
+    if (userExists){
+        return res.status(401).render('admin_user_creation', { errors: ['A user with the same name already exists.'] });
+    }
+
+    const user = new User({
         first_name: req.body.first_name,
         family_name: req.body.family_name,
         date_of_birth: req.body.date_of_birth,
@@ -114,11 +122,10 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
         contract: req.body.contract === "" ? undefined : req.body.contract,
         username: req.body.username,
         password: req.body.password,
-        });
+    });
 
-        await user.save();
-        res.redirect(`/admin/home`)
-    }
+    await user.save();
+    res.redirect(`/admin/home`)
 });
 
 exports.show_admin_schedule = asyncHandler(async (req, res) => {
