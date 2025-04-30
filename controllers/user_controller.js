@@ -59,7 +59,7 @@ exports.render_edit_employee_schedule = (req, res) => {
 
     const employees = users.filter(u => u.status === "employee");
 
-    res.render("admin_edit_employee_schedule", {
+    res.render("admin_edit_schedule", {
         employees,
         schedules
     });
