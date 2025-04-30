@@ -3,28 +3,43 @@ extends layout_admin
 block content
     h1 Edit Employee Schedules
 
-        form(action="/admin/edit_schedule" method="POST")
-            table(border="1")
-                thead
+    form(action="/admin/edit_schedule" method="POST")
+        table(border="1")
+            thead
+                tr
+                    th Username
+                    each day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+                        th= day.charAt(0).toUpperCase() + day.slice(1)
+            tbody
+                each emp in employees
                     tr
-                        th Username
-                        each day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-                            th= day.charAt(0).toUpperCase() + day.slice(1)
-                tbody
-                    each emp in employees
-                        tr
-                            td= emp.username
-                            each dayKey in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-                                - const val = (schedule && schedule[emp.username] && schedule[emp.username][dayKey]) || ''
-                                td
-                                    if ['sat', 'sun'].includes(dayKey)
-                                        span(style="color: gray") Closed
-                                    else
-                                        input(type="text", name=`schedule[${emp.username}][${dayKey}]`, value=val, placeholder="e.g. 9-17", style="width: 70px; margin-right: 5px;")
-                                        select(name=`preset[${emp.username}][${dayKey}]`)
-                                            option(value="") --
-                                            option(value="7.30-17") 7.30-17
-                                            option(value="8-15.30") 8-15.30
+                        td= emp.username
+                        each dayKey in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+                            - const val = (schedule && schedule[emp.username] && schedule[emp.username][dayKey]) || ''
+                            td
+                                if ['sat', 'sun'].includes(dayKey)
+                                    span(style="color: gray") Closed
+                                else
+                                    input(
+                                        type="text",
+                                        name=`schedule[${emp.username}][${dayKey}]`,
+                                        value=val,
+                                        placeholder="e.g. 9-17",
+                                        style="width: 70px; margin-right: 5px;"
+                                    )
+                                    select(name=`preset[${emp.username}][${dayKey}]`)
+                                        option(value="") --
+                                        if ['mon', 'wed'].includes(dayKey)
                                             option(value="7.30-19") 7.30-19
+                                            option(value="9-17") 9-17
+                                            option(value="13-19") 13-19
+                                        else if ['tue', 'thu'].includes(dayKey)
+                                            option(value="7.30-17") 7.30-17
+                                            option(value="9-17") 9-17
+                                            option(value="13-17") 13-17
+                                        else if dayKey === 'fri'
+                                            option(value="8-15.30") 8-15.30
+                                            option(value="9-14") 9-14
+                                            option(value="13-15.30") 13-15.30
 
-            button(type="submit") Save Changes
+        button(type="submit") Save Changes
