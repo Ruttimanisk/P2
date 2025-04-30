@@ -4,7 +4,7 @@
     "password": "Bob123",
     "first_name": "Bob",
     "last_name": "Le Builder",
-    "status": "employee"
+    "status": "Employee"
   },
   {
     "username": "Sponge1",
@@ -18,7 +18,7 @@
     "password": "test",
     "first_name": "Viktor",
     "last_name": "Tester",
-    "status": "employee"
+    "status": "Employee"
   },
   {
     "id": 1,
@@ -26,7 +26,7 @@
     "password": "1234",
     "first_name": "John",
     "last_name": "Doe",
-    "status": "employee"
+    "status": "Employee"
   },
   {
     "id": 2,
@@ -34,6 +34,6 @@
     "password": "admin",
     "first_name": "Alice",
     "last_name": "Smith",
-    "status": "employee"
+    "status": "Employee"
   }
 ]
