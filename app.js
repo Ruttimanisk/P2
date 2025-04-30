@@ -25,7 +25,7 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -35,30 +35,24 @@ app.use('/login', loginRouter);
 app.use('/admin', adminRouter);
 app.use('/employee', employeeRouter);
 
+app.use('/admin', require('./routes/admin'));
+
+
 const { ObjectId } = require('mongodb');
 
-/* -- Burde nok ikke være i app.js? --
 app.get('/calendar', async (req, res) => {
-  const db = mongoose.connection;
-  const collection = db.collection('shifts');
-  const shifts = await collection.find().toArray();
+  const shifts = await db.collection('shifts').find().toArray();
 
-  console.log("🔍 Found shifts:", shifts); // ← tilføj denne
-
-  const events = shifts.map(shift => {
-    const day = shift.day || "2024-04-08"; // fallback til dummy-dato
-    return {
-      title: shift.employee || "Ukendt", // fallback
-      start: `${day}T${shift.start}`,
-      end: `${day}T${shift.end}`,
-    };
-  });
-
-  console.log("📆 Parsed events:", events); // ← og denne
+  const events = shifts.map(shift => ({
+    title: shift.employee,
+    start: `${shift.date}T${shift.start}`,
+    end: `${shift.date}T${shift.end}`,
+  }));
 
   res.render('calendar', { events: JSON.stringify(events) });
 });
-*/
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

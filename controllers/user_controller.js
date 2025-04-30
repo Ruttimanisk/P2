@@ -51,6 +51,37 @@ exports.admin_home = asyncHandler( async(req, res) => {
     res.render('admin_home', {title: "Home Page"});
 });
 
+exports.render_edit_employee_schedule = (req, res) => {
+    const userPath     = path.join(__dirname, "../user_info.json");
+    const schedulePath = path.join(__dirname, "../schedule.json");
+
+    const users     = JSON.parse(fs.readFileSync(userPath, "utf8"));
+    const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
+
+    const employees = users.filter(u => u.status === "employee");
+
+    res.render("admin_edit_schedule", {
+        employees,
+        schedules
+    });
+};
+
+// Handles the form POST from that page
+exports.save_edited_schedule = (req, res) => {
+    const flatData = req.body;      // e.g. { "john.mon":"08:00-16:00", … }
+    const newSched = {};
+
+    for (let key in flatData) {
+        const [username, day] = key.split(".");
+        newSched[username] = newSched[username]||{};
+        newSched[username][day] = flatData[key];
+    }
+
+    const schedulePath = path.join(__dirname, "../schedule.json");
+    fs.writeFileSync(schedulePath, JSON.stringify(newSched, null, 2));
+
+    res.redirect("/admin/edit_schedule");
+};
 
 exports.admin_user_creation = asyncHandler(async (req,res) => {
     const errors = validationResult(req);
@@ -77,6 +108,34 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
     }
 });
 
+exports.show_admin_schedule = asyncHandler(async (req, res) => {
+    const userId = req.cookies.userId;
+    const scheduleFile = path.join(__dirname, "../schedule.json");
+    let scheduleData = {};
+
+    try {
+        if (fs.existsSync(scheduleFile)) {
+            const fileData = await fs.promises.readFile(scheduleFile, "utf8");
+            scheduleData = JSON.parse(fileData);
+        }
+
+        const schedule = scheduleData[userId] || {
+            Monday: "", Tuesday: "", Wednesday: "", Thursday: "",
+            Friday: "", Saturday: "", Sunday: ""
+        };
+
+        res.render("admin_schedule", {
+            schedule: schedule,
+            userId: userId
+        });
+
+    } catch (err) {
+        console.error("Error loading admin schedule:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
 // (Additional functions for scheduling can be implemented similarly)
 exports.list_employees_for_schedule_edit = async (req, res) => {
     const filePath = path.join(__dirname, "../user_info.json");
@@ -97,7 +156,7 @@ exports.list_employees_for_schedule_edit = async (req, res) => {
 };
 
 exports.show_employee_schedule = async (req, res) => {
-    const username = req.params.id;
+    const userId = req.cookies.userId;
     const filePath = path.join(__dirname, "../user_info.json");
 
     try {

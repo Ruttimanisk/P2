@@ -14,37 +14,50 @@ const mongoose = require('mongoose')
 
 // burde måske gøre det her i controller
 router.get('/calendar', requireAuth, async (req, res) => {
-        const db = mongoose.connection; // Mads: Tilføjet require mongoose.
-        const collection = db.collection('Schedule'); // Mads: ændret fra "shifts" til "Schedule" så det matcher navn i database.
+        const db = mongoose.connection;
+        const collection = db.collection('Schedule');
         const shifts = await collection.find().toArray();
 
-        // Log dataen for at sikre, at den er korrekt
         console.log("📦 Shifts data from DB:", shifts);
 
         const events = shifts.map(shift => {
-                const day = shift.day || "2024-04-08"; // midlertidig fallback
+                if (!shift.date || !shift.start || !shift.end || !shift.employee) {
+                        console.warn("⚠️ Manglende data:", shift);
+                        return null;
+                }
+
                 return {
                         title: shift.employee,
-                        start: `${day}T${shift.start}`,
-                        end: `${day}T${shift.end}`,
+                        start: `${shift.date}T${shift.start}`,
+                        end: `${shift.date}T${shift.end}`,
+                        resourceId: shift.employee
                 };
+        }).filter(e => e !== null);
+
+        // Udtræk unikke medarbejdernavne
+        const uniqueEmployees = [...new Set(shifts.map(shift => shift.employee))];
+
+        // Lav resources ud fra de unikke navne
+        const resources = uniqueEmployees.map(name => ({
+                id: name,
+                title: name
+        }));
+
+        console.log("📅 Events:", events);
+        console.log("🧑‍🤝‍🧑 Resources:", resources);
+
+        res.render('admin_calendar', {
+                events: JSON.stringify(events),
+                resources: JSON.stringify(resources)
         });
-
-        // Log de events, der skal sendes til view
-        console.log("📦 Events to send to calendar.pug:", events);
-
-        res.render('calendar', { events: JSON.stringify(events) });
 });
 
 
 
 
+        router.get('/home', requireAuth, user_controller.admin_home)
 
-
-
-router.get('/home', requireAuth, user_controller.admin_home)
-
-// router.get('/schedule', userschedule_controller.schedule)
+router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
 
 router.get('/prof_old', requireAuth, user_controller.profile)
 
@@ -57,7 +70,12 @@ router.get('/logout', user_controller.logout)
 
 // router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
 
-router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) => {
+router.get('/edit_schedule', requireAuth, user_controller.render_edit_employee_schedule);
+
+router.post('/edit_schedule', requireAuth, user_controller.save_edited_schedule);
+
+
+/*router.get('/edit_employee_schedule/:username', requireAuth, (req, res) => {
         const username = req.params.username;
 
         const userPath = path.join(__dirname, "../user_info.json");
@@ -73,13 +91,13 @@ router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) =>
                 return res.status(404).send("User not found");
         }
 
-        res.render("admin_schedule", {
+        res.render("edit_employee_schedule", {
                 username: user.username,
                 schedule: userSchedule
         });
 });
 
-router.post('/admin_edit_employee_schedule/:username', (req, res) => {
+router.post('/edit_employee_schedule/:username', (req, res) => {
         const username = req.params.username;
         const schedulePath = path.join(__dirname, "../schedule.json");
 
@@ -89,8 +107,8 @@ router.post('/admin_edit_employee_schedule/:username', (req, res) => {
         schedules[username] = newSchedule;
 
         fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
-        res.redirect(`/admin_edit_employee_schedule/${username}`);
-});
+        res.redirect(`/edit_employee_schedule/${username}`);
+});*/
 
 router.get('/employee_list', requireAuth, user_controller.admin_employee_list)
 

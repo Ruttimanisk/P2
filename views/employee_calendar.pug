@@ -1,4 +1,4 @@
-extends layout_admin
+extends layout_employee
 
 block content
     h1 Vagtplan
@@ -9,9 +9,9 @@ block content
     div#calendar(style="max-width: 900px; margin: 40px auto;")
 
     script.
-        console.log("💬 Events JSON string:", `!{events}`);
+        console.log("💬 Events JSON string:", !{events});
         try {
-            const events = JSON.parse(`!{events}`);
+            const events = !{events};
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -26,3 +26,4 @@ block content
         } catch (err) {
             console.error("❌ Fejl i JSON.parse:", err);
         }
+
