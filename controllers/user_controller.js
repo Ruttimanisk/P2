@@ -52,17 +52,18 @@ exports.admin_home = asyncHandler( async(req, res) => {
 });
 
 exports.render_edit_employee_schedule = (req, res) => {
-    const userPath     = path.join(__dirname, "../user_info.json");
+    const usersPath = path.join(__dirname, "../user_info.json");
     const schedulePath = path.join(__dirname, "../schedule.json");
 
-    const users     = JSON.parse(fs.readFileSync(userPath, "utf8"));
+    const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
     const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
 
-    const employees = users.filter(u => u.status === "employee");
+
+    const employees = users.filter(user => user.role === "employee" || user.status === "employee");
 
     res.render("admin_edit_schedule", {
         employees,
-        schedules
+        schedule: schedules
     });
 };
 
