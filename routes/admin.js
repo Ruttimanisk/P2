@@ -70,9 +70,9 @@ router.get('/logout', user_controller.logout)
 
 // router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
 
-router.get('/edit-schedule', requireAuth, userschedule_controller.renderEditSchedule);
+router.get('/edit_schedule', requireAuth, userschedule_controller.renderEditSchedule);
 
-router.post('/edit-schedule/save', requireAuth, userschedule_controller.saveEditedSchedule);
+router.post('/edit_schedule/save', requireAuth, userschedule_controller.saveEditedSchedule);
 
 
 router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) => {
@@ -91,7 +91,7 @@ router.get('/admin_edit_employee_schedule/:username', requireAuth, (req, res) =>
                 return res.status(404).send("User not found");
         }
 
-        res.render("admin_schedule", {
+        res.render("admin_edit_employee_schedule", {
                 username: user.username,
                 schedule: userSchedule
         });

@@ -38,5 +38,5 @@ exports.saveEditedSchedule = (req, res) => {
     }
 
     fs.writeFileSync(schedulesFile, JSON.stringify(newSchedule, null, 2));
-    res.redirect('/admin/edit-schedule');
+    res.redirect('/admin/edit_employee_schedule');
 };
