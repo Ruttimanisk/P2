@@ -25,18 +25,4 @@ exports.csv_input_data = asyncHandler( async (req, res) => {
     res.status(200).send(csvInput);
 });
 
-exports.saveEditedSchedule = (req, res) => {
-    const flatData = req.body;
-    const newSchedule = {};
 
-    for (let key in flatData) {
-        const [username, day] = key.split('.');
-        if (!newSchedule[username]) {
-            newSchedule[username] = {};
-        }
-        newSchedule[username][day] = flatData[key];
-    }
-
-    fs.writeFileSync(schedulesFile, JSON.stringify(newSchedule, null, 2));
-    res.redirect('/admin/edit_employee_schedule');
-};
