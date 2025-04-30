@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const UserSchedule = require("../models/userschedule");
+const Absence = require("../models/absence")
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
 const fs = require("fs");
@@ -242,3 +243,15 @@ exports.admin_employee_list = asyncHandler(async (req, res) => {
         admins: allAdmins,
     });
 });
+
+exports.absence_get = asyncHandler(async (req,res) => {
+    const [users, current_absence] = await Promise.all([
+        User.find().sort({ first_name: 1 }).exec(),
+        Absence.find().populate("user").exec()
+    ]);
+
+    res.render("admin_absence", {
+        users: users,
+        current_absence: current_absence,
+    })
+})

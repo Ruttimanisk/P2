@@ -137,5 +137,6 @@ router.post('/user_creation',
     user_controller.admin_user_creation
 );
 
+router.get('/absence', requireAuth, user_controller.absence_get)
 
 module.exports = router;
