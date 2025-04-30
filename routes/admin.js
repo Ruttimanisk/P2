@@ -70,12 +70,12 @@ router.get('/logout', user_controller.logout)
 
 // router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
 
-router.get('/edit_schedule', requireAuth, userschedule_controller.renderEditSchedule);
+router.get('/edit_schedule', requireAuth, user_controller.render_edit_employee_schedule);
 
-router.post('/edit_schedule/save', requireAuth, userschedule_controller.saveEditedSchedule);
+router.post('/edit_schedule', requireAuth, user_controller.save_edited_schedule);
 
 
-router.get('/edit_employee_schedule/:username', requireAuth, (req, res) => {
+/*router.get('/edit_employee_schedule/:username', requireAuth, (req, res) => {
         const username = req.params.username;
 
         const userPath = path.join(__dirname, "../user_info.json");
@@ -108,7 +108,7 @@ router.post('/edit_employee_schedule/:username', (req, res) => {
 
         fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
         res.redirect(`/edit_employee_schedule/${username}`);
-});
+});*/
 
 router.get('/employee_list', requireAuth, user_controller.admin_employee_list)
 

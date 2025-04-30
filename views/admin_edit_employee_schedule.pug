@@ -3,27 +3,26 @@ extends layout_admin
 block content
     h1 Edit Employee Schedules
 
-        form(action="/admin/edit_schedule/save" method="POST")
+        form(action="/admin/edit_schedule" method="POST")
             table(border="1")
                 thead
                     tr
                         th Name
-                        each day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                        each day in ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
                             th= day
                 tbody
-                    each employee in employees
+                    each emp in employees
                         tr
-                            td= employee.firstname + ' ' + employee.lastname
-                            each day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-                                - var currentValue = schedules[employee.username]?.[day] || ''
+                            td= emp.first_name + ' ' + emp.family_name
+                            each dayKey in ['mon','tue','wed','thu','fri','sat','sun']
+                                - const val = schedules[emp.username]?.[dayKey] || ''
                                 td
-                                    select(name=`${employee.username}.${day}`)
+                                    select(name=`${emp.username}.${dayKey}`)
                                         option(value="") Select
-                                        option(value="08:00-16:00" selected=(currentValue === '08:00-16:00')) 08:00–16:00
-                                        option(value="10:00-18:00" selected=(currentValue === '10:00-18:00')) 10:00–18:00
-                                        option(value="SICK" selected=(currentValue === 'SICK')) SICK
-                                        option(value="PTO" selected=(currentValue === 'PTO')) PTO
-                                        option(value="OFF" selected=(currentValue === 'OFF')) OFF
+                                        option(value="08:00-16:00" selected=(val === '08:00-16:00')) 08–16
+                                        option(value="10:00-18:00" selected=(val === '10:00-18:00')) 10–18
+                                        option(value="SICK" selected=(val === 'SICK')) SICK
+                                        option(value="PTO"  selected=(val === 'PTO'))  PTO
+                                        option(value="OFF"  selected=(val === 'OFF'))  OFF
 
-            br
             button(type="submit")
