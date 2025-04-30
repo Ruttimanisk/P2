@@ -11,11 +11,11 @@ const AbsenceSchema = new Schema({
 });
 
 AbsenceSchema.virtual("leave_start_short").get(function() {
-    return "start: " +(this.leave_start ? DateTime.fromJSDate(this.leave_start).toLocaleString({ weekday: 'long', month: 'short', day: '2-digit' }) : '')
+    return "" +(this.leave_start ? "start: " + DateTime.fromJSDate(this.leave_start).toLocaleString({ weekday: 'long', month: 'short', day: '2-digit' }) : '')
 });
 
 AbsenceSchema.virtual("leave_end_short").get(function() {
-    return "/ end: " +(this.leave_end ? DateTime.fromJSDate(this.leave_end).toLocaleString({ weekday: 'long', month: 'short', day: '2-digit' }) : '')
+    return "" +(this.leave_end ? "/ end: " + DateTime.fromJSDate(this.leave_end).toLocaleString({ weekday: 'long', month: 'short', day: '2-digit' }) : '')
 });
 
 module.exports = mongoose.model("Absence", AbsenceSchema);
