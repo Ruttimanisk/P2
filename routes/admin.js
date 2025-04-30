@@ -125,10 +125,10 @@ router.post('/user_creation',
             .trim()
             .isLength({ min: 1 })
             .escape(),
-        body("date_of_birth", "Date of birth must not be empty.")
-            .trim()
-            .isLength({ min: 1 })
-            .escape(),
+        body("date_of_birth", "Invalid or missing date.")
+            .notEmpty().withMessage("Leave end must not be empty.")
+            .isISO8601().withMessage("Leave end must be a valid ISO 8601 date.")
+            .toDate(),
         body("address").escape(),
         body("hours_per_week", "hours per week must not be empty.")
             .trim()
@@ -156,5 +156,26 @@ router.post('/user_creation',
 );
 
 router.get('/absence', requireAuth, user_controller.absence_get)
+
+router.post('/absence',
+    requireAuth,
+    [
+        body("user", "Invalid user ObjectId.")
+            .custom(user => mongoose.Types.ObjectId.isValid(user)),
+        body("reason", "Reason must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("leave_start", "Invalid or missing date.")
+            .notEmpty().withMessage("Leave start must not be empty.")
+            .isISO8601().withMessage("Leave start must be a valid ISO 8601 date.")
+            .toDate(),
+        body("leave_end", "Invalid or missing date.")
+            .notEmpty().withMessage("Leave end must not be empty.")
+            .isISO8601().withMessage("Leave end must be a valid ISO 8601 date.")
+            .toDate()
+    ],
+    user_controller.absence_post
+);
 
 module.exports = router;
