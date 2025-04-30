@@ -4,10 +4,10 @@ block content
     h1 Edit Employee Schedules
 
         form(action="/admin/edit_schedule" method="POST")
-            table
+            table(border="1")
                 thead
                     tr
-                        th Name
+                        th Username
                         each day in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
                             th= day.charAt(0).toUpperCase() + day.slice(1)
                 tbody
@@ -15,26 +15,16 @@ block content
                         tr
                             td= emp.username
                             each dayKey in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-                                - const val = schedule[emp.username]?.[dayKey] || '';
+                                - const val = (schedule && schedule[emp.username] && schedule[emp.username][dayKey]) || ''
                                 td
                                     if ['sat', 'sun'].includes(dayKey)
                                         span(style="color: gray") Closed
                                     else
-                                        select(name=`${emp.username}.${dayKey}_preset`)
-                                            option(value="") Select
-                                            if dayKey === 'mon' || dayKey === 'wed'
-                                                option(value="07:30-15:30") 07:30–15:30
-                                                option(value="08:00-16:00") 08:00–16:00
-                                                option(value="09:00-19:00") 09:00–19:00
-                                            else if dayKey === 'tue' || dayKey === 'thu'
-                                                option(value="07:30-15:30") 07:30–15:30
-                                                option(value="07:30-17:00") 07:30–17:00
-                                            else if dayKey === 'fri'
-                                                option(value="08:00-15:30") 08:00–15:30
-                                            option(value="SICK") SICK
-                                            option(value="PTO") PTO
-                                            option(value="OFF") OFF
-                                        br
-                                        input(type="text", name=`${emp.username}.${dayKey}`, value=val, placeholder="Or type: 08:00-14:00")
+                                        input(type="text", name=`schedule[${emp.username}][${dayKey}]`, value=val, placeholder="e.g. 9-17", style="width: 70px; margin-right: 5px;")
+                                        select(name=`preset[${emp.username}][${dayKey}]`)
+                                            option(value="") --
+                                            option(value="7.30-17") 7.30-17
+                                            option(value="8-15.30") 8-15.30
+                                            option(value="7.30-19") 7.30-19
 
-            button(type="submit")
+            button(type="submit") Save Changes
