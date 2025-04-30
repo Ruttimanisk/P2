@@ -18,39 +18,31 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const collection = db.collection('Schedule');
         const shifts = await collection.find().toArray();
 
-        console.log("📦 Shifts data from DB:", shifts);
+        // Byg events
+        const events = shifts
+            .filter(shift => shift.date && shift.start && shift.end && shift.employee)
+            .map(shift => ({
+                    title: `${shift.start} - ${shift.end}`, // valgfrit
+                    start: `${shift.date}T${shift.start}`,
+                    end: `${shift.date}T${shift.end}`,
+                    resourceId: shift.employee
+            }));
 
-        const events = shifts.map(shift => {
-                if (!shift.date || !shift.start || !shift.end || !shift.employee) {
-                        console.warn("⚠️ Manglende data:", shift);
-                        return null;
-                }
+        // Unikke medarbejdere som resources
+        const resources = [...new Set(shifts.map(shift => shift.employee))]
+            .map(name => ({ id: name, title: name }));
 
-                return {
-                        title: shift.employee,
-                        start: `${shift.date}T${shift.start}`,
-                        end: `${shift.date}T${shift.end}`,
-                        resourceId: shift.employee
-                };
-        }).filter(e => e !== null);
-
-        // Udtræk unikke medarbejdernavne
-        const uniqueEmployees = [...new Set(shifts.map(shift => shift.employee))];
-
-        // Lav resources ud fra de unikke navne
-        const resources = uniqueEmployees.map(name => ({
-                id: name,
-                title: name
-        }));
-
+        // Debug
         console.log("📅 Events:", events);
         console.log("🧑‍🤝‍🧑 Resources:", resources);
 
+        // RENDER - vigtigt: send IKKE JSON.stringify her
         res.render('admin_calendar', {
-                events: JSON.stringify(events),
-                resources: JSON.stringify(resources)
+                events,
+                resources
         });
 });
+
 
 
 

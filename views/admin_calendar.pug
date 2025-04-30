@@ -3,49 +3,48 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // CSS for Resource Timeline
-    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline/index.global.min.css')
+    // ✅ FullCalendar styles (core + resource-timeline)
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.css')
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/index.global.min.css')
 
-    // Scripts: FullCalendar Core + Plugins
+    // ✅ FullCalendar scripts (core + all required plugins)
     script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js')
+    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-common@6.1.8/index.global.min.js')
     script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/index.global.min.js')
-    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js')
     script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.8/index.global.min.js')
 
-    // Calendar container
+    // ✅ Calendar container
     div#calendar(style="max-width: 1000px; margin: 40px auto;")
 
+    // ✅ Initialization script
     script.
-        try {
+        document.addEventListener('DOMContentLoaded', function () {
             const events = !{JSON.stringify(events)};
             const resources = !{JSON.stringify(resources)};
 
-            console.log("💬 Events:", events);
-            console.log("📋 Resources:", resources);
+            console.log("📅 Events:", events);
+            console.log("🧑 Resources:", resources);
 
-            document.addEventListener('DOMContentLoaded', function () {
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'resourceTimelineWeek',
-                    plugins: [
-                        FullCalendar.ResourceTimeline,
-                        FullCalendar.DayGrid,
-                        FullCalendar.Interaction
-                    ],
-                    slotMinTime: "07:00:00",
-                    slotMaxTime: "20:00:00",
-                    allDaySlot: false,
-                    headerToolbar: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'resourceTimelineWeek,dayGridMonth'
-                    },
-                    resources: resources,
-                    events: events
-                });
-
-                calendar.render();
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives', // 👈 Til testformål
+                plugins: [
+                    FullCalendar.ResourceTimeline,
+                    FullCalendar.Interaction
+                ],
+                initialView: 'resourceTimelineWeek',
+                slotMinTime: "07:00:00",
+                slotMaxTime: "20:00:00",
+                allDaySlot: false,
+                resourceAreaHeaderContent: 'Medarbejdere',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'resourceTimelineWeek'
+                },
+                resources: resources,
+                events: events
             });
-        } catch (err) {
-            console.error("❌ Fejl i JSON:", err);
-        }
+
+            calendar.render();
+        });
