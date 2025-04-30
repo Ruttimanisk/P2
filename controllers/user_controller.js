@@ -314,3 +314,20 @@ exports.absence_get = asyncHandler(async (req,res) => {
         current_absence: current_absence,
     })
 })
+
+exports.absence_post = asyncHandler(async (req,res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).render('absence', { errors: errors.array() });
+    } else {
+        const absence = new Absence({
+            user: req.body.user,
+            reason: req.body.reason,
+            leave_start: req.body.leave_start,
+            leave_end: req.body.leave_end,
+        });
+
+        await absence.save();
+        res.redirect(`/admin/absence`)
+    }
+});
