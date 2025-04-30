@@ -164,8 +164,7 @@ router.post('/absence',
             .custom(user => mongoose.Types.ObjectId.isValid(user)),
         body("reason", "Reason must not be empty.")
             .trim()
-            .isLength({ min: 1 })
-            .escape(),
+            .isLength({ min: 1 }),
         body("leave_start", "Invalid or missing date.")
             .notEmpty().withMessage("Leave start must not be empty.")
             .isISO8601().withMessage("Leave start must be a valid ISO 8601 date.")
