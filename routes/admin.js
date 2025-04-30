@@ -171,8 +171,8 @@ router.post('/absence',
             .isISO8601().withMessage("Leave start must be a valid ISO 8601 date.")
             .toDate(),
         body("leave_end", "Invalid or missing date.")
-            .notEmpty().withMessage("Leave end must not be empty.")
-            .isISO8601().withMessage("Leave end must be a valid ISO 8601 date.")
+            // .notEmpty().withMessage("Leave end must not be empty.")
+            // .isISO8601().withMessage("Leave end must be a valid ISO 8601 date.")
             .toDate()
     ],
     user_controller.absence_post
