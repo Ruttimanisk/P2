@@ -38,3 +38,7 @@ block content
                     .form-group
                         button.btn.btn-primary(type='submit') Submit
 
+        if current_absence.length
+            ul.absence-list
+                each absence in current_absence
+                    li.absence-item= `#{absence.user.fullname}: #{absence.reason} - start: #{absence.leave_start}, end: #{absence.leave_end}`
