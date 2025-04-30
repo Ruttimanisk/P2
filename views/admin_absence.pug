@@ -1,0 +1,38 @@
+extends layout_admin
+
+block content
+    head
+        meta(charset='UTF-8')
+        title Absence
+        meta(name='viewport' content='width=device-width, initial-scale=1')
+        link(rel='stylesheet' type='text/css' href='/stylesheets/UserCreation.css')
+
+    .user-creation-wrapper
+        h1 Absence
+        if errors
+            ul.error-list
+                each err in errors
+                    li.error-item= err.msg
+
+        .box
+            form(action="/admin/absence" method="POST")
+                .creation-form
+                    .form-group
+                        label.form-label(for='user') User:
+                        select#status.form-control(name='user')
+                            for user in users
+                                option(value=user._id) #{user.fullname}
+
+                    .form-group
+                        label.form-label(for='reason') Reason:
+                            select#status.form-control(name='reason')
+                                option(value='Sick') Sick
+                                option(value='PTO') PTO
+                                option(value='M/Paternity') M/Paternity
+                    .form-group
+                        label.form-label(for='leave_start') Start of Leave:
+                        input#date_of_birth.form-control(type='date' name='leave_start' required)
+                    .form-group
+                        label.form-label(for='leave_end') End of Leave:
+                        input#date_of_birth.form-control(type='date' name='leave_end' required)
+
