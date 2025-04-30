@@ -59,7 +59,7 @@ exports.render_edit_employee_schedule = (req, res) => {
     const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
 
 
-    const employees = users.filter(user => user.role === "Employee" || user.status === "Employee");
+    const employees = users.filter(user => user.role === "employee" || user.status === "employee");
 
     res.render("admin_edit_schedule", {
         employees,
