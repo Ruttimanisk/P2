@@ -52,35 +52,48 @@ exports.admin_home = asyncHandler( async(req, res) => {
 });
 
 exports.render_edit_employee_schedule = (req, res) => {
-    const userPath     = path.join(__dirname, "../user_info.json");
+    const usersPath = path.join(__dirname, "../user_info.json");
     const schedulePath = path.join(__dirname, "../schedule.json");
 
-    const users     = JSON.parse(fs.readFileSync(userPath, "utf8"));
+    const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
     const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
 
-    const employees = users.filter(u => u.status === "employee");
+
+    const employees = users.filter(user => user.role === "employee" || user.status === "employee");
 
     res.render("admin_edit_schedule", {
         employees,
-        schedules
+        schedule: schedules
     });
 };
 
-// Handles the form POST from that page
 exports.save_edited_schedule = (req, res) => {
-    const flatData = req.body;      // e.g. { "john.mon":"08:00-16:00", … }
-    const newSched = {};
+    const flatData = req.body;
+    const schedulePath = path.join(__dirname, "../schedule.json");
+
+    const newSchedule = {};
 
     for (let key in flatData) {
+        // Skip dropdowns – they'll be handled via companion key
+        if (key.endsWith("_preset")) continue;
+
         const [username, day] = key.split(".");
-        newSched[username] = newSched[username]||{};
-        newSched[username][day] = flatData[key];
+        const typedValue = flatData[key];
+        const dropdownValue = flatData[`${username}.${day}_preset`] || "";
+
+        const finalValue = typedValue.trim() || dropdownValue;
+
+        if (!newSchedule[username]) newSchedule[username] = {};
+        newSchedule[username][day] = finalValue;
     }
 
-    const schedulePath = path.join(__dirname, "../schedule.json");
-    fs.writeFileSync(schedulePath, JSON.stringify(newSched, null, 2));
-
-    res.redirect("/admin/edit_schedule");
+    try {
+        fs.writeFileSync(schedulePath, JSON.stringify(newSchedule, null, 2), "utf8");
+        res.redirect("/admin/edit_schedule");
+    } catch (err) {
+        console.error("Error saving schedule:", err);
+        res.status(500).send("Failed to save schedule.");
+    }
 };
 
 exports.admin_user_creation = asyncHandler(async (req,res) => {
