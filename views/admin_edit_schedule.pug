@@ -13,7 +13,7 @@ block content
             tbody
                 each emp in employees
                     tr
-                        td= emp.firstName + ' ' + emp.lastName
+                        td= emp.fullName
                         each dayKey in ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
                             - const val = (schedule && schedule[emp.username] && schedule[emp.username][dayKey]) || ''
                             td
