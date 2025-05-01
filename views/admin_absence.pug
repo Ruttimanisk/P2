@@ -44,5 +44,5 @@ block content
             ul.absence-list
                 each absence in current_absence
                     li.absence-item= `${absence.user.fullname}: ${absence.reason} - ${absence.leave_start_short} ${absence.leave_end_short}`
-                    a(href="#", onclick=`deleteAbsence('${absence._id}')` style="color: red;") Delete
+                    a(href="javascript:void(0)", onclick=`deleteAbsence('${absence._id}')` style="color: red;") Delete
 
