@@ -60,7 +60,8 @@ block content
                             td= emp.fullname
                             each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                                 if ['Saturday', 'Sunday'].includes(dayKey)
-                                    span(style="color: gray") Closed
+                                    td
+                                        span(style="color: gray") Closed
                                 else
                                     td
                                         input(
