@@ -3,15 +3,12 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // ✅ FullCalendar styles (core + resource-timeline)
-    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.css')
-    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/index.global.min.css')
+    // CSS
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline/main.min.css')
 
-    // ✅ FullCalendar scripts (core + all required plugins)
-    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js')
-    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-common@6.1.8/index.global.min.js')
-    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/index.global.min.js')
-    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.8/index.global.min.js')
+    // JS (kun ÉN samlet bundle)
+    script(src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline/main.global.min.js')
+
 
     // ✅ Calendar container
     div#calendar(style="max-width: 1000px; margin: 40px auto;")
