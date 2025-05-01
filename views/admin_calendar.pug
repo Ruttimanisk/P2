@@ -3,21 +3,15 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // FullCalendar CSS
+    // CSS
     link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css')
 
-    // FullCalendar Scripts (global versions)
+    // Scripts
     script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js')
     script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/resource-timeline.global.min.js')
-    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/daygrid.global.min.js')
-    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/interaction.global.min.js')
 
+    div#calendar(style="max-width: 1200px; margin: 40px auto;")
 
-
-    // ✅ Calendar container
-    div#calendar(style="max-width: 1000px; margin: 40px auto;")
-
-    // ✅ Initialization script
     script.
         try {
             const events = !{JSON.stringify(events)};
@@ -32,7 +26,6 @@ block content
                     initialView: 'resourceTimelineWeek',
                     slotMinTime: "07:00:00",
                     slotMaxTime: "20:00:00",
-                    allDaySlot: false,
                     headerToolbar: {
                         left: 'prev,next today',
                         center: 'title',
@@ -47,6 +40,3 @@ block content
         } catch (err) {
             console.error("❌ Fejl i JSON:", err);
         }
-
-
-
