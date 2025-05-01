@@ -330,10 +330,23 @@ exports.absence_get = asyncHandler(async (req,res) => {
         Absence.find().populate("user").exec()
     ]);
 
-    res.render("admin_absence", {
-        users: users,
-        current_absence: current_absence,
-    })
+    try {
+        await Absence.deleteMany({
+          leave_end: { $lt: new Date() }
+        });
+
+        res.render("admin_absence", {
+            users: users,
+            current_absence: current_absence,
+        });
+
+    } catch (err) {
+        return res.status(500).render("admin_absence", {
+            users: users,
+            current_absence: current_absence,
+            errors: [`Failed in delete expired absence: ${err.name}, ${err.message}`]
+        })
+    }
 })
 
 exports.absence_post = asyncHandler(async (req,res) => {
