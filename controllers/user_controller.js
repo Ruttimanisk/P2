@@ -6,6 +6,7 @@ const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
+const { weekday } = require("../public/scripts/weekdayFromDate")
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -67,10 +68,47 @@ exports.render_edit_employee_schedule = asyncHandler(async (req, res) => {
 
     const employees = await User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec();
 
+    const empSchedules = []
+
+    class EmpSchedule {
+        constructor() {
+            this.Monday_start = "";
+            this.Monday_end = "";
+            this.Tuesday_start = "";
+            this.Tuesday_end = "";
+            this.Wednesday_start = "";
+            this.Wednesday_end = "";
+            this.Thursday_start = "";
+            this.Thursday_end = "";
+            this.Friday_start = "";
+            this.Friday_end = "";
+        }
+    }
+
+
+    // Create a mapping from employee _id to index in the array
+    const employeeIndexMap = {};
+
+    employees.forEach((employee, index) => {
+        empSchedules.push(new EmpSchedule());
+        employeeIndexMap[employee._id.toString()] = index;
+    });
+
+    // Populate the schedules
+    for (const shift of shifts) {
+        const day = weekday(shift.date); // returns e.g. "Monday"
+        const index = employeeIndexMap[shift.employee.toString()];
+
+        if (index !== undefined && empSchedules[index]) {
+            empSchedules[index][`${day}_start`] = shift.start;
+            empSchedules[index][`${day}_end`] = shift.end;
+        }
+    }
+
     res.render("admin_edit_schedule", {
         employees: employees,
         schedule: schedules,
-        shifts: shifts,
+        empSchedules: empSchedules,
     });
 });
 
