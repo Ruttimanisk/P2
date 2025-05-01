@@ -82,7 +82,7 @@ with open(shifts_file, "r", encoding="utf-8") as file:
             else:
                 print(f"Warning: Shift on {day} from {start} to {end} is outside opening hours ({open_start}–{open_end}) – Shift ignored.")
         else:
-            raise ValueError(f"Incorrect weekday: {day}")
+            raise ValueError(f"Incorrect weekdayFromDate: {day}")
 
 # Tjek at alle CSV-filer er der
 for file, name in zip([employees_file, absence_file, shifts_file], ["Employees.csv", "Absence.csv", "Shifts.csv"]):

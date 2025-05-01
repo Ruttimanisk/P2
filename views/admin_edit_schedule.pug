@@ -63,7 +63,7 @@ block content
                                         input(
                                             type="text",
                                             name=`start_${emp.first_name}${emp.family_name}_${dayKey}`,
-                                            value=`${schedule[emp._id][dayKey]}` || "",
+                                            value=shifts.findOne({ employee: emp.id}, weekdayFromDate(date) == dayKey)`${shifts[emp._id][dayKey]}` || "",
                                             style="width: 70px; margin-right: 5px;"
                                         )
                                         input(
@@ -76,3 +76,8 @@ block content
             button(type="submit") Save Changes
     script.
         console.log(#{shifts})
+
+        function weekdayFromDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { weekday: 'long' });
+        }
