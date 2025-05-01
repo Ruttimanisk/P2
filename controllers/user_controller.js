@@ -5,6 +5,7 @@ const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
+const mongoose = require("mongoose");
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -57,14 +58,19 @@ exports.render_edit_employee_schedule = asyncHandler(async (req, res) => {
     const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
     const employees = users.filter(user => user.role === "Employee" || user.status === "Employee");
     */
-    const schedulePath = path.join(__dirname, "../schedule.json");
+    const schedulePath = path.join(__dirname, "../algorithm/schedule.json");
     const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
+
+    const db = mongoose.connection;
+    const collection = db.collection('Schedule');
+    const shifts = await collection.find().toArray();
 
     const employees = await User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec();
 
     res.render("admin_edit_schedule", {
         employees: employees,
         schedule: schedules,
+        shifts: shifts,
     });
 });
 

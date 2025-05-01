@@ -43,3 +43,34 @@ block content
                                             option(value="13-15.30") 13-15.30
 
         button(type="submit") Save Changes
+
+        // mads version:
+        form(action="/admin/edit_schedule" method="POST")
+            table(border="1")
+                thead
+                    tr
+                        th Username
+                        each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                            th= day.slice(0, 2)
+                tbody
+                    each emp in employees
+                        tr
+                            td= emp.fullname
+                            each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                                    if ['Saturday', 'Sunday'].includes(dayKey)
+                                        span(style="color: gray") Closed
+                                    else
+                                        input(
+                                            type="text",
+                                            name=`start_${emp.first_name}${emp.family_name}_${dayKey}`,
+                                            value=`${schedule[emp._id][dayKey]}` || "",
+                                            style="width: 70px; margin-right: 5px;"
+                                        )
+                                        input(
+                                            type="text",
+                                            name=`end_${emp.first_name}${emp.family_name}_${dayKey}`,
+                                            value=`${schedule[emp._id][dayKey]}` || "",
+                                            style="width: 70px; margin-right: 5px;"
+                                        )
+
+            button(type="submit") Save Changes
