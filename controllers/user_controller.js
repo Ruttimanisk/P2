@@ -352,12 +352,3 @@ exports.absence_post = asyncHandler(async (req,res) => {
         res.redirect(`/admin/absence`)
     }
 });
-
-exports.absence_delete = asyncHandler(async (req, res) => {
-  try {
-    await Absence.findByIdAndDelete(req.params.absenceId);
-    res.redirect('/admin/absence');
-  } catch (err) {
-    res.status(500).send("Error deleting");
-  }
-});

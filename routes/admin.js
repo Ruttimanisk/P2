@@ -4,6 +4,7 @@ const router = express.Router();
 const user_controller = require("../controllers/user_controller");
 const userschedule_controller = require("../controllers/userschedule_controller");
 const {body} = require("express-validator");
+const Absence = require("../models/absence");
 const { requireAuth } = require('../middleware/auth');
 const mongoose = require('mongoose')
 
@@ -169,6 +170,14 @@ router.post('/absence',
     user_controller.absence_post
 );
 
-router.get('/absence_delete/:absenceId', requireAuth, user_controller.absence_delete)
+router.delete('/absence_delete/:id', async (req, res) => {
+  try {
+    await Absence.findByIdAndDelete(req.params.id);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
 
 module.exports = router;

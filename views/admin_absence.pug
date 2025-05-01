@@ -6,6 +6,7 @@ block content
         title Absence
         meta(name='viewport' content='width=device-width, initial-scale=1')
         link(rel='stylesheet' type='text/css' href='/stylesheets/UserCreation.css')
+        script(src="/scripts/absenceDelete.js")
 
     .user-creation-wrapper
         h1 Absence
@@ -43,5 +44,5 @@ block content
             ul.absence-list
                 each absence in current_absence
                     li.absence-item= `${absence.user.fullname}: ${absence.reason} - ${absence.leave_start_short} ${absence.leave_end_short}`
-                    a(href=`/absence_delete/${absence._id}` style="color: red;") Delete
+                    a(href="#", onclick=`deleteAbsence('${absence._id}')` style="color: red;") Delete
 
