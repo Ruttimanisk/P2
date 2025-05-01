@@ -65,12 +65,12 @@ block content
                                         input(
                                             type="text",
                                             name=`${emp._id}_${dayKey}_start`,
-                                            value=employee_schedule[index][`${dayKey}_start`] || ''
+                                            value=employee_schedule[`${dayKey}_start`] || ''
                                             )
                                         input(
                                             type="text",
                                             name=`${emp._id}_${dayKey}_end`,
-                                            value=employee_schedule[index][`${dayKey}_end`] || ''
+                                            value=employee_schedule[`${dayKey}_end`] || ''
                                             )
             button(type="submit") Save Changes
 
