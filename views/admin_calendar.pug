@@ -23,29 +23,30 @@ block content
             const events = !{JSON.stringify(events)};
             const resources = !{JSON.stringify(resources)};
 
-            console.log("📅 Events:", events);
-            console.log("🧑 Resources:", resources);
+            console.log("💬 Events:", events);
+            console.log("📋 Resources:", resources);
 
             document.addEventListener('DOMContentLoaded', function () {
                 var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendarResourceTimeline.Calendar(calendarEl, {
+                var calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'resourceTimelineWeek',
                     slotMinTime: "07:00:00",
                     slotMaxTime: "20:00:00",
                     allDaySlot: false,
-                    resourceAreaHeaderContent: 'Medarbejdere',
                     headerToolbar: {
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'resourceTimelineWeek'
+                        right: 'resourceTimelineWeek,dayGridMonth'
                     },
                     resources: resources,
                     events: events
                 });
+
                 calendar.render();
             });
         } catch (err) {
             console.error("❌ Fejl i JSON:", err);
         }
+
 
 
