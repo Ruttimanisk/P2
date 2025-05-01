@@ -61,12 +61,18 @@ block content
                                         span(style="color: gray") Closed
                                     else
                                         td
-                                            input(type="text", name=`${emp._id}_${dayKey}_start`, value=empSchedules[index][`${dayKey}_start`] || '')
-                                            input(type="text", name=`${emp._id}_${dayKey}_end`, value=empSchedules[index][`${dayKey}_end`] || '')
-
-
-
+                                            input(
+                                                type="text",
+                                                name=`${emp._id}_${dayKey}_start`,
+                                                value=empSchedules[index][`${dayKey}_start`] || ''
+                                                )
+                                            input(
+                                                type="text",
+                                                name=`${emp._id}_${dayKey}_end`,
+                                                value=empSchedules[index][`${dayKey}_end`] || ''
+                                                )
             button(type="submit") Save Changes
+
     script.
         console.log(#{shifts})
 
