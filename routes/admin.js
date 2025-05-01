@@ -170,7 +170,7 @@ router.post('/absence',
     user_controller.absence_post
 );
 
-router.delete('/absence_delete/:id', async (req, res) => {
+router.delete('/absence/:id', async (req, res) => {
   try {
     await Absence.findByIdAndDelete(req.params.id);
     res.sendStatus(200);
