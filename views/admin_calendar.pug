@@ -3,20 +3,18 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // CSS
-    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css")
-
-    // Scripts
-    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/resource-timeline.global.min.js")
+    // FullCalendar CSS
+    link(rel="stylesheet", href="/javascripts/fullcalendar/main.min.css")
 
     div#calendar(style="max-width: 1200px; margin: 40px auto;")
+
+    script(src="/javascripts/fullcalendar/index.global.min.js")
+    script(src="/javascripts/fullcalendar/resource-timeline.global.min.js")
 
     script.
         try {
             const events = !{JSON.stringify(events)};
             const resources = !{JSON.stringify(resources)};
-
             console.log("💬 Events:", events);
             console.log("📋 Resources:", resources);
 
@@ -34,7 +32,6 @@ block content
                     resources: resources,
                     events: events
                 });
-
                 calendar.render();
             });
         } catch (err) {
