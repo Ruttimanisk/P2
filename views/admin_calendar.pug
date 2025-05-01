@@ -27,11 +27,7 @@ block content
 
             const calendarEl = document.getElementById('calendar');
             const calendar = new FullCalendar.Calendar(calendarEl, {
-                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives', // 👈 Til testformål
-                plugins: [
-                    FullCalendar.ResourceTimeline,
-                    FullCalendar.Interaction
-                ],
+                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
                 initialView: 'resourceTimelineWeek',
                 slotMinTime: "07:00:00",
                 slotMaxTime: "20:00:00",
@@ -48,3 +44,4 @@ block content
 
             calendar.render();
         });
+
