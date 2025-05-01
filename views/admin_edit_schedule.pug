@@ -54,13 +54,13 @@ block content
                             th= day.slice(0, 2)
                 tbody
                     each emp in employees
+                        - const employee_schedule = empSchedules[index] || {};
                         tr
                             td= emp.fullname
                             each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                                 if ['Saturday', 'Sunday'].includes(dayKey)
                                     span(style="color: gray") Closed
                                 else
-                                    - const employee_schedule = empSchedules[index] || {};
                                     td
                                         input(
                                             type="text",
