@@ -3,39 +3,37 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // CSS
+    // Stylesheet til FullCalendar
     link(rel="stylesheet", href="/javascripts/fullcalendar/main.min.css")
 
-    // JS
+    // Lokale JS-filer
     script(src="/javascripts/fullcalendar/index.global.min.js")
     script(src="/javascripts/fullcalendar/daygrid.global.min.js")
     script(src="/javascripts/fullcalendar/interaction.global.min.js")
     script(src="/javascripts/fullcalendar/resource-timeline.global.min.js")
 
+    div#calendar(style="max-width: 1000px; margin: 40px auto;")
 
     script.
-        try {
-            const events = !{JSON.stringify(events)};
-            const resources = !{JSON.stringify(resources)};
-            console.log("💬 Events:", events);
-            console.log("📋 Resources:", resources);
+        const events = !{JSON.stringify(events)};
+        const resources = !{JSON.stringify(resources)};
+        console.log("💬 Events:", events);
+        console.log("📋 Resources:", resources);
 
-            document.addEventListener('DOMContentLoaded', function () {
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'resourceTimelineWeek',
-                    slotMinTime: "07:00:00",
-                    slotMaxTime: "20:00:00",
-                    headerToolbar: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'resourceTimelineWeek,dayGridMonth'
-                    },
-                    resources: resources,
-                    events: events
-                });
-                calendar.render();
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'resourceTimelineWeek',
+                slotMinTime: "07:00:00",
+                slotMaxTime: "20:00:00",
+                allDaySlot: false,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'resourceTimelineWeek,dayGridMonth'
+                },
+                resources: resources,
+                events: events
             });
-        } catch (err) {
-            console.error("❌ Fejl i JSON:", err);
-        }
+            calendar.render();
+        });
