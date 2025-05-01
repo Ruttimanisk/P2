@@ -15,30 +15,33 @@ block content
 
     // ✅ Initialization script
     script.
-        document.addEventListener('DOMContentLoaded', function () {
+        try {
             const events = !{JSON.stringify(events)};
             const resources = !{JSON.stringify(resources)};
 
             console.log("📅 Events:", events);
             console.log("🧑 Resources:", resources);
 
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-                initialView: 'resourceTimelineWeek',
-                slotMinTime: "07:00:00",
-                slotMaxTime: "20:00:00",
-                allDaySlot: false,
-                resourceAreaHeaderContent: 'Medarbejdere',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'resourceTimelineWeek'
-                },
-                resources: resources,
-                events: events
+            document.addEventListener('DOMContentLoaded', function () {
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendarResourceTimeline.Calendar(calendarEl, {
+                    initialView: 'resourceTimelineWeek',
+                    slotMinTime: "07:00:00",
+                    slotMaxTime: "20:00:00",
+                    allDaySlot: false,
+                    resourceAreaHeaderContent: 'Medarbejdere',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'resourceTimelineWeek'
+                    },
+                    resources: resources,
+                    events: events
+                });
+                calendar.render();
             });
+        } catch (err) {
+            console.error("❌ Fejl i JSON:", err);
+        }
 
-            calendar.render();
-        });
 
