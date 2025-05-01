@@ -60,18 +60,11 @@ block content
                                     if ['Saturday', 'Sunday'].includes(dayKey)
                                         span(style="color: gray") Closed
                                     else
-                                        input(
-                                            type="text",
-                                            name=`start_${emp.first_name}${emp.family_name}_${dayKey}`,
-                                            value=shifts.findOne({ employee: emp.id}, weekdayFromDate(date) == dayKey)`${shifts[emp._id][dayKey]}` || "",
-                                            style="width: 70px; margin-right: 5px;"
-                                        )
-                                        input(
-                                            type="text",
-                                            name=`end_${emp.first_name}${emp.family_name}_${dayKey}`,
-                                            value=`${schedule[emp._id][dayKey]}` || "",
-                                            style="width: 70px; margin-right: 5px;"
-                                        )
+                                        td
+                                            input(type="text", name=`${emp._id}_${dayKey}_start`, value=empSchedules[index][`${dayKey}_start`] || '')
+                                            input(type="text", name=`${emp._id}_${dayKey}_end`, value=empSchedules[index][`${dayKey}_end`] || '')
+
+
 
             button(type="submit") Save Changes
     script.
