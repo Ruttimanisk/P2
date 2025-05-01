@@ -3,13 +3,15 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // FullCalendar CSS
+    // CSS
     link(rel="stylesheet", href="/javascripts/fullcalendar/main.min.css")
 
-    div#calendar(style="max-width: 1200px; margin: 40px auto;")
-
+    // JS
     script(src="/javascripts/fullcalendar/index.global.min.js")
+    script(src="/javascripts/fullcalendar/daygrid.global.min.js")
+    script(src="/javascripts/fullcalendar/interaction.global.min.js")
     script(src="/javascripts/fullcalendar/resource-timeline.global.min.js")
+
 
     script.
         try {
