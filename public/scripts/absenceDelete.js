@@ -1,6 +1,6 @@
 function deleteAbsence(id) {
   if (confirm("Are you sure you want to delete this absence?")) {
-    fetch(`/absence/${id}`, {
+    fetch(`/admin/absence/${id}`, {
       method: 'DELETE',
     })
     .then(res => {
