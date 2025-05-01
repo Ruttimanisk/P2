@@ -5,6 +5,7 @@ const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
+const mongoose = require("mongoose");
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -51,21 +52,27 @@ exports.admin_home = asyncHandler( async(req, res) => {
     res.render('admin_home', {title: "Home Page"});
 });
 
-exports.render_edit_employee_schedule = (req, res) => {
+exports.render_edit_employee_schedule = asyncHandler(async (req, res) => {
+    /*
     const usersPath = path.join(__dirname, "../user_info.json");
-    const schedulePath = path.join(__dirname, "../schedule.json");
-
     const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
+    const employees = users.filter(user => user.role === "Employee" || user.status === "Employee");
+    */
+    const schedulePath = path.join(__dirname, "../algorithm/schedule.json");
     const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
 
+    const db = mongoose.connection;
+    const collection = db.collection('Schedule');
+    const shifts = await collection.find().toArray();
 
-    const employees = users.filter(user => user.role === "Employee" || user.status === "Employee");
+    const employees = await User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec();
 
     res.render("admin_edit_schedule", {
-        employees,
-        schedule: schedules
+        employees: employees,
+        schedule: schedules,
+        shifts: shifts,
     });
-};
+});
 
 exports.save_edited_schedule = (req, res) => {
     const flatData = req.body;
@@ -329,10 +336,23 @@ exports.absence_get = asyncHandler(async (req,res) => {
         Absence.find().populate("user").exec()
     ]);
 
-    res.render("admin_absence", {
-        users: users,
-        current_absence: current_absence,
-    })
+    try {
+        await Absence.deleteMany({
+          leave_end: { $lt: new Date() }
+        });
+
+        res.render("admin_absence", {
+            users: users,
+            current_absence: current_absence,
+        });
+
+    } catch (err) {
+        return res.status(500).render("admin_absence", {
+            users: users,
+            current_absence: current_absence,
+            errors: [`Failed in delete expired absence: ${err.name}, ${err.message}`]
+        })
+    }
 })
 
 exports.absence_post = asyncHandler(async (req,res) => {

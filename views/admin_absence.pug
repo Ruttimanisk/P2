@@ -6,13 +6,14 @@ block content
         title Absence
         meta(name='viewport' content='width=device-width, initial-scale=1')
         link(rel='stylesheet' type='text/css' href='/stylesheets/UserCreation.css')
+        script(src="/scripts/absenceDelete.js")
 
     .user-creation-wrapper
         h1 Absence
         if errors
             ul.error-list
                 each err in errors
-                    li.error-item= err.msg
+                    li.error-item= typeof err === 'object' && err.msg ? err.msg : err
 
         .box
             form(action="/admin/absence" method="POST")
@@ -43,3 +44,5 @@ block content
             ul.absence-list
                 each absence in current_absence
                     li.absence-item= `${absence.user.fullname}: ${absence.reason} - ${absence.leave_start_short} ${absence.leave_end_short}`
+                    a(href="javascript:void(0)", onclick=`deleteAbsence('${absence._id}')` style="color: red;") Delete
+
