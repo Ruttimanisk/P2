@@ -63,8 +63,8 @@ exports.render_edit_employee_schedule = asyncHandler(async (req, res) => {
     const employees = await User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec();
 
     res.render("admin_edit_schedule", {
-        employees,
-        schedule: schedules
+        employees: employees,
+        schedule: schedules,
     });
 });
 
