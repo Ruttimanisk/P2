@@ -199,8 +199,26 @@ exports.save_employee_schedule = async (req, res) => {
         console.error("Error saving schedule:", err);
         res.status(500).send("Failed to save schedule");
     }
-}; */
+};
 
+
+
+
+exports.profile_old = (req, res) => {
+    const username = req.session.username;
+    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
+    const user = users.find(u => u.username === username);
+
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    res.render('profile', {
+        name: user.first_name,  // Make sure the JSON contains "firstName"
+        status: user.status     // Ensure it's "status", not "role"
+    })
+};
+*/
 exports.admin_user_creation = asyncHandler(async (req,res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -232,24 +250,6 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
     await user.save();
     res.redirect(`/admin/home`)
 });
-
-
-exports.profile_old = (req, res) => {
-    const username = req.session.username;
-    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
-    const user = users.find(u => u.username === username);
-
-    if (!user) {
-        return res.status(404).send('User not found');
-    }
-
-    res.render('profile', {
-        name: user.first_name,  // Make sure the JSON contains "firstName"
-        status: user.status     // Ensure it's "status", not "role"
-    })
-};
-
-// remaking profile with database - Mads
 
 exports.profile = asyncHandler(async (req, res) => {
     try {
