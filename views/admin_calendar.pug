@@ -10,7 +10,6 @@ block content
     // FullCalendar scripts
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/resource-daygrid@5.11.3/main.min.js") // <--- NYT!
 
     div#calendar(style="max-width: 1200px; margin: 40px auto;")
 
@@ -24,12 +23,20 @@ block content
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-                initialView: 'resourceDayGridWeek', // <--- Skiftet her!
+                initialView: 'resourceTimelineWeek',
+                slotDuration: { days: 1 },          // én dag pr. kolonne
+                slotLabelFormat: [
+                    { weekday: 'short' }            // vis kun Mon, Tue, Wed
+                ],
+                slotMinTime: "00:00:00",             // starter ved midnat
+                slotMaxTime: "24:00:00",             // slutter ved midnat
+                allDaySlot: false,                   // skjul All-Day slot
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'resourceDayGridWeek,dayGridMonth'
+                    right: 'resourceTimelineWeek,dayGridMonth'
                 },
+                resourceAreaHeaderContent: 'Medarbejdere', // Skriv "Medarbejdere" som venstre kolonne header
                 resources: resources,
                 events: events
             });
