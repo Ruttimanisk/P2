@@ -24,21 +24,23 @@ block content
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 initialView: 'resourceTimelineWeek',
-                slotDuration: { days: 1 },          // én dag pr. kolonne
+                slotDuration: {days: 1},
                 slotLabelFormat: [
-                    { weekday: 'short' }            // vis kun Mon, Tue, Wed
+                    {weekday: 'short'}
                 ],
-                slotMinTime: "00:00:00",             // starter ved midnat
-                slotMaxTime: "24:00:00",             // slutter ved midnat
-                allDaySlot: false,                   // skjul All-Day slot
+                slotMinTime: "00:00:00",
+                slotMaxTime: "24:00:00",
+                allDaySlot: false,
+                displayEventTime: false, // <--- tilføjet her
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'resourceTimelineWeek,dayGridMonth'
                 },
-                resourceAreaHeaderContent: 'Medarbejdere', // Skriv "Medarbejdere" som venstre kolonne header
+                resourceAreaHeaderContent: 'Employees',
                 resources: resources,
                 events: events
             });
+
             calendar.render();
         });
