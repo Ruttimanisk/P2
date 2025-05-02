@@ -24,6 +24,8 @@ block content
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 initialView: 'resourceTimelineWeek',
+                firstDay: 1,
+                contentHeight: 'auto',
                 slotDuration: {days: 1},
                 slotLabelFormat: [
                     {weekday: 'short'}
@@ -31,7 +33,7 @@ block content
                 slotMinTime: "00:00:00",
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
-                displayEventTime: false, // <--- tilføjet her
+                displayEventTime: false,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -41,6 +43,7 @@ block content
                 resources: resources,
                 events: events
             });
+
 
             calendar.render();
         });
