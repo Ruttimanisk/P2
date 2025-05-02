@@ -85,25 +85,12 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             { _id: schedule._id },
             { $set: updatedSchedule }
         );
-
-
     }
 
     res.redirect('/admin/calendar');
 });
 
 
-    asyncHandler(async (req, res) => {
-        const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
-
-        for (let i = 0; i < schedules.length; i++) {
-
-        }
-
-        res.render("admin_edit_schedule", {
-            schedules: schedules,
-        });
-    })
 // de her skal ændres
 exports.show_admin_schedule = asyncHandler(async (req, res) => {
     const userId = req.cookies.userId;
