@@ -37,10 +37,8 @@ exports.login = asyncHandler(async (req, res) => {
 });
 
 exports.logout = asyncHandler(async (req, res) => {
-    if (confirm("Are you sure you want to log out?") === true) {
-        res.clearCookie('userId');
-        res.render('login')
-    }
+    res.clearCookie('userId');
+    res.render('login')
 });
 
 exports.employee_home = asyncHandler( async(req, res) => {
@@ -106,6 +104,7 @@ exports.show_admin_schedule = asyncHandler(async (req, res) => {
     }
 });
 
+/*
 exports.save_edited_schedule = (req, res) => {
     const flatData = req.body;
     const schedulePath = path.join(__dirname, "../schedules.json");
@@ -136,7 +135,7 @@ exports.save_edited_schedule = (req, res) => {
 };
 
 // (Additional functions for scheduling can be implemented similarly)
-/*
+
 exports.list_employees_for_schedule_edit = async (req, res) => {
     const filePath = path.join(__dirname, "../user_info.json");
 
