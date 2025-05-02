@@ -16,7 +16,7 @@ html
             a(href='/employee/profile') Profile
             a(href='/employee/schedule') Schedule
             a(href='/employee/calendar') Calendar
-            a(href="/login", onclick= "confirmLogout()") Logout
+            a(href="/admin/logout", onclick="return confirm('Are you sure you want to log out?')") Logout
 
         .sidebar
             img(src='/images/WFM.webp' alt='WFM Logo')
