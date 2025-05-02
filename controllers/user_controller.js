@@ -71,6 +71,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 });
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
+    // not done at all buddy
     const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
 
     res.render("admin_edit_schedule", {
