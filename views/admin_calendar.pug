@@ -3,16 +3,15 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // Stylesheet til FullCalendar
-    link(rel="stylesheet", href="/javascripts/fullcalendar/main.min.css")
+    // FullCalendar stylesheets
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
-    // Lokale JS-filer
-    script(src="/javascripts/fullcalendar/index.global.min.js")
-    script(src="/javascripts/fullcalendar/daygrid.global.min.js")
-    script(src="/javascripts/fullcalendar/interaction.global.min.js")
-    script(src="/javascripts/fullcalendar/resource-timeline.global.min.js")
+    // FullCalendar scripts
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
 
-    div#calendar(style="max-width: 1000px; margin: 40px auto;")
+    div#calendar(style="max-width: 1200px; margin: 40px auto;")
 
     script.
         const events = !{JSON.stringify(events)};
@@ -23,17 +22,28 @@ block content
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 initialView: 'resourceTimelineWeek',
-                slotMinTime: "07:00:00",
-                slotMaxTime: "20:00:00",
+                firstDay: 1,
+                contentHeight: 'auto',
+                slotDuration: {days: 1},
+                slotLabelFormat: [
+                    {weekday: 'short'}
+                ],
+                slotMinTime: "00:00:00",
+                slotMaxTime: "24:00:00",
                 allDaySlot: false,
+                displayEventTime: false,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'resourceTimelineWeek,dayGridMonth'
                 },
+                resourceAreaHeaderContent: 'Employees',
                 resources: resources,
                 events: events
             });
+
+
             calendar.render();
         });
