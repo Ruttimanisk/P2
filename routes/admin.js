@@ -49,7 +49,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
 router.post('/update_shift', async (req, res) => {
     const { id, start, end, resourceId, title } = req.body;
-    const schedulePath = path.join(__dirname, '../schedule.json');
+    const schedulePath = path.join(__dirname, '../schedules.json');
     const schedules = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
 
     // Find og opdatér eksisterende vagt
@@ -68,7 +68,7 @@ router.post('/update_shift', async (req, res) => {
 
 router.post('/create_shift', async (req, res) => {
     const { start, end, resourceId, title } = req.body;
-    const schedulePath = path.join(__dirname, '../schedule.json');
+    const schedulePath = path.join(__dirname, '../schedules.json');
     const schedules = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
 
     const newId = Date.now().toString(); // simpelt ID baseret på timestamp
