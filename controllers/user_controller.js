@@ -71,7 +71,8 @@ exports.render_edit_employee_schedule = asyncHandler(async (req, res) => {
     const empSchedules = []
 
     class EmpSchedule {
-        constructor() {
+        constructor(user) {
+            this.user = user;
             this.Monday_start = "";
             this.Monday_end = "";
             this.Tuesday_start = "";
