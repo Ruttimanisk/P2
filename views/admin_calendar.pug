@@ -3,15 +3,16 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // Stylesheet til FullCalendar
-    link(rel="stylesheet", href="/javascripts/fullcalendar/main.min.css")
+    // FullCalendar stylesheet fra CDN
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css")
 
-    script(src="/javascripts/fullcalendar/core.global.min.js")
-    script(src="/javascripts/fullcalendar/interaction.global.min.js")
-    script(src="/javascripts/fullcalendar/daygrid.global.min.js")
-    script(src="/javascripts/fullcalendar/timeline.global.min.js")
-    script(src="/javascripts/fullcalendar/resource.global.min.js")
-    script(src="/javascripts/fullcalendar/resource-timeline.global.min.js")
+    // FullCalendar scripts fra CDN
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.8/index.global.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/timeline@6.1.8/index.global.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/resource@6.1.8/index.global.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/index.global.min.js")
 
     div#calendar(style="max-width: 1000px; margin: 40px auto;")
 
@@ -24,6 +25,7 @@ block content
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 initialView: 'resourceTimelineWeek',
                 slotMinTime: "07:00:00",
                 slotMaxTime: "20:00:00",
