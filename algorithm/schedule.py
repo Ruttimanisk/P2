@@ -1,3 +1,5 @@
+from fileinput import close
+
 import pulp
 import csv
 import os
@@ -120,33 +122,66 @@ print("Status:", pulp.LpStatus[model.status])
 print("\nShift Plan:")
 
 schedule_output = []
+shift_output = []
 
 for e in employees:
+    schedule = {
+        "employee": e,
+        "week_start_date": week_start,
+        "Monday_start": "",
+        "Monday_end": "",
+        "Tuesday_start": "",
+        "Tuesday_end": "",
+        "Wednesday_start": "",
+        "Wednesday_end": "",
+        "Thursday_start": "",
+        "Thursday_end": "",
+        "Friday_start": "",
+        "Friday_end": "",
+    }
+
     for s in shifts:
         if x[e][s].value() == 1:
+            schedule[f'{s[0]}_start'] = s[1]
+            schedule[f'{s[0]}_end'] = s[2]
             shift = {
                 "employee": e,
                 "date": weekday_to_date.get(s[0], week_start),
                 "start": s[1],
                 "end": s[2]
             }
-            schedule_output.append(shift)
+            shift_output.append(shift)
             print(f"{e} works on {shift['date']} from {s[1]} to {s[2]}")
 
-with open("schedule.json", "w", encoding="utf-8") as f:
+    schedule_output.append(schedule)
+    print(f'Schedule for {schedule['employee']} saved.')
+
+
+with open("schedules.json", "w", encoding="utf-8") as f:
     json.dump(schedule_output, f, indent=4)
-print("\nSchedule saved to schedule.json")
+print("\nSchedules saved to schedules.json")
+
+with open("shifts.json", "w", encoding="utf-8") as f:
+    json.dump(shift_output, f, indent=4)
+print("\nShifts saved to shifts.json")
 
 # Upload til MongoDB
 try:
     client = MongoClient("mongodb+srv://prasm24:p2gruppe7@wfm-test.nvx2k.mongodb.net/")
     db = client["WFM-Database"]
-    collection = db["Schedule"]
+    collection = db["schedules"]
 
     collection.delete_many({})
     collection.insert_many(schedule_output)
 
-    print("Schedule uploaded to MongoDB successfully.")
+    print("Schedules uploaded to MongoDB successfully.")
+
+    collection = db["shifts"]
+
+    collection.delete_many({})
+    collection.insert_many(shift_output)
+
+    print("Shifts uploaded to MongoDB successfully.")
 
 except Exception as e:
     print("Failed to upload to MongoDB:", e)

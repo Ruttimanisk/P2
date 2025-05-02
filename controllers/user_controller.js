@@ -59,7 +59,7 @@ exports.render_edit_employee_schedule = asyncHandler(async (req, res) => {
     const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
     const employees = users.filter(user => user.role === "Employee" || user.status === "Employee");
     */
-    const schedulePath = path.join(__dirname, "../algorithm/schedule.json");
+    const schedulePath = path.join(__dirname, "../algorithm/schedules.json");
     const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
 
     const db = mongoose.connection;
@@ -115,7 +115,7 @@ exports.render_edit_employee_schedule = asyncHandler(async (req, res) => {
 
 exports.save_edited_schedule = (req, res) => {
     const flatData = req.body;
-    const schedulePath = path.join(__dirname, "../schedule.json");
+    const schedulePath = path.join(__dirname, "../schedules.json");
 
     const newSchedule = {};
 
@@ -176,7 +176,7 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
 
 exports.show_admin_schedule = asyncHandler(async (req, res) => {
     const userId = req.cookies.userId;
-    const scheduleFile = path.join(__dirname, "../schedule.json");
+    const scheduleFile = path.join(__dirname, "../schedules.json");
     let scheduleData = {};
 
     try {
@@ -248,7 +248,7 @@ exports.show_employee_schedule = async (req, res) => {
 exports.save_employee_schedule = async (req, res) => {
     const userId = req.params.id;
     const newSchedule = req.body.schedule; // expecting schedule to be an object
-    const scheduleFile = path.join(__dirname, "../schedule.json");
+    const scheduleFile = path.join(__dirname, "../schedules.json");
 
     try {
         let schedule = {};

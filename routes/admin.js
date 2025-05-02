@@ -72,7 +72,7 @@ router.post('/edit_schedule', requireAuth, user_controller.save_edited_schedule)
         const username = req.params.username;
 
         const userPath = path.join(__dirname, "../user_info.json");
-        const schedulePath = path.join(__dirname, "../schedule.json");
+        const schedulePath = path.join(__dirname, "../schedules.json");
 
         const users = JSON.parse(fs.readFileSync(userPath, "utf8"));
         const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
@@ -92,7 +92,7 @@ router.post('/edit_schedule', requireAuth, user_controller.save_edited_schedule)
 
 router.post('/edit_employee_schedule/:username', (req, res) => {
         const username = req.params.username;
-        const schedulePath = path.join(__dirname, "../schedule.json");
+        const schedulePath = path.join(__dirname, "../schedules.json");
 
         const newSchedule = JSON.parse(req.body.schedule); // comes from the hidden input
 
