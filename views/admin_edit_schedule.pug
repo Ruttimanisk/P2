@@ -53,10 +53,9 @@ block content
                         each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                             th= day.slice(0, 3)
                 tbody
-                    each emp in employees
-                        - const employee_schedule = empSchedules[index] || {};
+                    each schedule in schedules
                         tr
-                            td= emp.fullname
+                            td= schedule.employee
                             each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                                 if ['Saturday', 'Sunday'].includes(dayKey)
                                     td
@@ -65,18 +64,18 @@ block content
                                     td
                                         input(
                                             type="text",
-                                            name=`${emp._id}_${dayKey}_start`,
-                                            value=employee_schedule[`${dayKey}_start`] || ''
+                                            name=`${schedule.employee}_${dayKey}_start`,
+                                            value=schedule[`${dayKey}_start`] || ''
                                             placeholder="e.g. 9:00"
                                             style="width: 70px; padding: 1px; margin-right: 1px;"
                                             )
                                         input(
                                             type="text",
-                                            name=`${emp._id}_${dayKey}_end`,
-                                            value=employee_schedule[`${dayKey}_end`] || ''
+                                            name=`${schedule.employee}_${dayKey}_end`,
+                                            value=schedule[`${dayKey}_end`] || ''
                                             placeholder="e.g. 17:00"
-                                            style="width: 70px; padding: 1px; margin-left: 1px;"
-                                            )
+                                            style="width: 70px; padding: 1px; margin-right: 1px;"
+                                        )
             button(type="submit", style="transform: translateY(5px)") Save Changes
 
     script.

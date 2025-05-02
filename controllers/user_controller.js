@@ -53,63 +53,20 @@ exports.admin_home = asyncHandler( async(req, res) => {
     res.render('admin_home', {title: "Home Page"});
 });
 
-exports.render_edit_employee_schedule = asyncHandler(async (req, res) => {
+exports.edit_schedule_get = asyncHandler(async (req, res) => {
     /*
     const usersPath = path.join(__dirname, "../user_info.json");
     const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
     const employees = users.filter(user => user.role === "Employee" || user.status === "Employee");
-    */
+
     const schedulePath = path.join(__dirname, "../algorithm/schedules.json");
     const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
+    */
 
-    const db = mongoose.connection;
-    const collection = db.collection('Schedule');
-    const shifts = await collection.find().toArray();
-
-    const employees = await User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec();
-
-    const empSchedules = []
-
-    class EmpSchedule {
-        constructor(user) {
-            this.user = user;
-            this.Monday_start = "";
-            this.Monday_end = "";
-            this.Tuesday_start = "";
-            this.Tuesday_end = "";
-            this.Wednesday_start = "";
-            this.Wednesday_end = "";
-            this.Thursday_start = "";
-            this.Thursday_end = "";
-            this.Friday_start = "";
-            this.Friday_end = "";
-        }
-    }
-
-
-    // Create a mapping from employee _id to index in the array
-    const employeeIndexMap = {};
-
-    employees.forEach((employee, index) => {
-        empSchedules.push(new EmpSchedule());
-        employeeIndexMap[employee._id.toString()] = index;
-    });
-
-    // Populate the schedules
-    for (const shift of shifts) {
-        const day = weekday(shift.date); // returns e.g. "Monday"
-        const index = employeeIndexMap[shift.employee.toString()];
-
-        if (index !== undefined && empSchedules[index]) {
-            empSchedules[index][`${day}_start`] = shift.start;
-            empSchedules[index][`${day}_end`] = shift.end;
-        }
-    }
+    const schedules = await mongoose.connection.collection('schedules').find().toArray();
 
     res.render("admin_edit_schedule", {
-        employees: employees,
-        schedule: schedules,
-        empSchedules: empSchedules,
+        schedules: schedules,
     });
 });
 

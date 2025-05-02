@@ -63,7 +63,7 @@ router.get('/logout', user_controller.logout)
 
 // router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
 
-router.get('/edit_schedule', requireAuth, user_controller.render_edit_employee_schedule);
+router.get('/edit_schedule', requireAuth, user_controller.edit_schedule_get);
 
 router.post('/edit_schedule', requireAuth, user_controller.save_edited_schedule);
 
