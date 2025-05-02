@@ -8,6 +8,23 @@ const Absence = require("../models/absence");
 const { requireAuth } = require('../middleware/auth');
 const mongoose = require('mongoose')
 
+// DEBUG: make sure none of these are undefined
+console.log({
+  requireAuth:       typeof requireAuth,
+  admin_home:        typeof user_controller.admin_home,
+  show_schedule:     typeof user_controller.show_admin_schedule,
+  profile:           typeof user_controller.profile,
+  view_profile:      typeof user_controller.view_profile,
+  logout:            typeof user_controller.logout,
+  edit_get:          typeof user_controller.edit_schedule_get,
+  edit_post:         typeof user_controller.edit_schedule_post,
+  list_emps:         typeof user_controller.admin_employee_list,
+  absence_get:       typeof user_controller.absence_get,
+  absence_post:      typeof user_controller.absence_post,
+  create_user:       typeof user_controller.admin_user_creation,
+  validator_chain:   Array.isArray([ body("x").notEmpty() ]) ? "array" : typeof body,
+});
+
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
