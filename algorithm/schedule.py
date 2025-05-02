@@ -147,8 +147,9 @@ for e in employees:
             shift = {
                 "employee": e,
                 "date": weekday_to_date.get(s[0], week_start),
+                "weekday": s[0],
                 "start": s[1],
-                "end": s[2]
+                "end": s[2],
             }
             shift_output.append(shift)
             print(f"{e} works on {shift['date']} from {s[1]} to {s[2]}")

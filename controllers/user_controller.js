@@ -60,6 +60,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
+    const shifts = await mongoose.connection.collection('shifts').find().sort({ employee: 1 }).toArray();
 
     for (const schedule of schedules) {
         const updatedSchedule = {
@@ -75,6 +76,16 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
         await mongoose.connection.collection('schedules').updateOne(
             { _id: schedule._id },
             { $set: updatedSchedule }
+        );
+
+        await mongoose.connection.collection('shifts').updateOne(
+            { employee: schedule.employee, weekday: day },
+            {
+                $set: {
+                    start: req.body[`${schedule.employee}_${day}_start`],
+                    end: req.body[`${schedule.employee}_${day}_end`],
+                }
+            }
         );
     }
 
