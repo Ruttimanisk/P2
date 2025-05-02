@@ -1,12 +1,11 @@
 const User = require("../models/user");
-const UserSchedule = require("../models/userschedule");
 const Absence = require("../models/absence")
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
-const { weekday } = require("../public/scripts/weekdayFromDate")
+const {body} = require("express-validator");
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -52,15 +51,6 @@ exports.admin_home = asyncHandler( async(req, res) => {
 });
 
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
-    /*
-    const usersPath = path.join(__dirname, "../user_info.json");
-    const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
-    const employees = users.filter(user => user.role === "Employee" || user.status === "Employee");
-
-    const schedulePath = path.join(__dirname, "../algorithm/schedules.json");
-    const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
-    */
-
     const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
 
     res.render("admin_edit_schedule", {
@@ -69,14 +59,41 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 });
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
-    // not done at all buddy
     const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
 
-    res.render("admin_edit_schedule", {
-        schedules: schedules,
-    });
-})
+    for (const schedule of schedules) {
+        const updatedSchedule = {
+            employee: schedule.employee,
+            week_start_date: schedule.week_start_date,
+        };
 
+        for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
+            updatedSchedule[`${day}_start`] = req.body[`${schedule.employee}_${day}_start`] || '';
+            updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_${day}_end`] || '';
+        }
+
+        await mongoose.connection.collection('schedules').updateOne(
+            { _id: schedule._id },
+            { $set: updatedSchedule }
+        );
+    }
+
+    res.redirect('/admin/calendar');
+});
+
+
+    asyncHandler(async (req, res) => {
+        const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
+
+        for (let i = 0; i < schedules.length; i++) {
+
+        }
+
+        res.render("admin_edit_schedule", {
+            schedules: schedules,
+        });
+    })
+// de her skal ændres
 exports.show_admin_schedule = asyncHandler(async (req, res) => {
     const userId = req.cookies.userId;
     const scheduleFile = path.join(__dirname, "../schedules.json");
@@ -100,6 +117,30 @@ exports.show_admin_schedule = asyncHandler(async (req, res) => {
 
     } catch (err) {
         console.error("Error loading admin schedule:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+exports.show_employee_schedule = asyncHandler(async (req, res) => {
+    const userId = req.cookies.userId;
+    const filePath = path.join(__dirname, "../user_info.json");
+
+    try {
+        const data = await fs.promises.readFile(filePath, "utf8");
+        const users = JSON.parse(data);
+        const user = users.find(u => u.username === username);
+
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        res.render("admin_edit_employee_schedule", {
+            title: `Edit Schedule for ${user.first_name} ${user.last_name}`,
+            employee: employee
+        });
+
+    } catch (err) {
+        console.error("Failed to load user:", err);
         res.status(500).send("Internal Server Error");
     }
 });
@@ -150,30 +191,6 @@ exports.list_employees_for_schedule_edit = async (req, res) => {
         });
     } catch (err) {
         console.error("Error loading users for schedule edit:", err);
-        res.status(500).send("Internal Server Error");
-    }
-};
-
-exports.show_employee_schedule = async (req, res) => {
-    const userId = req.cookies.userId;
-    const filePath = path.join(__dirname, "../user_info.json");
-
-    try {
-        const data = await fs.promises.readFile(filePath, "utf8");
-        const users = JSON.parse(data);
-        const user = users.find(u => u.username === username);
-
-        if (!user) {
-            return res.status(404).send("User not found");
-        }
-
-        res.render("admin_edit_employee_schedule", {
-            title: `Edit Schedule for ${user.first_name} ${user.last_name}`,
-            employee: employee
-        });
-
-    } catch (err) {
-        console.error("Failed to load user:", err);
         res.status(500).send("Internal Server Error");
     }
 };
