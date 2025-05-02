@@ -15,7 +15,8 @@ p.error {
     transform: translateY(-10px);
 }
 .msgbox {
-    width: 100%;
+    max-width: 128px;
+    height: 100%;
     max-height: 200px;
     background-color: greenyellow;
     padding: 10px;
