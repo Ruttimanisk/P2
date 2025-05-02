@@ -5,7 +5,7 @@ p.error {
     color: blue;
 }
 
-.msgboxer {
+.msgbox {
     width: 128px;
     height: 200px;
     background-color: greenyellow;
@@ -14,16 +14,7 @@ p.error {
     margin: 10px;
     transform: translateY(-10px);
 }
-.msgbox {
-    max-width: 128px;
-    height: 100%;
-    max-height: 200px;
-    background-color: greenyellow;
-    padding: 10px;
-    margin: 10px;
-    transform: translateY(-10px);
-    overflow: hidden;
-}
+
 .login {
     position: relative;
     display: flex;
