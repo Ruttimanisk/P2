@@ -3,15 +3,16 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // FullCalendar stylesheet fra v5.11.3
+    // FullCalendar stylesheets
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
-    // FullCalendar scripts fra v5.11.3
+    // FullCalendar scripts
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/resource-daygrid@5.11.3/main.min.js") // <--- NYT!
 
-    div#calendar(style="max-width: 1000px; margin: 40px auto;")
+    div#calendar(style="max-width: 1200px; margin: 40px auto;")
 
     script.
         const events = !{JSON.stringify(events)};
@@ -23,14 +24,11 @@ block content
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-                initialView: 'resourceTimelineWeek',
-                slotMinTime: "07:00:00",
-                slotMaxTime: "20:00:00",
-                allDaySlot: false,
+                initialView: 'resourceDayGridWeek', // <--- Skiftet her!
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'resourceTimelineWeek,dayGridMonth'
+                    right: 'resourceDayGridWeek,dayGridMonth'
                 },
                 resources: resources,
                 events: events
