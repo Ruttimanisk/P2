@@ -8,6 +8,8 @@ const Absence = require("../models/absence");
 const { requireAuth } = require('../middleware/auth');
 const mongoose = require('mongoose')
 
+const fs = require('fs');
+const path = require('path');
 
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
@@ -45,9 +47,48 @@ router.get('/calendar', requireAuth, async (req, res) => {
         });
 });
 
+router.post('/update_shift', async (req, res) => {
+    const { id, start, end, resourceId, title } = req.body;
+    const schedulePath = path.join(__dirname, '../schedule.json');
+    const schedules = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
 
+    // Find og opdatér eksisterende vagt
+    for (const [user, shifts] of Object.entries(schedules)) {
+        for (const day in shifts) {
+            if (shifts[day].id === id) {
+                shifts[day] = { id, start, end, title };
+                break;
+            }
+        }
+    }
 
+    fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
+    res.sendStatus(200);
+});
 
+router.post('/create_shift', async (req, res) => {
+    const { start, end, resourceId, title } = req.body;
+    const schedulePath = path.join(__dirname, '../schedule.json');
+    const schedules = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
+
+    const newId = Date.now().toString(); // simpelt ID baseret på timestamp
+
+    if (!schedules[resourceId]) {
+        schedules[resourceId] = {};
+    }
+
+    const dateKey = new Date(start).toLocaleDateString('en-CA'); // 2025-05-02 format
+
+    schedules[resourceId][dateKey] = {
+        id: newId,
+        title,
+        start,
+        end
+    };
+
+    fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
+    res.sendStatus(200);
+});
 
 router.get('/home', requireAuth, user_controller.admin_home)
 

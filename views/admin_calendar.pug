@@ -26,24 +26,81 @@ block content
                 initialView: 'resourceTimelineWeek',
                 firstDay: 1,
                 contentHeight: 'auto',
-                slotDuration: {days: 1},
-                slotLabelFormat: [
-                    {weekday: 'short'}
-                ],
+                slotDuration: { days: 1 },
+                slotLabelFormat: [{ weekday: 'short' }],
                 slotMinTime: "00:00:00",
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
                 displayEventTime: false,
+                editable: true,
+                selectable: true,
+                selectMirror: true,
+                eventDurationEditable: true,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'resourceTimelineWeek,dayGridMonth'
                 },
-                resourceAreaHeaderContent: 'Employees',
+                resourceAreaHeaderContent: 'Medarbejdere',
                 resources: resources,
-                events: events
+                events: events,
+
+                eventDrop: function(info) {
+                    console.log('Vagt flyttet:', info.event);
+                    saveEventChange(info.event);
+                },
+                eventResize: function(info) {
+                    console.log('Vagt ændret varighed:', info.event);
+                    saveEventChange(info.event);
+                },
+                dateClick: function(info) {
+                    console.log('Klikket på tom plads:', info);
+                    createNewEvent(info);
+                }
             });
-
-
             calendar.render();
+
+            function saveEventChange(event) {
+                fetch('/admin/update_shift', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: event.id,
+                        start: event.start.toISOString(),
+                        end: event.end.toISOString(),
+                        resourceId: event.getResources()[0].id,
+                        title: event.title
+                    })
+                }).then(response => {
+                    if (!response.ok) {
+                        alert('Noget gik galt ved opdatering!');
+                    }
+                });
+            }
+
+            function createNewEvent(info) {
+                const title = prompt('Indtast titel for ny vagt:');
+                if (title) {
+                    fetch('/admin/create_shift', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            start: info.dateStr,
+                            end: info.dateStr,
+                            resourceId: info.resource.id,
+                            title: title
+                        })
+                    }).then(response => {
+                        if (response.ok) {
+                            calendar.refetchEvents();
+                        } else {
+                            alert('Fejl ved oprettelse af vagt');
+                        }
+                    });
+                }
+            }
         });
