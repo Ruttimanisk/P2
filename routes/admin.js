@@ -16,7 +16,7 @@ const mongoose = require('mongoose')
 // burde måske gøre det her i controller
 router.get('/calendar', requireAuth, async (req, res) => {
         const db = mongoose.connection;
-        const collection = db.collection('Schedule');
+        const collection = db.collection('shifts');
         const shifts = await collection.find().toArray();
 
         // Byg events
