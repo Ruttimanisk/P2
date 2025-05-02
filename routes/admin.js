@@ -48,13 +48,10 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
 
 
-        router.get('/home', requireAuth, user_controller.admin_home)
+router.get('/home', requireAuth, user_controller.admin_home)
 
 router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
 
-router.get('/prof_old', requireAuth, user_controller.profile)
-
-// recreated profile
 router.get('/profile/', requireAuth, user_controller.profile);
 
 router.get('/view_profile/:userId', requireAuth, user_controller.view_profile)
