@@ -5,7 +5,6 @@ const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
-const {body} = require("express-validator");
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -60,7 +59,6 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
-    const shifts = await mongoose.connection.collection('shifts').find().sort({ employee: 1 }).toArray();
 
     for (const schedule of schedules) {
         const updatedSchedule = {
@@ -71,6 +69,16 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
             updatedSchedule[`${day}_start`] = req.body[`${schedule.employee}_${day}_start`] || '';
             updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_${day}_end`] || '';
+
+            await mongoose.connection.collection('shifts').updateOne(
+                { employee: schedule.employee, weekday: day },
+                {
+                    $set: {
+                        start: req.body[`${schedule.employee}_${day}_start`],
+                        end: req.body[`${schedule.employee}_${day}_end`],
+                    }
+                }
+            );
         }
 
         await mongoose.connection.collection('schedules').updateOne(
@@ -78,15 +86,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             { $set: updatedSchedule }
         );
 
-        await mongoose.connection.collection('shifts').updateOne(
-            { employee: schedule.employee, weekday: day },
-            {
-                $set: {
-                    start: req.body[`${schedule.employee}_${day}_start`],
-                    end: req.body[`${schedule.employee}_${day}_end`],
-                }
-            }
-        );
+
     }
 
     res.redirect('/admin/calendar');
