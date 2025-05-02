@@ -123,42 +123,42 @@ router.get('/user_creation', requireAuth, (req, res) => { res.render('admin_user
 
 router.post('/user_creation',
     requireAuth,
-    [
-        body("first_name", "First name must not be empty.")
-            .trim()
-            .isLength({ min: 1 })
-            .escape(),
-        body("family_name", "Family name must not be empty.")
-            .trim()
-            .isLength({ min: 1 })
-            .escape(),
-        body("date_of_birth", "Invalid or missing date.")
-            .notEmpty().withMessage("Leave end must not be empty.")
-            .isISO8601().withMessage("Leave end must be a valid ISO 8601 date.")
-            .toDate(),
-        body("address").escape(),
-        body("hours_per_week", "hours per week must not be empty.")
-            .trim()
-            .isNumeric()
-            .escape(),
-        body("hourly_rate", "hourly rate must not be empty.")
-            .trim()
-            .isNumeric()
-            .escape(),
-        body("role", "Role must not be empty.")
-            .trim()
-            .isLength({ min: 1 })
-            .escape(),
-        body("contract").escape(),
-        body("status").escape(),
-        body('username')
-            .trim()
-            .notEmpty().withMessage('Username is required')
-            .isLength({ max: 50 }).withMessage('Username too long'),
-        body('password')
-            .notEmpty().withMessage('Password is required')
-            .isLength({ max: 50 }).withMessage('Password too long'),
-    ],
+
+    body("first_name", "First name must not be empty.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("family_name", "Family name must not be empty.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("date_of_birth", "Invalid or missing date.")
+        .notEmpty().withMessage("Leave end must not be empty.")
+        .isISO8601().withMessage("Leave end must be a valid ISO 8601 date.")
+        .toDate(),
+    body("address").escape(),
+    body("hours_per_week", "hours per week must not be empty.")
+        .trim()
+        .isNumeric()
+        .escape(),
+    body("hourly_rate", "hourly rate must not be empty.")
+        .trim()
+        .isNumeric()
+        .escape(),
+    body("role", "Role must not be empty.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("contract").escape(),
+    body("status").escape(),
+    body('username')
+        .trim()
+        .notEmpty().withMessage('Username is required')
+        .isLength({ max: 50 }).withMessage('Username too long'),
+    body('password')
+        .notEmpty().withMessage('Password is required')
+        .isLength({ max: 50 }).withMessage('Password too long'),
+
     user_controller.admin_user_creation
 );
 
@@ -166,21 +166,20 @@ router.get('/absence', requireAuth, user_controller.absence_get)
 
 router.post('/absence',
     requireAuth,
-    [
-        body("user", "Invalid user ObjectId.")
-            .custom(user => mongoose.Types.ObjectId.isValid(user)),
-        body("reason", "Reason must not be empty.")
-            .trim()
-            .isLength({ min: 1 }),
-        body("leave_start", "Invalid or missing date.")
-            .notEmpty().withMessage("Leave start must not be empty.")
-            .isISO8601().withMessage("Leave start must be a valid ISO 8601 date.")
-            .toDate(),
-        body("leave_end", "Invalid or missing date.")
-            // .notEmpty().withMessage("Leave end must not be empty.")
-            // .isISO8601().withMessage("Leave end must be a valid ISO 8601 date.")
-            .toDate()
-    ],
+
+    body("user", "Invalid user ObjectId.")
+        .custom(user => mongoose.Types.ObjectId.isValid(user)),
+    body("reason", "Reason must not be empty.")
+        .trim()
+        .isLength({ min: 1 }),
+    body("leave_start", "Invalid or missing date.")
+        .notEmpty().withMessage("Leave start must not be empty.")
+        .isISO8601().withMessage("Leave start must be a valid ISO 8601 date.")
+        .toDate(),
+    body("leave_end", "Invalid or missing date.")
+        .optional({ checkFalsy: true })
+        .isISO8601().toDate(),
+
     user_controller.absence_post
 );
 
