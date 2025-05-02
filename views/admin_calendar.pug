@@ -3,16 +3,13 @@ extends layout_admin
 block content
     h1 Vagtplan
 
-    // FullCalendar stylesheet fra CDN
-    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css")
+    // FullCalendar stylesheet fra v5.11.3
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
-    // FullCalendar scripts fra CDN
-    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.8/index.global.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/timeline@6.1.8/index.global.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/resource@6.1.8/index.global.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.8/index.global.min.js")
+    // FullCalendar scripts fra v5.11.3
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
 
     div#calendar(style="max-width: 1000px; margin: 40px auto;")
 
