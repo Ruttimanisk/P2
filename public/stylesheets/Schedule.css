@@ -87,3 +87,11 @@ tr:nth-child(even) {
 .save_schedule_button:hover {
     background-color: #357ABD;
 }
+
+.save-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
