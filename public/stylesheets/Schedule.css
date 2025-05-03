@@ -64,3 +64,17 @@ tr:nth-child(even) {
 #tableEmployees {
 
 }
+.save_schedule_button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.save_schedule_button:hover {
+    background-color: #357ABD;
+}
