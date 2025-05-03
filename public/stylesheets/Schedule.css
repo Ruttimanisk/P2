@@ -131,8 +131,8 @@ form {
 
 #legendRow {
     position: absolute;
-    top: 300px;  /* Adjust this number to place it below #tableB */
-    left: 160px; /* Same left as your tables for alignment */
+    top: 320px;  /* Adjust this number to place it below #tableB */
+    left: 2000px; /* Same left as your tables for alignment */
     width: calc(100% - 160px);
     display: flex;
     justify-content: space-between;
