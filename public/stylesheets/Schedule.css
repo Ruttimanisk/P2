@@ -45,6 +45,7 @@ tr:nth-child(even) {
     position: relative;
     bottom: 250px;
     left: 120px;
+    display: inline-block;
 }
 .legend li {
     float: left;
