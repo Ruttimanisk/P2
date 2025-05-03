@@ -2,7 +2,7 @@ const { isEven, divide, delayedDivision } = require('../public/scripts/mathUtils
 const { safeDivide } = require('../public/scripts/calculator')
 
 test('4 is even', () => {
-    expect(isEven(5)).toBe(true);
+    expect(isEven(4)).toBe(true);
 });
 
 test('5 is odd', () => {
@@ -19,7 +19,7 @@ test('b is 0', () => {
 
 test('10 divided by 2 after delay', async () => {
     const result = await delayedDivision(10, 2);
-    expect(result).toBe(54);
+    expect(result).toBe(5);
 });
 test('throws error when dividing by 0', async () => {
     await expect(delayedDivision(10, 0)).rejects.toThrow("Cannot divide by zero");
