@@ -88,5 +88,7 @@ tr:nth-child(even) {
     background-color: #357ABD;
 }
 
-
+form {
+    position: relative;
+}
 
