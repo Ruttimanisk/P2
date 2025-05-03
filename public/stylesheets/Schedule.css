@@ -15,6 +15,11 @@ td, th {
     text-align: left;
     padding: 8px;
 }
+td {
+    background-color: #4A90E2;
+    color: white;
+    padding: 5px;
+}
 
 tr:nth-child(even) {
     background-color: #dddddd;
