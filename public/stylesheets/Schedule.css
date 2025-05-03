@@ -53,11 +53,12 @@ tr:nth-child(even) {
 
 .legend {
     list-style: none;
-    margin: 0;
-    padding: 0;
+    margin-left: 120px;
     display: flex;
-    gap: 10px;
+    gap: 12px;
+    align-items: center;
 }
+
 
 .legend li {
     display: flex;
@@ -122,5 +123,9 @@ tr:nth-child(even) {
 
 form {
     position: relative;
+}
+
+.schedule-wrapper {
+    margin-bottom: 40px;
 }
 
