@@ -1,10 +1,10 @@
 const User = require("../models/user");
-const UserSchedule = require("../models/userschedule");
 const Absence = require("../models/absence")
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
+const mongoose = require("mongoose");
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -35,10 +35,8 @@ exports.login = asyncHandler(async (req, res) => {
 });
 
 exports.logout = asyncHandler(async (req, res) => {
-    if (confirm("Are you sure you want to log out?") === true) {
-        res.clearCookie('userId');
-        res.render('login')
-    }
+    res.clearCookie('userId');
+    res.render('login')
 });
 
 exports.employee_home = asyncHandler( async(req, res) => {
@@ -51,25 +49,104 @@ exports.admin_home = asyncHandler( async(req, res) => {
     res.render('admin_home', {title: "Home Page"});
 });
 
-exports.render_edit_employee_schedule = (req, res) => {
-    const usersPath = path.join(__dirname, "../user_info.json");
-    const schedulePath = path.join(__dirname, "../schedule.json");
-
-    const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
-    const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
-
-
-    const employees = users.filter(user => user.role === "Employee" || user.status === "Employee");
+exports.edit_schedule_get = asyncHandler(async (req, res) => {
+    const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
 
     res.render("admin_edit_schedule", {
-        employees,
-        schedule: schedules
+        schedules: schedules,
     });
-};
+});
 
+exports.edit_schedule_post = asyncHandler(async (req, res) => {
+    const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
+
+    for (const schedule of schedules) {
+        const updatedSchedule = {
+            employee: schedule.employee,
+            week_start_date: schedule.week_start_date,
+        };
+
+        for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
+            updatedSchedule[`${day}_start`] = req.body[`${schedule.employee}_${day}_start`] || '';
+            updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_${day}_end`] || '';
+
+            await mongoose.connection.collection('shifts').updateOne(
+                { employee: schedule.employee, weekday: day },
+                {
+                    $set: {
+                        start: req.body[`${schedule.employee}_${day}_start`],
+                        end: req.body[`${schedule.employee}_${day}_end`],
+                    }
+                }
+            );
+        }
+
+        await mongoose.connection.collection('schedules').updateOne(
+            { _id: schedule._id },
+            { $set: updatedSchedule }
+        );
+    }
+
+    res.redirect('/admin/calendar');
+});
+
+
+// de her skal ændres
+exports.show_admin_schedule = asyncHandler(async (req, res) => {
+    const userId = req.cookies.userId;
+    const scheduleFile = path.join(__dirname, "../schedules.json");
+    let scheduleData = {};
+
+    try {
+        if (fs.existsSync(scheduleFile)) {
+            const fileData = await fs.promises.readFile(scheduleFile, "utf8");
+            scheduleData = JSON.parse(fileData);
+        }
+
+        const schedule = scheduleData[userId] || {
+            Monday: "", Tuesday: "", Wednesday: "", Thursday: "",
+            Friday: "", Saturday: "", Sunday: ""
+        };
+
+        res.render("admin_schedule", {
+            schedule: schedule,
+            userId: userId
+        });
+
+    } catch (err) {
+        console.error("Error loading admin schedule:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+exports.show_employee_schedule = asyncHandler(async (req, res) => {
+    const userId = req.cookies.userId;
+    const filePath = path.join(__dirname, "../user_info.json");
+
+    try {
+        const data = await fs.promises.readFile(filePath, "utf8");
+        const users = JSON.parse(data);
+        const user = users.find(u => u.username === username);
+
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        res.render("admin_edit_employee_schedule", {
+            title: `Edit Schedule for ${user.first_name} ${user.last_name}`,
+            employee: employee
+        });
+
+    } catch (err) {
+        console.error("Failed to load user:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+/*
 exports.save_edited_schedule = (req, res) => {
     const flatData = req.body;
-    const schedulePath = path.join(__dirname, "../schedule.json");
+    const schedulePath = path.join(__dirname, "../schedules.json");
 
     const newSchedule = {};
 
@@ -96,60 +173,8 @@ exports.save_edited_schedule = (req, res) => {
     }
 };
 
-exports.admin_user_creation = asyncHandler(async (req,res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).render('admin_user_creation', { errors: errors.array() });
-    } else {
-        const user = new User({
-        first_name: req.body.first_name,
-        family_name: req.body.family_name,
-        date_of_birth: req.body.date_of_birth,
-        date_of_death: undefined,
-        address: req.body.address,
-        hours_per_week: req.body.hours_per_week,
-        hourly_rate: req.body.hourly_rate,
-        role: req.body.role,
-        status: req.body.status,
-        contract: req.body.contract === "" ? undefined : req.body.contract,
-        username: req.body.username,
-        password: req.body.password,
-        });
-
-        await user.save();
-        res.redirect(`/admin/home`)
-    }
-});
-
-exports.show_admin_schedule = asyncHandler(async (req, res) => {
-    const userId = req.cookies.userId;
-    const scheduleFile = path.join(__dirname, "../schedule.json");
-    let scheduleData = {};
-
-    try {
-        if (fs.existsSync(scheduleFile)) {
-            const fileData = await fs.promises.readFile(scheduleFile, "utf8");
-            scheduleData = JSON.parse(fileData);
-        }
-
-        const schedule = scheduleData[userId] || {
-            Monday: "", Tuesday: "", Wednesday: "", Thursday: "",
-            Friday: "", Saturday: "", Sunday: ""
-        };
-
-        res.render("admin_schedule", {
-            schedule: schedule,
-            userId: userId
-        });
-
-    } catch (err) {
-        console.error("Error loading admin schedule:", err);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-
 // (Additional functions for scheduling can be implemented similarly)
+
 exports.list_employees_for_schedule_edit = async (req, res) => {
     const filePath = path.join(__dirname, "../user_info.json");
 
@@ -168,34 +193,10 @@ exports.list_employees_for_schedule_edit = async (req, res) => {
     }
 };
 
-exports.show_employee_schedule = async (req, res) => {
-    const userId = req.cookies.userId;
-    const filePath = path.join(__dirname, "../user_info.json");
-
-    try {
-        const data = await fs.promises.readFile(filePath, "utf8");
-        const users = JSON.parse(data);
-        const user = users.find(u => u.username === username);
-
-        if (!user) {
-            return res.status(404).send("User not found");
-        }
-
-        res.render("admin_edit_employee_schedule", {
-            title: `Edit Schedule for ${user.first_name} ${user.last_name}`,
-            employee: employee
-        });
-
-    } catch (err) {
-        console.error("Failed to load user:", err);
-        res.status(500).send("Internal Server Error");
-    }
-};
-
 exports.save_employee_schedule = async (req, res) => {
     const userId = req.params.id;
     const newSchedule = req.body.schedule; // expecting schedule to be an object
-    const scheduleFile = path.join(__dirname, "../schedule.json");
+    const scheduleFile = path.join(__dirname, "../schedules.json");
 
     try {
         let schedule = {};
@@ -214,6 +215,9 @@ exports.save_employee_schedule = async (req, res) => {
     }
 };
 
+
+
+
 exports.profile_old = (req, res) => {
     const username = req.session.username;
     const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
@@ -228,8 +232,38 @@ exports.profile_old = (req, res) => {
         status: user.status     // Ensure it's "status", not "role"
     })
 };
+*/
+exports.admin_user_creation = asyncHandler(async (req,res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).render('admin_user_creation', { errors: errors.array() });
+    }
 
-// remaking profile with database - Mads
+    const userExists = await User.findOne({ first_name: req.body.first_name, family_name: req.body.family_name })
+        .collation({ locale: "en", strength: 2 })
+        .exec();
+    if (userExists){
+        return res.status(401).render('admin_user_creation', { errors: ['A user with the same name already exists.'] });
+    }
+
+    const user = new User({
+        first_name: req.body.first_name,
+        family_name: req.body.family_name,
+        date_of_birth: req.body.date_of_birth,
+        date_of_death: undefined,
+        address: req.body.address,
+        hours_per_week: req.body.hours_per_week,
+        hourly_rate: req.body.hourly_rate,
+        role: req.body.role,
+        status: req.body.status,
+        contract: req.body.contract === "" ? undefined : req.body.contract,
+        username: req.body.username,
+        password: req.body.password,
+    });
+
+    await user.save();
+    res.redirect(`/admin/home`)
+});
 
 exports.profile = asyncHandler(async (req, res) => {
     try {
@@ -322,10 +356,23 @@ exports.absence_get = asyncHandler(async (req,res) => {
         Absence.find().populate("user").exec()
     ]);
 
-    res.render("admin_absence", {
-        users: users,
-        current_absence: current_absence,
-    })
+    try {
+        await Absence.deleteMany({
+          leave_end: { $lt: new Date() }
+        });
+
+        res.render("admin_absence", {
+            users: users,
+            current_absence: current_absence,
+        });
+
+    } catch (err) {
+        return res.status(500).render("admin_absence", {
+            users: users,
+            current_absence: current_absence,
+            errors: [`Failed in delete expired absence: ${err.name}, ${err.message}`]
+        })
+    }
 })
 
 exports.absence_post = asyncHandler(async (req,res) => {
