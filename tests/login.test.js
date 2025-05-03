@@ -58,6 +58,30 @@ describe('login controller', () => {
         });
     });
 
+    test('should render error if password is incorrect', async () => {
+        validationResult.mockReturnValue({
+            isEmpty: () => true,
+        });
+
+        User.findOne.mockReturnValue({
+            maxTimeMS: () => ({
+                exec: () => ({ username: 'testuser', password: 'correctpassword' }),
+            }),
+        });
+
+        req.body = {
+            username: 'testuser',
+            password: 'wrongpassword',
+        };
+
+        await login(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.render).toHaveBeenCalledWith('login', {
+            errors: ['Invalid username or password'],
+        });
+    });
+
     test('should redirect on successful login', async () => {
         validationResult.mockReturnValue({
             isEmpty: () => true,
