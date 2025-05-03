@@ -7,7 +7,7 @@
     bottom: 300px;
 }
 #tableA tr:nth-child(2) {
-    background-color: #4b7cf4;
+    background-color: #4a90e2;
 }
 
 td, th {
@@ -28,7 +28,7 @@ tr:nth-child(even) {
     bottom: 270px;
 }
 #tableB tr:nth-child(2) {
-    background-color: #4b7cf4;
+    background-color: #4a90e2;
 }
 /*Legend position */
 .legend {
