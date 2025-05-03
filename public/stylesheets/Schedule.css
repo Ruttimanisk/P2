@@ -57,7 +57,6 @@ tr:nth-child(even) {
     display: flex;
     gap: 12px;
     align-items: center;
-    position: relative; bottom: 250px; left: 120px;
 }
 
 
