@@ -51,7 +51,7 @@ block content
             td +3
             td 12
 
-    form(method='POST' action=`/admin_edit_employee_schedule/${username}` style='display: flex; justify-content: space-between; align-items: center;')
+    form(method='POST' action=`/admin_edit_employee_schedule/${username}` class='legend-form')
         input(type='hidden' name='schedule' id='scheduleInput')
 
         ul.legend
@@ -68,8 +68,11 @@ block content
                 span.Sick
                 |  Sick
 
-        button(type='submit', class='save_schedule_button', style='padding: 4px 16px float: right;') Save Schedule
+        button(type='submit', class='save_schedule_button') Save Schedule
 
+
+
+        // Den gamele Knap og Form
     //-form(method='POST' action=`/admin_edit_employee_schedule/${username}`)
         input(type='hidden' name='schedule' id='scheduleInput')
 
