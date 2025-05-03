@@ -53,7 +53,7 @@ block content
                 td +3
                 td 12
 
-        form(method='POST' action=`/admin_edit_employee_schedule/${username}` class='legend-form')
+        form#legendRow(method='POST' action=`/admin_edit_employee_schedule/${username}`)
             input(type='hidden' name='schedule' id='scheduleInput')
 
             ul.legend
@@ -71,6 +71,7 @@ block content
                     |  Sick
 
             button(type='submit', class='save_schedule_button') Save Schedule
+
 
 
 
