@@ -2,15 +2,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const shiftCells = document.querySelectorAll('.shift-cell');
     const statuses = ['Choose an option', 'Default', 'Available', 'Sick', 'PTO', 'Maternity'];
     const colors = {
-        'Available': '#70ff70',
+        'Available': '#e600ff',
         'Sick': '#fc3f4d',
-        'PTO': '#546fff',
+        'PTO': '#44c32a',
         'Maternity': '#fff055'
     };
 
     shiftCells.forEach(cell => {
         // Set default background
-        cell.style.backgroundColor = 'rgba(51,129,188,0.62)';
+        cell.style.backgroundColor = 'rgb(75,124,244)';
 
         // Create dropdown
         const select = document.createElement('select');
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const selectedStatus = select.value;
 
             if (selectedStatus === 'Default') {
-                cell.style.backgroundColor = 'rgba(51,129,188,0.62)';
+                cell.style.backgroundColor = 'rgb(75,124,244)';
                 cell.textContent = '';
             } else if (colors[selectedStatus]) {
                 cell.style.backgroundColor = colors[selectedStatus];

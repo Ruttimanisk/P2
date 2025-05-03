@@ -7,7 +7,7 @@
     bottom: 300px;
 }
 #tableA tr:nth-child(2) {
-    background-color: #3f93dd;
+    background-color: #4b7cf4;
 }
 
 td, th {
@@ -50,13 +50,13 @@ tr:nth-child(even) {
 }
 /*Legend farve og tekst*/
 .legend .Available {
-    background-color: #568ff4;
+    background-color: #ff00dd;
 }
 .legend .Maternity {
     background-color: #fff055;
 }
 .legend .PTO {
-    background-color: #546fff;
+    background-color: #4bb533;
 }
 .legend .Sick {
     background-color: #fc3f4d;
