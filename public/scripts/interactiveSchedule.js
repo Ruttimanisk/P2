@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     shiftCells.forEach(cell => {
         // Set default background
-        cell.style.backgroundColor = 'rgb(75,124,244)';
+        cell.style.backgroundColor = 'rgb(74,144,226)';
 
         // Create dropdown
         const select = document.createElement('select');
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const selectedStatus = select.value;
 
             if (selectedStatus === 'Default') {
-                cell.style.backgroundColor = 'rgb(75,124,244)';
+                cell.style.backgroundColor = 'rgb(74,144,226)';
                 cell.textContent = '';
             } else if (colors[selectedStatus]) {
                 cell.style.backgroundColor = colors[selectedStatus];
