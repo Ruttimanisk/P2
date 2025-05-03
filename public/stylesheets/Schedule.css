@@ -7,7 +7,7 @@
     bottom: 300px;
 }
 #tableA tr:nth-child(2) {
-    background-color: greenyellow;
+    background-color: #3f93dd;
 }
 
 td, th {
