@@ -48,6 +48,7 @@ tr:nth-child(even) {
     padding: 0 120px;
     position: relative;
     width: calc(100% - 240px);
+    margin-top: -150px;
 }
 
 .legend {
