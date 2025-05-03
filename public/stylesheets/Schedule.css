@@ -75,6 +75,7 @@ tr:nth-child(even) {
 }
 .save_schedule_button {
     background-color: #4a90e2;
+    float: right;
     color: white;
     border: none;
     padding: 10px 20px;
