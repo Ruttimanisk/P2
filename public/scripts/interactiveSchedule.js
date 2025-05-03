@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     shiftCells.forEach(cell => {
         // Set default background
-        cell.style.backgroundColor = 'greenyellow';
+        cell.style.backgroundColor = '#3f93dd';
 
         // Create dropdown
         const select = document.createElement('select');
