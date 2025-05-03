@@ -34,7 +34,7 @@ tr:nth-child(even) {
     width: 100%;
     position: relative;
     left: 160px;
-    bottom: 270px;
+    bottom: 240px;
 }
 #tableB tr:nth-child(2) {
     background-color: #4a90e2;
