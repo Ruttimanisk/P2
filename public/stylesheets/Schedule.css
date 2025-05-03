@@ -28,7 +28,7 @@ tr:nth-child(even) {
     bottom: 270px;
 }
 #tableB tr:nth-child(2) {
-    background-color: greenyellow;
+    background-color: #4b7cf4;
 }
 /*Legend position */
 .legend {
