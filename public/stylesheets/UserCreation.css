@@ -4,9 +4,8 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    margin: 0;
     font-family: sans-serif;
-    transform: translateX(-72px);
+    margin-bottom: 80px;
 }
 .user-creation-wrapper h1 {
     text-align: center;
@@ -17,7 +16,6 @@
     border: 2px solid black;
     padding: 20px;
     border-radius: 8px;
-    margin-bottom: 100px;
 }
 .user-creation-wrapper .form-group {
     display: flex;
