@@ -5,8 +5,12 @@ const User = require('../models/user'); // your User model
 jest.mock('express-validator');
 jest.mock('../models/user');
 
+// Bundles the test in the body together, linked to the beforeEach-hook
 describe('login controller', () => {
     let req, res;
+
+    // Resets the values of req and res before each test (within the describe function),
+    // so they don't interfere with eachother
 
     beforeEach(() => {
         req = {
@@ -16,7 +20,7 @@ describe('login controller', () => {
             },
             cookies: {},
         };
-
+        // Initiates spy-functions, to let Jest know what is going on
         res = {
             status: jest.fn(() => res),
             render: jest.fn(),

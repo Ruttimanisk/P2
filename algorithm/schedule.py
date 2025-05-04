@@ -10,10 +10,18 @@ from datetime import datetime, timedelta
 os.chdir(os.path.dirname(__file__))
 
 def time_to_minutes(time_str):
-    h, m = time_str.split(":")
-    return int(h) * 60 + int(m)
+    try:
+        h, m = time_str.split(":")
+        h, m = int(h), int(m)
+        if not (0 <= h <= 23 and 0 <= m <= 59):
+            raise ValueError("Time out of range")
+        return h * 60 + m
+    except (ValueError, AttributeError):
+        raise ValueError("Invalid time format. Expected 'HH:MM'")
 
 def shift_hours(start, end):
+    if end < start:
+        raise ValueError("Shift ends before it starts")
     return (time_to_minutes(end) - time_to_minutes(start)) / 60
 
 def shifts_overlap(s1, s2):
