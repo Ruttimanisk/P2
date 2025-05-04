@@ -1,11 +1,9 @@
 .user-creation-wrapper {
-    display: flex;
-    flex-direction: column;
+
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     font-family: sans-serif;
-    padding-bottom: 200px;
     margin-right: 72px;
 }
 .user-creation-wrapper h1 {
