@@ -1,4 +1,5 @@
 .user-creation-wrapper {
+    display: flex;
 
     align-items: center;
     justify-content: center;
