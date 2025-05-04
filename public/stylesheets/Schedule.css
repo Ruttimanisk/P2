@@ -7,13 +7,23 @@
     bottom: 300px;
 }
 #tableA tr:nth-child(2) {
-    background-color: #3f93dd;
+    background-color: #4a90e2;
 }
 
 td, th {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
+}
+.table_schedule{
+    background-color: #4A90E2;
+    color: black;
+}
+td {
+   /* background-color: #4A90E2;*/
+    background-color: #ffffff;
+    color: #000000;
+    padding: 5px;
 }
 
 tr:nth-child(even) {
@@ -25,17 +35,50 @@ tr:nth-child(even) {
     width: 100%;
     position: relative;
     left: 160px;
-    bottom: 270px;
+    bottom: 240px;
 }
 #tableB tr:nth-child(2) {
-    background-color: greenyellow;
+    background-color: #4a90e2;
 }
 /*Legend position */
+
+.legend-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 120px;
+    position: relative;
+    width: calc(100% - 240px);
+    margin-top: -180px;
+}
+
+.legend {
+    list-style: none;
+    margin-left: 120px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+
+.legend li {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.legend span {
+    border: 1px solid #ccc;
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+}
+
+
 .legend {
     list-style: none;
     position: relative;
-    bottom: 250px;
-    left: 120px;
+    display: inline-block;
 }
 .legend li {
     float: left;
@@ -50,13 +93,13 @@ tr:nth-child(even) {
 }
 /*Legend farve og tekst*/
 .legend .Available {
-    background-color: #70ff70;
+    background-color: #ff00dd;
 }
 .legend .Maternity {
     background-color: #fff055;
 }
 .legend .PTO {
-    background-color: #546fff;
+    background-color: #4bb533;
 }
 .legend .Sick {
     background-color: #fc3f4d;
@@ -64,3 +107,36 @@ tr:nth-child(even) {
 #tableEmployees {
 
 }
+.save_schedule_button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.save_schedule_button:hover {
+    background-color: #357ABD;
+}
+
+form {
+    position: relative;
+}
+
+.schedule-wrapper {
+    margin-bottom: 40px;
+}
+
+#legendRow {
+    position: absolute;
+    top: 330px;  /* Adjust this number to place it below #tableB */
+    left: 50px; /* Same left as your tables for alignment */
+    width: calc(100% - 160px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
