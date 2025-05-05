@@ -349,7 +349,7 @@ exports.update_profile_get = asyncHandler(async (req,res) => {
             return res.render('admin_update_profile', {
                 first_name: user.first_name,
                 family_name: user.family_name,
-                date_of_birth: user.date_of_birth,
+                date_of_birth: user.date_of_birth.toISOString().split('T')[0],
                 statuss: user.status,
                 role: user.role,
                 address: user.address,
@@ -375,7 +375,7 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
         return res.status(400).render('admin_update_profile', {
             first_name: user_old.first_name,
             family_name: user_old.family_name,
-            date_of_birth: user_old.date_of_birth,
+            date_of_birth: user_old.date_of_birth.toISOString().split('T')[0],
             statuss: user_old.status,
             role: user_old.role,
             address: user_old.address,
