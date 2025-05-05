@@ -130,7 +130,7 @@ router.post(
             .isNumeric()
             .escape(),
     ],
-    user_controller.update_profile_get)
+    user_controller.update_profile_post)
 
 router.get('/logout', user_controller.logout)
 
