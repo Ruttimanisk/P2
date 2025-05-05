@@ -24,6 +24,9 @@ block content
             th Status:
             td #{statuss}
         tr
+            th Role:
+            td #{role}
+        tr
             th Address:
             td #{address}
         tr
@@ -33,5 +36,6 @@ block content
             th Hours per Week:
             td #{hours_per_week}
 
+    a#update_profile(href=`/update_profile/${userId}`) - Update profile
     if view_profile
         a#see_schedule(href=`/admin_edit_employee_schedule/${userId}`) - See schedule

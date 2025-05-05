@@ -279,6 +279,7 @@ exports.profile = asyncHandler(async (req, res) => {
                 fullname: user.fullname,
                 lifespan: user.lifespan,
                 statuss: user.status,
+                role: user.role,
                 address: user.address,
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
@@ -293,6 +294,7 @@ exports.profile = asyncHandler(async (req, res) => {
                 fullname: user.fullname,
                 lifespan: user.lifespan,
                 statuss: user.status,
+                role: user.role,
                 address: user.address,
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
@@ -324,6 +326,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
                 fullname: user.fullname,
                 lifespan: user.lifespan,
                 statuss: user.status,
+                role: user.role,
                 address: user.address,
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
@@ -336,6 +339,10 @@ exports.view_profile = asyncHandler(async (req, res) => {
         return res.status(500).send(`view profile error in catch: ${err.name}, ${err.message}`)
     }
 })
+
+exports.update_profile_get = asyncHandler(async (req,res) => {
+})
+
 
 exports.admin_employee_list = asyncHandler(async (req, res) => {
         const [allEmployees, allAdmins] = await Promise.all([
