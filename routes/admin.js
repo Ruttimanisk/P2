@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const user_controller = require("../controllers/user_controller");
-const userschedule_controller = require("../controllers/userschedule_controller");
 const {body} = require("express-validator");
 const Absence = require("../models/absence");
 const { requireAuth } = require('../middleware/auth');
@@ -97,6 +96,41 @@ router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
 router.get('/profile/', requireAuth, user_controller.profile);
 
 router.get('/view_profile/:userId', requireAuth, user_controller.view_profile)
+
+router.get('/update_profile/:userId', requireAuth, user_controller.update_profile_get)
+
+router.post(
+    '/update_profile/:userId',
+    requireAuth,
+    [
+        body("first_name", "First name must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("family_name", "Family name must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("date_of_birth", "Invalid or missing date.")
+            .notEmpty().withMessage("Leave end must not be empty.")
+            .isISO8601().withMessage("Leave end must be a valid ISO 8601 date.")
+            .toDate(),
+        body("status").escape(),
+        body("role", "Role must not be empty.")
+            .trim()
+            .isLength({ min: 1 })
+            .escape(),
+        body("address").escape(),
+        body("hourly_rate", "hourly rate must not be empty.")
+            .trim()
+            .isNumeric()
+            .escape(),
+        body("hours_per_week", "hours per week must not be empty.")
+            .trim()
+            .isNumeric()
+            .escape(),
+    ],
+    user_controller.update_profile_get)
 
 router.get('/logout', user_controller.logout)
 

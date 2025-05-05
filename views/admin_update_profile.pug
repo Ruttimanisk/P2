@@ -1,0 +1,97 @@
+extends layout_admin
+
+block content
+    style.
+        #update_profile td, #update_profile th {
+            border: 1px solid #707070;
+            text-align: left;
+            padding: 8px;
+            background-color: #FAFAFA;
+        }
+        #update_profile td {min-width: 170px;}
+        #go_back {padding: 5px; text-decoration-line: none; font-size: 17px; margin-left: 148px;}
+        .error-list {transform: translate(-15px, -100px);  z-index: 1; color: red;}
+
+    h1 Update Profile
+
+    form(action="/admin/update_profile/:userId" method="POST")
+        table#update_profile
+            tr
+                th First Name:
+                td
+                    input(
+                        type="text",
+                        name="first_name",
+                        value=first_name,
+                        style="width: 70px; margin-right: 1px;"
+                    )
+            tr
+                th Family Name:
+                td
+                    input(
+                        type="text",
+                        name="family_name",
+                        value=family_name,
+                        style="width: 70px; margin-right: 1px;"
+                    )
+            tr
+                th Date of Birth:
+                td
+                    input(
+                        type="date",
+                        name="date_of_birth",
+                        value=date_of_birth,
+                        style="width: 70px; margin-right: 1px;"
+                    )
+            tr
+                th Status:
+                td
+                    input(
+                        type="text",
+                        name="statuss",
+                        value=statuss,
+                        style="width: 70px; margin-right: 1px;"
+                    )
+            tr
+                th Role:
+                td
+                    input(
+                        type="text",
+                        name="role",
+                        value=role,
+                        style="width: 70px; margin-right: 1px;"
+                    )
+            tr
+                th Address:
+                td
+                    input(
+                        type="text",
+                        name="address",
+                        value=address,
+                        style="width: 70px; margin-right: 1px;"
+                    )
+            tr
+                th Hourly Rate:
+                td
+                    input(
+                        type="number",
+                        name="hourly_rate",
+                        value=hourly_rate,
+                        style="width: 70px; margin-right: 1px;"
+                    ) dkk/h
+            tr
+                th Hours per Week:
+                td
+                    input(
+                        type="number",
+                        name="hours_per_week",
+                        value=hours_per_week,
+                        style="width: 70px; margin-right: 1px;"
+                    )
+        button(type="submit", style="margin-left: 148px; transform: translateY(5px)") Save Changes
+    a#go_back(href="javascript:history.back()") - Go back
+
+    if errors
+        ul.error-list
+            each err in errors
+                li.error-item= err.msg

@@ -275,7 +275,6 @@ exports.profile = asyncHandler(async (req, res) => {
         }
         if (user.status === 'Employee'){
             return res.render('employee_profile', {
-                first_name: user.first_name,
                 fullname: user.fullname,
                 lifespan: user.lifespan,
                 statuss: user.status,
@@ -290,7 +289,6 @@ exports.profile = asyncHandler(async (req, res) => {
 
         else if (user.status === 'Admin'){
             return res.render('admin_profile', {
-                first_name: user.first_name,
                 fullname: user.fullname,
                 lifespan: user.lifespan,
                 statuss: user.status,
@@ -322,7 +320,6 @@ exports.view_profile = asyncHandler(async (req, res) => {
         }
         else {
             return res.render('admin_profile', {
-                first_name: user.first_name,
                 fullname: user.fullname,
                 lifespan: user.lifespan,
                 statuss: user.status,
@@ -341,7 +338,70 @@ exports.view_profile = asyncHandler(async (req, res) => {
 })
 
 exports.update_profile_get = asyncHandler(async (req,res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findOne({_id: userId});
+
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        else {
+            return res.render('admin_update_profile', {
+                first_name: user.first_name,
+                family_name: user.family_name,
+                statuss: user.status,
+                role: user.role,
+                address: user.address,
+                hourly_rate: user.hourly_rate,
+                hours_per_week: user.hours_per_week,
+                userId: userId,
+            })
+        }
+
+    } catch (err) {
+        return res.status(500).send(`update profile error in catch: ${err.name}, ${err.message}`)
+    }
 })
+
+exports.update_profile_post = asyncHandler(async (req,res) => {
+    const userId = req.params.userId;
+    const user_old = await User.findOne({_id: userId});
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+
+        return res.status(400).render('admin_update_profile', {
+            first_name: user_old.first_name,
+            family_name: user_old.family_name,
+            statuss: user_old.status,
+            role: user_old.role,
+            address: user_old.address,
+            hourly_rate: user_old.hourly_rate,
+            hours_per_week: user_old.hours_per_week,
+            userId: userId,
+            errors: errors.array()
+        });
+    } else {
+        const user = new User({
+            first_name: req.body.first_name,
+            family_name: req.body.family_name,
+            date_of_birth: req.body.date_of_birth,
+            date_of_death: user_old.date_of_death,
+            address: req.body.address,
+            hours_per_week: req.body.hours_per_week,
+            hourly_rate: req.body.hourly_rate,
+            role: req.body.role,
+            status: req.body.status,
+            contract: user_old.contract,
+            username: user_old.username,
+            password: user_old.password,
+        });
+
+        await User.findByIdAndUpdate(userId, user, {});
+        res.redirect(`/admin/view_profile/${userId}`)
+    }
+});
 
 
 exports.admin_employee_list = asyncHandler(async (req, res) => {
