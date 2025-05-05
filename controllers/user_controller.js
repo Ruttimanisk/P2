@@ -401,8 +401,11 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
             password: user_old.password,
         });
 
-        await User.findByIdAndUpdate(userId, user, {});
-        res.redirect(`/admin/employee_list`)
+        await User.updateOne(
+            { _id: userId },
+            { $set: user }
+        );
+        res.redirect(`/admin/view_profile/${userId}`)
 
     } catch (err) {
         return res.status(500).render('admin_update_profile', {
