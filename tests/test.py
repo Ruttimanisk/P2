@@ -1,9 +1,13 @@
 import unittest
 import algorithm.schedule
-from algorithm.schedule import time_to_minutes
-from algorithm.schedule import shift_hours
+from algorithm.schedule import (time_to_minutes,
+                                shift_hours,
+                                shifts_overlap,
+                                Shift)
 
 class TestAlgorithm(unittest.TestCase):
+
+    # ------------- TESTING TIME_TO_MINUTES -------------
 
     def test_time_to_minutes_valid(self):
         self.assertEqual(time_to_minutes("12:30"), 750)
@@ -24,6 +28,8 @@ class TestAlgorithm(unittest.TestCase):
         with self.assertRaises(ValueError):
             time_to_minutes(1430)
 
+    # ------------- TESTING SHIFT_HOURS -------------
+
     def test_shift_hours_normal(self):
         self.assertEqual(shift_hours('08:00', '12:00'), 4.0)
 
@@ -37,6 +43,33 @@ class TestAlgorithm(unittest.TestCase):
     def test_shift_hours_invalid_input(self):
         with self.assertRaises(ValueError):
             shift_hours('9:00', '25:00')
+
+    # ------------- TESTING SHIFTS_OVERLAP -------------
+
+    def test_shifts_overlap_true(self):
+        shift_1 = Shift("day", "08:30", "12:30")
+        shift_2 = Shift("day", "12:00", "14:00")
+        assert shifts_overlap(shift_1, shift_2) == True
+
+    def test_shifts_overlap_different_days(self):
+        shift_1 = Shift("day_1", "08:30", "11:00")
+        shift_2 = Shift("day_2", "12:00", "14:00")
+        assert shifts_overlap(shift_1, shift_2) == False
+
+    def test_shifts_overlap_edge(self):
+        shift_1 = Shift("day", "08:30", "12:30")
+        shift_2 = Shift("day", "12:30", "14:00")
+        assert shifts_overlap(shift_1, shift_2) == False
+
+    def test_shifts_overlap_seperate(self):
+        shift_1 = Shift("day", "08:30", "11:00")
+        shift_2 = Shift("day", "12:00", "14:00")
+        assert shifts_overlap(shift_1, shift_2) == False
+
+    def test_shifts_overlap_simultaneous(self):
+        shift_1 = Shift("day", "08:30", "12:30")
+        shift_2 = Shift("day", "09:00", "11:00")
+        assert shifts_overlap(shift_1, shift_2) == True
 
 if __name__ == '_main__':
     unittest.main()
