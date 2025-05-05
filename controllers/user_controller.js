@@ -404,7 +404,7 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
         await User.findByIdAndUpdate(userId, user, {});
         res.redirect(`/admin/employee_list`)
 
-    } catch {
+    } catch (err) {
         return res.status(500).render('admin_update_profile', {
             first_name: user_old.first_name,
             family_name: user_old.family_name,
