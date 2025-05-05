@@ -1,34 +1,11 @@
 extends layout_admin
 
 block content
-    // lav til et stylesheet
-    style.
-        #update_profile td, #update_profile th {
-            border: 1px solid #707070;
-            text-align: left;
-            padding: 8px;
-            background-color: #FAFAFA;
-        }
-        #update_profile td {min-width: 170px;}
-        #go_back {padding: 10px 5px; text-decoration-line: none; font-size: 17px; margin-left: 148px;}
-        .error-list {color: red;}
-        .update_input {width: 168px; font-size: 15px;}
-        #update_status {width: 176px; font-size: 15px;}
-        .save_changes_button {
-            margin-left: 150px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .save_changes_button:hover {
-            background-color: #357ABD;
-        }
+    head
+        meta(charset='UTF-8')
+        title Update Profile
+        meta(name='viewport' content='width=device-width, initial-scale=1')
+        link(rel='stylesheet' href='/stylesheets/UpdateProfile.css')
 
     h1 Update Profile
 
