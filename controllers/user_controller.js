@@ -401,7 +401,7 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
         });
 
         await User.findByIdAndUpdate(userId, user, {});
-        res.redirect(`/admin/view_profile/${userId}`)
+        res.redirect(`/admin/employee_list`)
     }
 });
 
