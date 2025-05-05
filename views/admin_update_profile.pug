@@ -47,12 +47,13 @@ block content
             tr
                 th Status:
                 td
-                    input.update_input(
-                        type="text",
-                        name="status",
-                        value=statuss,
-                        required,
-                    )
+                    select.update_input(name='status' required)
+                        if statuss === "Employee"
+                            option(value='Employee' selected) Employee
+                            option#AdminOption(value='Admin') Admin
+                        else
+                            option(value='Employee') Employee
+                            option#AdminOption(value='Admin' selected) Admin
             tr
                 th Role:
                 td
