@@ -1,6 +1,7 @@
 extends layout_admin
 
 block content
+    // lav til et stylesheet
     style.
         #update_profile td, #update_profile th {
             border: 1px solid #707070;
@@ -13,6 +14,21 @@ block content
         .error-list {color: red;}
         .update_input {width: 168px; font-size: 15px;}
         #update_status {width: 176px; font-size: 15px;}
+        .save_changes_button {
+            margin-left: 150px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .save_changes_button:hover {
+            background-color: #357ABD;
+        }
 
     h1 Update Profile
 
@@ -91,7 +107,7 @@ block content
                         value=hours_per_week,
                         required,
                     )
-        button(type="submit", style="margin-left: 150px; margin-top: 5px;") Save Changes
+        button.save_changes_button(type="submit") Save Changes
 
     a#go_back(href="javascript:history.back()") - Go back
 
