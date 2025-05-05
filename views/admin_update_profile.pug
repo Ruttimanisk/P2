@@ -96,4 +96,4 @@ block content
     if errors
         ul.error-list
             each err in errors
-                li.error-item= err.msg
+                li.error-item= typeof err === 'object' && err.msg ? err.msg : err

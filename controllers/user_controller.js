@@ -371,7 +371,6 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-
         return res.status(400).render('admin_update_profile', {
             first_name: user_old.first_name,
             family_name: user_old.family_name,
@@ -384,7 +383,9 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
             userId: userId,
             errors: errors.array()
         });
-    } else {
+    }
+
+    try {
         const user = new User({
             first_name: req.body.first_name,
             family_name: req.body.family_name,
@@ -402,6 +403,20 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
 
         await User.findByIdAndUpdate(userId, user, {});
         res.redirect(`/admin/employee_list`)
+
+    } catch {
+        return res.status(500).render('admin_update_profile', {
+            first_name: user_old.first_name,
+            family_name: user_old.family_name,
+            date_of_birth: user_old.date_of_birth.toISOString().split('T')[0],
+            statuss: user_old.status,
+            role: user_old.role,
+            address: user_old.address,
+            hourly_rate: user_old.hourly_rate,
+            hours_per_week: user_old.hours_per_week,
+            userId: userId,
+            errors: [`update post error: ${err.name}, ${err.message}`]
+        });
     }
 });
 
