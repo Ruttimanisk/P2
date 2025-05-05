@@ -15,7 +15,7 @@ block content
 
     h1 Update Profile
 
-    form(action="/admin/update_profile/:userId" method="POST")
+    form(action=`/admin/update_profile/${userId}` method="POST")
         table#update_profile
             tr
                 th First Name:
