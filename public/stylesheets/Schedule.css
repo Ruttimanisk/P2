@@ -150,3 +150,14 @@ form {
 .hiper_link_style:hover {
     color: #226298;
 }
+
+.delete_link{
+    color : red;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 10px
+}
+.delete_link:hover{
+    color: #971a1a;
+}
