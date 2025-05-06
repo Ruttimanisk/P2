@@ -41,6 +41,18 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
+.go_back_button {
+    margin: 5px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 .save_changes_button:hover {
     background-color: #357ABD;
 }
