@@ -162,16 +162,3 @@ form {
     color: #971a1a;
 }
 
-.go_back_button{
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-.go_back_button:hover {
-    background-color: #357ABD;
-}
