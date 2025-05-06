@@ -11,7 +11,7 @@ block content
         ul
             each employee in employees
                 li
-                    a(href=`/admin/view_profile/${employee._id}`, class='hiper_link_style')!{employee.fullname}
+                    a(href=`/admin/view_profile/${employee._id}`, class='hiper_link_style') !{employee.fullname}
     else
         p.error No employees found.
     hr
