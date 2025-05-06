@@ -140,3 +140,15 @@ form {
     align-items: center;
 }
 
+.hiper_link_style{
+    background-color: #4A90E2;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 10px
+}
+.hiper_link_style:hover {
+    background-color: #357ABD;
+
+}

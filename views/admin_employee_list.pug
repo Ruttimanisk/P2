@@ -1,6 +1,7 @@
 extends layout_admin
 
 block content
+    link(rel='stylesheet' href='/stylesheets/Schedule.css')
     style.
         ul {transform: translateX(20px);}
     h1= title
@@ -10,7 +11,7 @@ block content
         ul
             each employee in employees
                 li
-                    a(href=`/admin/view_profile/${employee._id}`) !{employee.fullname}
+                    a(href=`/admin/view_profile/${employee._id}`, class='hiper_link_style')!{employee.fullname}
     else
         p.error No employees found.
     hr
