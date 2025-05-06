@@ -6,7 +6,6 @@ block content
         title Update Profile
         meta(name='viewport' content='width=device-width, initial-scale=1')
         link(rel='stylesheet' href='/stylesheets/UpdateProfile.css')
-        link(rel='stylesheet' href='/stylesheets/Schedule.css')
 
     h1 Update Profile
 
@@ -89,7 +88,7 @@ block content
 
         //Old link
         //a#go_back(href="javascript:history.back()", class='hiper_link_style') Go back
-        button(onclick="history.back()", class='save_schedule_button', style='padding: 10px 10px;') Go back
+        button.save_changes_button(onclick="history.back()") Go back
 
     if errors
         ul.error-list
