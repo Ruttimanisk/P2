@@ -8,6 +8,7 @@ const AbsenceSchema = new Schema({
     reason: { type: String, required: true, enum: ["Sick", "PTO", "M/Paternity"]},
     leave_start: { type: Date, required: true },
     leave_end: { type: Date },
+    archived: { type: Boolean },
 });
 
 AbsenceSchema.virtual("leave_start_short").get(function() {

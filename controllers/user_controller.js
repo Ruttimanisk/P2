@@ -445,9 +445,10 @@ exports.absence_get = asyncHandler(async (req,res) => {
     ]);
 
     try {
-        await Absence.deleteMany({
-          leave_end: { $lt: new Date() }
-        });
+        await Absence.updateMany(
+            { leave_end: { $lt: new Date() }},
+            { $set: { archived: true } }
+        );
 
         res.render("admin_absence", {
             users: users,
@@ -458,7 +459,7 @@ exports.absence_get = asyncHandler(async (req,res) => {
         return res.status(500).render("admin_absence", {
             users: users,
             current_absence: current_absence,
-            errors: [`Failed in delete expired absence: ${err.name}, ${err.message}`]
+            errors: [`Failed in archive expired absence: ${err.name}, ${err.message}`]
         })
     }
 })
