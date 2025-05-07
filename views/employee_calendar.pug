@@ -14,8 +14,8 @@ block content
     div#calendar(style="max-width: 1200px; margin: 40px auto;")
 
     script.
-        const events = !{JSON.stringify(events)};
-        const resources = !{JSON.stringify(resources)};
+        const events = !{events ? JSON.stringify(events) : '[]'};
+        const resources = !{resources ? JSON.stringify(resources) : '[]'};
         console.log("💬 Events:", events);
         console.log("📋 Resources:", resources);
 
