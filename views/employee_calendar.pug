@@ -25,9 +25,11 @@ block content
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 initialView: 'resourceTimelineWeek',
                 firstDay: 1,
+                nowIndicator: true,               // 🔥 Vis rød linje for dags dato
+                now: new Date(),                   // 🔥 Sæt 'nu' til dagens dato
                 contentHeight: 'auto',
                 slotDuration: { days: 1 },
-                slotLabelFormat: [{ weekday: 'short' }],
+                slotLabelFormat: [{ weekday: 'short', day: 'numeric', month: 'short' }], // 📅 Vis dag + dato + måned
                 slotMinTime: "00:00:00",
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
