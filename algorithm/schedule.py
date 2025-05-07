@@ -1,4 +1,4 @@
-from fileinput import close
+# from fileinput import close
 
 import pulp
 import csv
@@ -96,7 +96,7 @@ with open(shifts_file, "r", encoding="utf-8") as file:
         if day in opening_hours:
             open_start, open_end = opening_hours[day]
             if time_to_minutes(start) >= time_to_minutes(open_start) and time_to_minutes(end) <= time_to_minutes(open_end):
-                all_shifts.append(Shift(day, start, end))
+                    all_shifts.append(Shift(day, start, end))
             else:
                 print(f"Warning: Shift on {day} from {start} to {end} is outside opening hours ({open_start}–{open_end}) – Shift ignored.")
         else:
