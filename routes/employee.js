@@ -21,21 +21,20 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const collection = db.collection('shifts');
         const shifts = await collection.find().toArray();
 
+        console.log("📋 RAW SHIFTS:", shifts); // <--- HER logger vi hele shifts fra databasen
+
         const events = shifts
             .filter(shift => shift.date && shift.start && shift.end && shift.employee)
             .map(shift => ({
-                title: `${shift.start} - ${shift.end}`,     // Vi viser start og slut i titlen
-                start: `${shift.date}T${shift.start}`,       // ISO format
-                end: `${shift.date}T${shift.end}`,           // ISO format
-                resourceId: shift.employee                  // ⬅️ NØGLE: Sørg for resourceId bliver tilføjet!
+                title: `${shift.start} - ${shift.end}`,
+                start: `${shift.date}T${shift.start}`,
+                end: `${shift.date}T${shift.end}`,
+                resourceId: shift.employee
             }));
 
         const resources = [...new Set(shifts.map(shift => shift.employee))]
-            .filter(name => name) // Fjern evt. tomme navne
+            .filter(name => name)
             .map(name => ({ id: name, title: name }));
-
-        console.log("✅ Events:", events);
-        console.log("✅ Resources:", resources);
 
         res.render('employee_calendar', { events, resources });
     } catch (err) {
@@ -43,6 +42,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
         res.status(500).send('Server fejl');
     }
 });
+
 
 
 router.get('/prof_old', requireAuth, (req, res) => {
