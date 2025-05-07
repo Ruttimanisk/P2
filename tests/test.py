@@ -1,5 +1,5 @@
 import unittest
-#import algorithm.schedule
+# import algorithm.schedule
 from algorithm.schedule import (time_to_minutes,
                                 shift_hours,
                                 shifts_overlap,
