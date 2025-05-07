@@ -24,14 +24,18 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const events = shifts
             .filter(shift => shift.date && shift.start && shift.end && shift.employee)
             .map(shift => ({
-                title: `${shift.start} - ${shift.end}`,   // valgfri visning
+                title: `${shift.start} - ${shift.end}`,
                 start: `${shift.date}T${shift.start}`,
                 end: `${shift.date}T${shift.end}`,
-                resourceId: shift.employee                // 👈 MEGET vigtigt!
+                resourceId: shift.employee
             }));
 
         const resources = [...new Set(shifts.map(shift => shift.employee))]
+            .filter(name => name) // <--- vigtigt!
             .map(name => ({ id: name, title: name }));
+
+        console.log("✅ Events:", events);
+        console.log("✅ Resources:", resources);
 
         res.render('employee_calendar', { events, resources });
     } catch (err) {
@@ -39,8 +43,6 @@ router.get('/calendar', requireAuth, async (req, res) => {
         res.status(500).send('Server fejl');
     }
 });
-
-
 
 router.get('/prof_old', requireAuth, (req, res) => {
     const username = req.session.username;
