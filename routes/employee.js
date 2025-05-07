@@ -18,32 +18,28 @@ router.get('/schedule', requireAuth, user_controller.show_employee_schedule);
 router.get('/calendar', requireAuth, async (req, res) => {
     try {
         const db = mongoose.connection;
-        const collection = db.collection('shifts'); // 📍 Samme som admin
+        const collection = db.collection('shifts');
         const shifts = await collection.find().toArray();
 
-        // Byg events
         const events = shifts
             .filter(shift => shift.date && shift.start && shift.end && shift.employee)
             .map(shift => ({
-                title: `${shift.start} - ${shift.end}`,
+                title: `${shift.start} - ${shift.end}`,   // valgfri visning
                 start: `${shift.date}T${shift.start}`,
                 end: `${shift.date}T${shift.end}`,
-                resourceId: shift.employee
+                resourceId: shift.employee                // 👈 MEGET vigtigt!
             }));
 
-        // Byg resources (medarbejdere)
         const resources = [...new Set(shifts.map(shift => shift.employee))]
             .map(name => ({ id: name, title: name }));
 
-        console.log("📅 Employee Events:", events);
-        console.log("🧑‍🤝‍🧑 Employee Resources:", resources);
-
-        res.render('employee_calendar', { events, resources }); // 🔥 Samme som admin, men til employee view
+        res.render('employee_calendar', { events, resources });
     } catch (err) {
         console.error('Fejl i /employee/calendar:', err);
         res.status(500).send('Server fejl');
     }
 });
+
 
 
 router.get('/prof_old', requireAuth, (req, res) => {
