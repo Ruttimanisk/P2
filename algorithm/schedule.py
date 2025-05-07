@@ -5,8 +5,9 @@ import csv
 import os
 import json
 from pymongo import MongoClient
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from collections import namedtuple
+from dateutil.relativedelta import relativedelta, MO
 
 os.chdir(os.path.dirname(__file__))
 
@@ -51,7 +52,8 @@ def generate_weekday_date_mapping(start_date_str):
 
 
 # Vælg hvilken uge du vil generere (mandagsdato)
-week_start = "2025-04-28"
+today = date.today()
+week_start = today - timedelta(days=today.weekday())
 weekday_to_date = generate_weekday_date_mapping(week_start)
 
 opening_hours = {
