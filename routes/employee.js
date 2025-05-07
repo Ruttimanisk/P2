@@ -21,26 +21,25 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const collection = db.collection('Schedule');
         const shifts = await collection.find().toArray();
 
-        // Byg events og resources korrekt
         const events = shifts
             .filter(shift => shift.date && shift.start && shift.end && shift.employee)
             .map(shift => ({
-                title: `${shift.start} - ${shift.end}`,  // viser arbejdstid i stedet
+                title: `${shift.start} - ${shift.end}`,
                 start: `${shift.date}T${shift.start}`,
                 end: `${shift.date}T${shift.end}`,
-                resourceId: shift.employee               // 🔥 SUPER VIGTIGT
+                resourceId: shift.employee
             }));
-
 
         const resources = [...new Set(shifts.map(shift => shift.employee))]
             .map(name => ({ id: name, title: name }));
 
-        res.render('employee_calendar', { events, resources }); // 🔥 Rigtigt renderet
+        res.render('employee_calendar', { events, resources });
     } catch (err) {
-        console.error("Fejl under hentning af kalender:", err);
-        res.status(500).send("Server fejl");
+        console.error("Fejl i /employee/calendar:", err); // 👈 Viktigt log
+        res.status(500).send('Server error');
     }
 });
+
 
 router.get('/prof_old', requireAuth, (req, res) => {
     const username = req.session.username;
