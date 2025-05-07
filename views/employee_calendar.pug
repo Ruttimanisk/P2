@@ -3,19 +3,21 @@ extends layout_employee
 block content
     h1 Min Vagtplan
 
+    // FullCalendar stylesheets
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
+    // FullCalendar scripts
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
 
-    div#calendar(style="max-width: 1200px; margin: 40px auto; padding: 20px;")
+    div#calendar(style="max-width: 1200px; margin: 40px auto;")
 
     script.
-        const events = !{events.length ? JSON.stringify(events) : '[]'};
-        const resources = !{resources.length ? JSON.stringify(resources) : '[]'};
-
-        console.log("🔍 EVENTS:", events);
+        const events = !{events ? JSON.stringify(events) : '[]'};
+        const resources = !{resources ? JSON.stringify(resources) : '[]'};
+        console.log("💬 Events:", events);
+        console.log("📋 Resources:", resources);
 
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
@@ -30,8 +32,10 @@ block content
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
                 displayEventTime: false,
-                editable: false,
-                selectable: false,
+                editable: false,        // 👈 Ingen træk/ændringer
+                selectable: false,      // 👈 Ingen klik-for-nyt event
+                selectMirror: false,
+                eventDurationEditable: false,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
