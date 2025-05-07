@@ -1,15 +1,16 @@
 import unittest
-# import algorithm.schedule
+import algorithm.schedule
 from algorithm.schedule import (time_to_minutes,
                                 shift_hours,
                                 shifts_overlap,
-                                Shift, generate_weekday_date_mapping)
+                                Shift,
+                                generate_weekday_date_mapping)
 
-class TestAlgorithm(unittest.TestCase):
+class TestTimeToMinutes(unittest.TestCase):
 
     # ------------- TESTING TIME_TO_MINUTES -------------
 
-    # --------- TESTING FORMAT OF STRING ---------
+        # --------- TESTING FORMAT OF STRING ---------
 
     def test_time_to_minutes_bad_format(self):
         with self.assertRaises(ValueError):
@@ -56,7 +57,9 @@ class TestAlgorithm(unittest.TestCase):
         self.assertEqual(time_to_minutes("00:00"), 0)
 
     def test_time_to_minutes_edge_2(self):
-        self.assertEqual(time_to_minutes("23:59"), 1439)
+       self.assertEqual(time_to_minutes("23:59"), 1439)
+
+class TestShiftHours(unittest.TestCase):
 
     # ------------- TESTING SHIFT_HOURS -------------
 
@@ -74,6 +77,7 @@ class TestAlgorithm(unittest.TestCase):
     def test_shift_hours_zero(self):
         self.assertEqual(shift_hours('12:00', '12:00'), 0.0)
 
+class TestShiftsOverlap(unittest.TestCase):
     # ------------- TESTING SHIFTS_OVERLAP -------------
 
     def test_shifts_overlap_true(self):
@@ -101,16 +105,29 @@ class TestAlgorithm(unittest.TestCase):
         shift_2 = Shift("day", "09:00", "11:00")
         assert shifts_overlap(shift_1, shift_2) == True
 
+class TestGenerateWeekdayDateMapping(unittest.TestCase):
     # ---------------- TESTING GENERATE_WEEKDAY_DATE_MAPPING ----------
 
     def test_generate_weekday_date_mapping_invalid_input(self):
-        try:
+        with self.assertRaises(ValueError):
             generate_weekday_date_mapping("05-25-2025")
-        except ValueError:
-            print("Caught ValueError as expected")
 
     def test_generate_weekday_date_mapping_valid_input(self):
         self.assertTrue(generate_weekday_date_mapping("2025-05-25"))
+
+    # -------------- TESTING ABSENCE FILE-----------
+
+
+    def test_all_shifts_valid(self):
+        self.assertTrue(time_to_minutes("08:00") >= time_to_minutes("07:00") and time_to_minutes("12:00") <= time_to_minutes("13:00"))
+
+    def test_all_shifts_invalid_argument_start(self):
+        self.assertEqual(time_to_minutes("06:00") >= time_to_minutes("07:00") and time_to_minutes("12:00") <= time_to_minutes("13:00"), False)
+
+    def test_all_shifts_invalid_argument_end(self):
+        self.assertEqual(time_to_minutes("08:00") >= time_to_minutes("09:00") and time_to_minutes("12:00") <= time_to_minutes("10:00"), False)
+
+
 
 if __name__ == '_main__':
     unittest.main()
