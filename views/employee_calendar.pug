@@ -12,8 +12,8 @@ block content
     div#calendar(style="max-width: 1200px; margin: 40px auto; padding: 20px;")
 
     script.
-        const events = !{events || []};
-        const resources = !{resources || []};
+        const events = !{events.length ? JSON.stringify(events) : '[]'};
+        const resources = !{resources.length ? JSON.stringify(resources) : '[]'};
 
         console.log("🔍 EVENTS:", events);
 
@@ -38,12 +38,8 @@ block content
                     right: 'resourceTimelineWeek,dayGridMonth'
                 },
                 resourceAreaHeaderContent: 'Medarbejdere',
-
                 resources: resources,
-                events: events,   // 👈 VIGTIGT her
-
-                // Fjerner event fetching hvis FullCalendar bliver forvirret
-                eventSources: [],
+                events: events,
             });
             calendar.render();
         });
