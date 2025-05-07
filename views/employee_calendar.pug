@@ -7,7 +7,7 @@ block content
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
-    // FullCalendar scripts
+    // FullCalendar script (kun én gang!)
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
 
     div#calendar(style="max-width: 1200px; margin: 40px auto;")
@@ -29,13 +29,13 @@ block content
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
                 displayEventTime: false,
+                editable: false,        // 👈 Ingen træk/ændringer
+                selectable: false,      // 👈 Ingen mulighed for ny oprettelse
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'resourceTimelineWeek,dayGridMonth'
                 },
-                editable: false,   // 👈 Ingen træk/ændringer
-                selectable: false, // 👈 Ingen klik-og-træk for at lave events
                 resourceAreaHeaderContent: 'Employees',
                 resources: resources,
                 events: events

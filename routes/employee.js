@@ -19,6 +19,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
     const collection = db.collection('Schedule');
     const shifts = await collection.find().toArray();
 
+    // Byg events og resources
     const events = shifts
         .filter(shift => shift.date && shift.start && shift.end && shift.employee)
         .map(shift => ({
@@ -30,7 +31,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
     const resources = [...new Set(shifts.map(shift => shift.employee))]
         .map(name => ({ id: name, title: name }));
 
-    res.render('employee_calendar', { events, resources }); // 👈 Bemærk: employee_calendar
+    res.render('employee_calendar', { events, resources }); // 👈 Korrekt render
 });
 
 
