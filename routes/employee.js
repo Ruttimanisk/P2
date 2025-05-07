@@ -19,32 +19,20 @@ router.get('/calendar', requireAuth, async (req, res) => {
     const collection = db.collection('Schedule');
     const shifts = await collection.find().toArray();
 
-    console.log("📦 Shifts data from DB:", shifts);
-    shifts.forEach(shift => {
-        console.log("🔎 Raw shift:", shift);
-        console.log("📅 shift.date:", shift.date);
-    });
-
-
-    // Her sikrer vi, at vi får den rigtige dato fra MongoDB
-    const events = shifts.map(shift => {
-        console.log("👀 shift:", shift); // Til fejlfinding
-        if (!shift.date || !shift.start || !shift.end) {
-            console.warn("⚠️ Manglende data:", shift);
-            return null;
-        }
-        return {
+    const events = shifts
+        .filter(shift => shift.date && shift.start && shift.end && shift.employee)
+        .map(shift => ({
             title: shift.employee,
             start: `${shift.date}T${shift.start}`,
             end: `${shift.date}T${shift.end}`
-        };
-    }).filter(e => e !== null);
+        }));
 
+    const resources = [...new Set(shifts.map(shift => shift.employee))]
+        .map(name => ({ id: name, title: name }));
 
-    console.log("📦 Events to send to admin_calendar.pug:", events);
-
-    res.render('employee_calendar', { events: JSON.stringify(events) });
+    res.render('employee_calendar', { events, resources }); // 👈 Bemærk: employee_calendar
 });
+
 
 router.get('/prof_old',  requireAuth, (req, res) => {
     const username = req.session.username;
