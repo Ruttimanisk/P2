@@ -1,44 +1,35 @@
-extends layout_employee
+script.
+    const events = !{JSON.stringify(events || [])};
+    const resources = !{JSON.stringify(resources || [])};
 
-block content
-    h1 Min Vagtplan
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+            initialView: 'resourceTimelineWeek',
+            firstDay: 1,
+            contentHeight: 'auto',
+            slotDuration: { days: 1 },
+            slotLabelFormat: [{ weekday: 'short' }],
+            slotMinTime: "00:00:00",
+            slotMaxTime: "24:00:00",
+            allDaySlot: false,
+            displayEventTime: false,
+            editable: false,
+            selectable: false,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'resourceTimelineWeek,dayGridMonth'
+            },
+            resourceAreaHeaderContent: 'Medarbejdere',
+            resources: resources,
 
-    // FullCalendar stylesheets
-    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
-    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
+            // 👇 VIGTIGT! Brug eventData direkte her:
+            events: events,     // <--- FULD array, direkte.
 
-    // FullCalendar scripts
-    script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
-
-    div#calendar(style="max-width: 1200px; margin: 40px auto; padding: 20px;")
-
-    script.
-        const events = !{JSON.stringify(events || [])};
-        const resources = !{JSON.stringify(resources || [])};
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-                initialView: 'resourceTimelineWeek',
-                firstDay: 1,                     // Uge starter mandag
-                contentHeight: 'auto',
-                slotDuration: { days: 1 },
-                slotLabelFormat: [{ weekday: 'short' }],
-                slotMinTime: "00:00:00",
-                slotMaxTime: "24:00:00",
-                allDaySlot: false,
-                displayEventTime: false,
-                editable: false,                // 👈 Ingen drag/drop/redigering
-                selectable: false,              // 👈 Ingen oprettelse af events
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'resourceTimelineWeek,dayGridMonth'
-                },
-                resourceAreaHeaderContent: 'Employees',
-                resources: resources,
-                events: events
-            });
-            calendar.render();
+            // 👇 SIKRER at den ikke prøver at loade noget eksternt:
+            eventSources: [],   // <- fortæl FullCalendar at INGEN eksterne kilder bruges
         });
+        calendar.render();
+    });
