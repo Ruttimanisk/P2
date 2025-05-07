@@ -7,22 +7,22 @@ block content
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
-    // FullCalendar script
+    // FullCalendar scripts
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
 
-    div#calendar(style="max-width: 1200px; margin: 40px auto;")
+    div#calendar(style="max-width: 1200px; margin: 40px auto; padding: 20px;")
 
-    // Events og Resources skal være korrekt injiceret
     script.
+        // Sikrer at events/resources altid er arrays
         const events = !{JSON.stringify(events || [])};
         const resources = !{JSON.stringify(resources || [])};
 
         document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 initialView: 'resourceTimelineWeek',
-                firstDay: 1,
+                firstDay: 1,                     // Uge starter mandag
                 contentHeight: 'auto',
                 slotDuration: { days: 1 },
                 slotLabelFormat: [{ weekday: 'short' }],
@@ -30,8 +30,8 @@ block content
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
                 displayEventTime: false,
-                editable: false,        // 👈 Ingen ændring/move/resize
-                selectable: false,      // 👈 Ingen ny oprettelse
+                editable: false,                // 👈 Ingen drag/drop/redigering
+                selectable: false,              // 👈 Ingen oprettelse af events
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
