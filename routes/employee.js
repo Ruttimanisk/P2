@@ -25,10 +25,12 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const events = shifts
             .filter(shift => shift.date && shift.start && shift.end && shift.employee)
             .map(shift => ({
-                title: shift.employee,
+                title: `${shift.start} - ${shift.end}`,  // viser arbejdstid i stedet
                 start: `${shift.date}T${shift.start}`,
-                end: `${shift.date}T${shift.end}`
+                end: `${shift.date}T${shift.end}`,
+                resourceId: shift.employee               // 🔥 SUPER VIGTIGT
             }));
+
 
         const resources = [...new Set(shifts.map(shift => shift.employee))]
             .map(name => ({ id: name, title: name }));
