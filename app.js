@@ -14,6 +14,10 @@ var employeeRouter = require('./routes/employee');
 
 var app = express();
 
+// ny
+app.set('trust proxy', 1); // gør Express klar til at forstå HTTPS bag Nginx
+
+
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(process.env.MONGODB_URI);
