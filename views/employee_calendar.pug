@@ -7,6 +7,17 @@ block content
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
+    style.
+        /* Diskret highlight af dags dato */
+        .fc-day-today {
+            background-color: #f5f5f5; /* meget lys grå baggrund */
+        }
+
+        .fc-resourceTimelineWeek .fc-day-today .fc-col-header-cell-cushion {
+            font-weight: bold;
+            color: #333; /* lidt mørkere tekst for dagen */
+        }
+
     // FullCalendar scripts
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
