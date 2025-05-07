@@ -1,35 +1,49 @@
-script.
-    const events = !{JSON.stringify(events || [])};
-    const resources = !{JSON.stringify(resources || [])};
+extends layout_employee
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-            initialView: 'resourceTimelineWeek',
-            firstDay: 1,
-            contentHeight: 'auto',
-            slotDuration: { days: 1 },
-            slotLabelFormat: [{ weekday: 'short' }],
-            slotMinTime: "00:00:00",
-            slotMaxTime: "24:00:00",
-            allDaySlot: false,
-            displayEventTime: false,
-            editable: false,
-            selectable: false,
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'resourceTimelineWeek,dayGridMonth'
-            },
-            resourceAreaHeaderContent: 'Medarbejdere',
-            resources: resources,
+block content
+    h1 Min Vagtplan
 
-            // 👇 VIGTIGT! Brug eventData direkte her:
-            events: events,     // <--- FULD array, direkte.
+    // 📄 FullCalendar CSS
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
-            // 👇 SIKRER at den ikke prøver at loade noget eksternt:
-            eventSources: [],   // <- fortæl FullCalendar at INGEN eksterne kilder bruges
+    // 📄 FullCalendar JS (skal komme FØR du bruger FullCalendar!)
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
+
+    div#calendar(style="max-width: 1200px; margin: 40px auto; padding: 20px;")
+
+    // 📄 DIT script der bruger FullCalendar
+    script.
+        const events = !{JSON.stringify(events || [])};
+        const resources = !{JSON.stringify(resources || [])};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("KALENDER EVENTS:", events);
+
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                initialView: 'resourceTimelineWeek',
+                firstDay: 1,
+                contentHeight: 'auto',
+                slotDuration: { days: 1 },
+                slotLabelFormat: [{ weekday: 'short' }],
+                slotMinTime: "00:00:00",
+                slotMaxTime: "24:00:00",
+                allDaySlot: false,
+                displayEventTime: false,
+                editable: false,
+                selectable: false,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'resourceTimelineWeek,dayGridMonth'
+                },
+                resourceAreaHeaderContent: 'Medarbejdere',
+                resources: resources,
+                events: events,
+                eventSources: [], // For at være sikker på, at den ikke laver fetch
+            });
+            calendar.render();
         });
-        calendar.render();
-    });
