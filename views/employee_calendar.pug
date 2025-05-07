@@ -1,29 +1,47 @@
-extends layout_employee
+extends layout_admin
 
 block content
     h1 Vagtplan
 
-    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css')
-    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js')
+    // FullCalendar stylesheets
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
-    div#calendar(style="max-width: 900px; margin: 40px auto;")
+    // FullCalendar scripts
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
+
+    div#calendar(style="max-width: 1200px; margin: 40px auto;")
 
     script.
-        console.log("💬 Events JSON string:", !{events});
-        try {
-            const events = !{events};
-            document.addEventListener('DOMContentLoaded', function () {
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'timeGridWeek',
-                    allDaySlot: false,
-                    slotMinTime: "07:00:00",
-                    slotMaxTime: "20:00:00",
-                    events: events
-                });
-                calendar.render();
-            });
-        } catch (err) {
-            console.error("❌ Fejl i JSON.parse:", err);
-        }
+        const events = !{JSON.stringify(events)};
+        const resources = !{JSON.stringify(resources)};
+        console.log("💬 Events:", events);
+        console.log("📋 Resources:", resources);
 
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                initialView: 'resourceTimelineWeek',
+                firstDay: 1,                     // <--- Start uge med mandag
+                contentHeight: 'auto',            // <--- Ingen kæmpe hul under sidste medarbejder
+                slotDuration: {days: 1},
+                slotLabelFormat: [
+                    {weekday: 'short'}
+                ],
+                slotMinTime: "00:00:00",
+                slotMaxTime: "24:00:00",
+                allDaySlot: false,
+                displayEventTime: false,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'resourceTimelineWeek,dayGridMonth'
+                },
+                resourceAreaHeaderContent: 'Medarbejdere',
+                resources: resources,
+                events: events
+            });
+            calendar.render();
+        });
