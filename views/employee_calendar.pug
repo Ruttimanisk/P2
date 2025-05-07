@@ -1,7 +1,7 @@
 extends layout_employee
 
 block content
-    h1 Min Vagtplan
+    h1 Schedule
 
     // FullCalendar stylesheets
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
@@ -54,7 +54,7 @@ block content
                     center: 'title',
                     right: 'resourceTimelineWeek,dayGridMonth'
                 },
-                resourceAreaHeaderContent: 'Medarbejdere',
+                resourceAreaHeaderContent: 'Employees',
                 resources: resources,
                 events: events,
             });
