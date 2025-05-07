@@ -24,14 +24,14 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const events = shifts
             .filter(shift => shift.date && shift.start && shift.end && shift.employee)
             .map(shift => ({
-                title: `${shift.start} - ${shift.end}`,
-                start: `${shift.date}T${shift.start}`,
-                end: `${shift.date}T${shift.end}`,
-                resourceId: shift.employee
+                title: `${shift.start} - ${shift.end}`,     // Vi viser start og slut i titlen
+                start: `${shift.date}T${shift.start}`,       // ISO format
+                end: `${shift.date}T${shift.end}`,           // ISO format
+                resourceId: shift.employee                  // ⬅️ NØGLE: Sørg for resourceId bliver tilføjet!
             }));
 
         const resources = [...new Set(shifts.map(shift => shift.employee))]
-            .filter(name => name) // <--- vigtigt!
+            .filter(name => name) // Fjern evt. tomme navne
             .map(name => ({ id: name, title: name }));
 
         console.log("✅ Events:", events);
@@ -43,6 +43,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
         res.status(500).send('Server fejl');
     }
 });
+
 
 router.get('/prof_old', requireAuth, (req, res) => {
     const username = req.session.username;
