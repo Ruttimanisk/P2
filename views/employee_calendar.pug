@@ -1,4 +1,4 @@
-extends layout_admin
+extends layout_employee
 
 block content
     h1 Vagtplan
@@ -8,7 +8,6 @@ block content
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
     // FullCalendar scripts
-    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
 
     div#calendar(style="max-width: 1200px; margin: 40px auto;")
@@ -16,18 +15,16 @@ block content
     script.
         const events = !{JSON.stringify(events || [])};
         const resources = !{JSON.stringify(resources || [])};
-        console.log("💬 Events:", events);
-        console.log("📋 Resources:", resources);
 
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 initialView: 'resourceTimelineWeek',
-                firstDay: 1,                     // <--- Start uge med mandag
-                contentHeight: 'auto',            // <--- Ingen kæmpe hul under sidste medarbejder
-                slotDuration: {days: 1},
-                slotLabelFormat: [{weekday: 'short'}],
+                firstDay: 1,
+                contentHeight: 'auto',
+                slotDuration: { days: 1 },
+                slotLabelFormat: [{ weekday: 'short' }],
                 slotMinTime: "00:00:00",
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
