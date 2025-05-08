@@ -1,11 +1,22 @@
 extends layout_admin
 
 block content
-    h1 Vagtplan
+    h1 Calendar
 
     // FullCalendar stylesheets
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
+
+    style.
+        /* Diskret highlight af dags dato */
+        .fc-day-today {
+            background-color: #f5f5f5; /* meget lys grå baggrund */
+        }
+
+        .fc-resourceTimelineWeek .fc-day-today .fc-col-header-cell-cushion {
+            font-weight: bold;
+            color: #333; /* lidt mørkere tekst for dagen */
+        }
 
     // FullCalendar scripts
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
@@ -25,9 +36,11 @@ block content
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 initialView: 'resourceTimelineWeek',
                 firstDay: 1,
+                nowIndicator: false,
+                now: new Date(),
                 contentHeight: 'auto',
                 slotDuration: { days: 1 },
-                slotLabelFormat: [{ weekday: 'short' }],
+                slotLabelFormat: [{ weekday: 'short', day: 'numeric', month: 'short' }],
                 slotMinTime: "00:00:00",
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
