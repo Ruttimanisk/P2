@@ -44,6 +44,7 @@ block content
         if current_absence.length
             ul.absence-list
                 each absence in current_absence
-                    li.absence-item= `${absence.user.fullname}: ${absence.reason} - ${absence.leave_start_short} ${absence.leave_end_short}`
-                    a(href="javascript:void(0)", onclick=`deleteAbsence('${absence._id}')` class='delete_link') Delete
+                    if absence.archived !== true
+                        li.absence-item= `${absence.user.fullname}: ${absence.reason} - ${absence.leave_start_short} ${absence.leave_end_short}`
+                        a(href="javascript:void(0)", onclick=`deleteAbsence('${absence._id}')` class='delete_link') Delete
 

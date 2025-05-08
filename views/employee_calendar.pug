@@ -1,29 +1,62 @@
 extends layout_employee
 
 block content
-    h1 Vagtplan
+    h1 Schedule
 
-    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css')
-    script(src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js')
+    // FullCalendar stylesheets
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
 
-    div#calendar(style="max-width: 900px; margin: 40px auto;")
-
-    script.
-        console.log("💬 Events JSON string:", !{events});
-        try {
-            const events = !{events};
-            document.addEventListener('DOMContentLoaded', function () {
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'timeGridWeek',
-                    allDaySlot: false,
-                    slotMinTime: "07:00:00",
-                    slotMaxTime: "20:00:00",
-                    events: events
-                });
-                calendar.render();
-            });
-        } catch (err) {
-            console.error("❌ Fejl i JSON.parse:", err);
+    style.
+        /* Diskret highlight af dags dato */
+        .fc-day-today {
+            background-color: #f5f5f5; /* meget lys grå baggrund */
         }
 
+        .fc-resourceTimelineWeek .fc-day-today .fc-col-header-cell-cushion {
+            font-weight: bold;
+            color: #333; /* lidt mørkere tekst for dagen */
+        }
+
+    // FullCalendar scripts
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
+
+    div#calendar(style="max-width: 1200px; margin: 40px auto;")
+
+    script.
+        const events = !{JSON.stringify(events)};
+        const resources = !{JSON.stringify(resources)};
+        console.log("💬 Events:", events);
+        console.log("📋 Resources:", resources);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                initialView: 'resourceTimelineWeek',
+                firstDay: 1,
+                nowIndicator: false,               // 🔥 Vis rød linje for dags dato
+                now: new Date(),                   // 🔥 Sæt 'nu' til dagens dato
+                contentHeight: 'auto',
+                slotDuration: { days: 1 },
+                slotLabelFormat: [{ weekday: 'short', day: 'numeric', month: 'short' }], // 📅 Vis dag + dato + måned
+                slotMinTime: "00:00:00",
+                slotMaxTime: "24:00:00",
+                allDaySlot: false,
+                displayEventTime: false,
+                editable: false,        // 👈 Ingen træk/ændringer
+                selectable: false,      // 👈 Ingen klik-for-nyt event
+                selectMirror: false,
+                eventDurationEditable: false,
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'resourceTimelineWeek,dayGridMonth'
+                },
+                resourceAreaHeaderContent: 'Employees',
+                resources: resources,
+                events: events,
+            });
+            calendar.render();
+        });

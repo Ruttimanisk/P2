@@ -1,77 +1,80 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+const path = require("path");
+const fs = require("fs");
 
 const user_controller = require("../controllers/user_controller");
 const userschedule_controller = require("../controllers/userschedule_controller");
 const { requireAuth } = require("../middleware/auth");
-const mongoose = require("mongoose");
 
-// med rotes herfra skal man gå ud fra at de allerede er på /employee/
-// tilføj requireAuth til alle når vi har fået login til at fungere
-// skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 
-router.get('/home',  requireAuth, user_controller.employee_home)
 
-router.get('/schedule', requireAuth, user_controller.show_employee_schedule)
+router.get('/home', requireAuth, user_controller.employee_home);
 
+router.get('/schedule', requireAuth, user_controller.show_employee_schedule);
+
+// Kalender med FullCalendar visning
 router.get('/calendar', requireAuth, async (req, res) => {
-    const db = mongoose.connection;
-    const collection = db.collection('Schedule');
-    const shifts = await collection.find().toArray();
+    try {
+        const db = mongoose.connection;
+        const collection = db.collection('shifts');
+        const shifts = await collection.find().toArray();
 
-    console.log("📦 Shifts data from DB:", shifts);
-    shifts.forEach(shift => {
-        console.log("🔎 Raw shift:", shift);
-        console.log("📅 shift.date:", shift.date);
-    });
+        console.log("📋 RAW SHIFTS:", shifts); // <--- HER logger vi hele shifts fra databasen
 
+        const events = shifts
+            .filter(shift => shift.date && shift.start && shift.end && shift.employee)
+            .map(shift => ({
+                title: `${shift.start} - ${shift.end}`,
+                start: `${shift.date}T${shift.start}`,
+                end: `${shift.date}T${shift.end}`,
+                resourceId: shift.employee
+            }));
 
-    // Her sikrer vi, at vi får den rigtige dato fra MongoDB
-    const events = shifts.map(shift => {
-        console.log("👀 shift:", shift); // Til fejlfinding
-        if (!shift.date || !shift.start || !shift.end) {
-            console.warn("⚠️ Manglende data:", shift);
-            return null;
-        }
-        return {
-            title: shift.employee,
-            start: `${shift.date}T${shift.start}`,
-            end: `${shift.date}T${shift.end}`
-        };
-    }).filter(e => e !== null);
+        const resources = [...new Set(shifts.map(shift => shift.employee))]
+            .filter(name => name)
+            .map(name => ({ id: name, title: name }));
 
-
-    console.log("📦 Events to send to admin_calendar.pug:", events);
-
-    res.render('employee_calendar', { events: JSON.stringify(events) });
+        res.render('employee_calendar', { events, resources });
+    } catch (err) {
+        console.error('Fejl i /employee/calendar:', err);
+        res.status(500).send('Server fejl');
+    }
 });
 
-router.get('/prof_old',  requireAuth, (req, res) => {
+
+
+router.get('/prof_old', requireAuth, (req, res) => {
     const username = req.session.username;
 
     if (!username) {
         return res.redirect('/login');
     }
 
-    const usersPath = path.join(__dirname, '../user_info.json'); // adjust as needed
-    const users = JSON.parse(fs.readFileSync(usersPath));
+    const usersPath = path.join(__dirname, '../user_info.json');
 
-    const user = users.find(u => u.username === username);
+    try {
+        const users = JSON.parse(fs.readFileSync(usersPath, "utf8"));
+        const user = users.find(u => u.username === username);
 
-    if (!user) {
-        return res.status(404).send('User not found');
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        res.render('profile', {
+            name: user.first_name,
+            status: user.status
+        });
+    } catch (err) {
+        console.error("Fejl ved læsning af brugere:", err);
+        res.status(500).send("Server fejl");
     }
-
-    res.render('profile', {
-        name: user.first_name,
-        status: user.status
-    });
 });
 
-// recreated profile
-router.get('/profile',  requireAuth, user_controller.profile);
+router.get('/profile', requireAuth, user_controller.profile);
 
-router.get('/logout', user_controller.logout)
-
+// Logout
+router.get('/logout', user_controller.logout);
 
 module.exports = router;
