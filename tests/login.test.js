@@ -1,7 +1,18 @@
-const { login } = require('../controllers/user_controller'); // your controller file
-const { validationResult } = require('express-validator');
-const User = require('../models/user'); // your User model
+// Import functions to test
+const { login,
+        logout,
+        employee_home,
+        admin_home,
+        edit_schedule_get,
+        edit_schedule_post} = require('../controllers/user_controller');
 
+// Other Jest dependencies for testing
+const { validationResult } = require('express-validator');
+const User = require('../models/user');
+const mongoose = require('mongoose');
+
+
+// Classic Jest mock functions initialized for setting up asynch testing
 jest.mock('express-validator');
 jest.mock('../models/user');
 
@@ -26,10 +37,14 @@ describe('login controller', () => {
             render: jest.fn(),
             redirect: jest.fn(),
             cookie: jest.fn(),
+            clearCookie: jest.fn()
         };
     });
 
     test('should render error if validation fails', async () => {
+
+        // Unintuitive, but the error array is NOT empty
+        // (there IS an error in validation), so isEmpty method returns false
         validationResult.mockReturnValue({
             isEmpty: () => false,
             array: () => [{ msg: 'Username is required' }],
@@ -121,4 +136,54 @@ describe('login controller', () => {
             errors: [expect.stringContaining('login error in catch')],
         });
     });
+
+    test('logout to login page and clear cookie', async () => {
+
+        await logout(req, res);
+
+        expect(res.clearCookie).toHaveBeenCalledWith('userId');
+        expect(res.render).toHaveBeenCalledWith('login');
+    });
+
+    test('redirects to employee home page', async () => {
+
+        await employee_home(req, res);
+
+        expect(res.render).toHaveBeenCalledWith('employee_home', {"title": "Home Page"});
+    });
+
+    test('redirects to admin home page', async () => {
+
+        await admin_home(req, res);
+
+        expect(res.render).toHaveBeenCalledWith('admin_home', {"title": "Home Page"});
+    });
+
+    test('gets schedule from DB and renders it for editting', async () => {
+
+        // mock a schedule
+        const mockSchedules = [{employee: 'Steve'}, {employee: 'Jane'}];
+
+        // mock the find().sort().toArray() method chain
+        const mockToArray = jest.fn().mockResolvedValue(mockSchedules);
+        const mockSort = jest.fn().mockReturnValue({ toArray: mockToArray })
+        const mockFind = jest.fn().mockReturnValue({ sort: mockSort });
+
+        // mock the mongoose connection succeeding
+        const collectionSpy = jest
+            .spyOn(mongoose.connection,  'collection')
+            .mockReturnValue({ find: mockFind } )
+
+        await edit_schedule_get(req, res);
+
+        expect(collectionSpy).toHaveBeenCalledWith('schedules');
+        expect(mockFind).toHaveBeenCalled();
+        expect(mockSort).toHaveBeenCalledWith({ employee: 1 });
+        expect(mockToArray).toHaveBeenCalled();
+        expect(res.render).toHaveBeenCalledWith('admin_edit_schedule', { schedules: mockSchedules,
+        });
+
+        collectionSpy.mockRestore();
+    });
 });
+
