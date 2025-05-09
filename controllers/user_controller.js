@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
+const { startOfWeek, parseISO, isAfter, isEqual } = require('date-fns');
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -50,10 +51,32 @@ exports.admin_home = asyncHandler( async(req, res) => {
 });
 
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
-    const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
+    const today = new Date();
+    const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
+
+    const allSchedules = await mongoose.connection.collection('schedules').find().sort({ week_start_date: 1, employee: 1 }).toArray();
+
+    const schedulesByWeek = [];
+
+    allSchedules.forEach(schedule => {
+        const scheduleDate = parseISO(schedule.week_start_date);
+
+        if (isAfter(scheduleDate, currentWeekStart) || isEqual(scheduleDate, currentWeekStart)) { // filters out previous weeks
+            let week = schedulesByWeek.find(w => w.week_start_date === schedule.week_start_date);
+            if (week) {
+                week.schedules.push(schedule);
+            } else {
+                schedulesByWeek.push({
+                    week_start_date: schedule.week_start_date,
+                    schedules: [schedule]
+                });
+            }
+        }
+    });
 
     res.render("admin_edit_schedule", {
-        schedules: schedules,
+        schedules: allSchedules,
+        schedulesByWeek: schedulesByWeek,
     });
 });
 
