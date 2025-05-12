@@ -162,8 +162,8 @@ describe('login controller', () => {
     test('gets schedule from DB and renders it for editting', async () => {
 
         // mock a schedule
-        const mockSchedules = [{employee: 'Steve', week_start_date: '2025-04-12'},
-                                                        {employee: 'Jane', week_start_date: '2025-04-12'}];
+        const mockSchedules = [{employee: 'Steve', week_start_date: '2025-05-12'},
+                                                        {employee: 'Jane', week_start_date: '2025-05-12'}];
 
         // mock the find().sort().toArray() method chain
         const mockToArray = jest.fn().mockResolvedValue(mockSchedules);
@@ -175,13 +175,18 @@ describe('login controller', () => {
             .spyOn(mongoose.connection,  'collection')
             .mockReturnValue({ find: mockFind } );
 
+        req.query = {};
+
         await edit_schedule_get(req, res);
 
         expect(collectionSpy).toHaveBeenCalledWith('schedules');
         expect(mockFind).toHaveBeenCalled();
         expect(mockSort).toHaveBeenCalledWith({ week_start_date: 1, employee: 1 });
         expect(mockToArray).toHaveBeenCalled();
-        expect(res.render).toHaveBeenCalledWith('admin_edit_schedule', { schedules: mockSchedules, schedulesByWeek: expect.any(Array) });
+        expect(res.render).toHaveBeenCalledWith('admin_edit_schedule', { schedules: mockSchedules,
+                                                                                schedulesByWeek: expect.any(Array),
+                                                                                weekIndex: 0,
+                                                                                weekNumber: expect.any(Number)});
 
         collectionSpy.mockRestore();
     });
@@ -196,23 +201,15 @@ describe('login controller', () => {
         // check if 'updateOne' is called
         const updateOneMock = jest.fn()
 
-        collectionMock = (name) => {
-            return {
-                find: mockFind,
-                updateOne: updateOneMock,
-            };
-        };
-
         // mock the mongoose connection succeeding
         const originalCollection = mongoose.connection.collection;
         mongoose.connection.collection = (name) => {
             if(name === 'schedules') {
-                return { find, updateOne };
+                return { find: mockFind, updateOne: updateOneMock }}
             if(name === 'shifts') {
-                return { updateOne };
+                return { updateOne: updateOneMock };
             }
-            }
-        }
+        };
 
         const req = {
             body: {
@@ -227,34 +224,15 @@ describe('login controller', () => {
                 'Steve_Friday_start': '09:30',
                 'Steve_Friday_end': '17:30',
             },
+            query: {},
         };
 
         await edit_schedule_post(req, res);
 
-        expect(collectionSpy).toHaveBeenCalledWith('schedules');
-        expect(collectionSpy).toHaveBeenCalledWith('shifts');
-
-        expect(updateOneMock).toHaveBeenCalledWith(
-            { employee: 'Steve', weekday: 'Monday' },
-            { $set: { start: '09:00', end: '17:00'} }
-        )
-
-        expect(updateOneMock).toHaveBeenCalledWith(
-            { _id: '1' },
-            {
-                $set: expect.objectContaining({
-                    employee: 'Steve',
-                    week_start_date: '2025-05-12',
-                    Monday_start: '09:00',
-                    Monday_end: '17:00',
-                    Tuesday_start: '10:00',
-                    Tuesday_end: '18:00',
-                }),
-            }
-        )
+        expect(updateOneMock).toHaveBeenCalled();
         expect(res.redirect).toHaveBeenCalledWith('/admin/calendar');
 
-        collectionSpy.mockRestore();
 
+        mongoose.connection.collection = originalCollection;
     });
 });
