@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
-const { startOfWeek, parseISO, isAfter, isEqual } = require('date-fns');
+const { startOfWeek, parseISO, isAfter, isEqual, getISOWeek } = require('date-fns');
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -51,11 +51,11 @@ exports.admin_home = asyncHandler( async(req, res) => {
 });
 
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
-    const today = new Date();
-    const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
-
     const allSchedules = await mongoose.connection.collection('schedules').find().sort({ week_start_date: 1, employee: 1 }).toArray();
 
+    const weekIndex = parseInt(req.query.week) || 0;
+    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const weekNumber = getISOWeek(currentWeekStart)
     const schedulesByWeek = [];
 
     allSchedules.forEach(schedule => {
@@ -77,6 +77,8 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     res.render("admin_edit_schedule", {
         schedules: allSchedules,
         schedulesByWeek: schedulesByWeek,
+        weekIndex: weekIndex,
+        weekNumber: weekNumber,
     });
 });
 
