@@ -162,7 +162,8 @@ describe('login controller', () => {
     test('gets schedule from DB and renders it for editting', async () => {
 
         // mock a schedule
-        const mockSchedules = [{employee: 'Steve'}, {employee: 'Jane'}];
+        const mockSchedules = [{employee: 'Steve', week_start_date: '2025-04-12'},
+                                                        {employee: 'Jane', week_start_date: '2025-04-12'}];
 
         // mock the find().sort().toArray() method chain
         const mockToArray = jest.fn().mockResolvedValue(mockSchedules);
@@ -172,18 +173,88 @@ describe('login controller', () => {
         // mock the mongoose connection succeeding
         const collectionSpy = jest
             .spyOn(mongoose.connection,  'collection')
-            .mockReturnValue({ find: mockFind } )
+            .mockReturnValue({ find: mockFind } );
 
         await edit_schedule_get(req, res);
 
         expect(collectionSpy).toHaveBeenCalledWith('schedules');
         expect(mockFind).toHaveBeenCalled();
-        expect(mockSort).toHaveBeenCalledWith({ employee: 1 });
+        expect(mockSort).toHaveBeenCalledWith({ week_start_date: 1, employee: 1 });
         expect(mockToArray).toHaveBeenCalled();
-        expect(res.render).toHaveBeenCalledWith('admin_edit_schedule', { schedules: mockSchedules,
-        });
+        expect(res.render).toHaveBeenCalledWith('admin_edit_schedule', { schedules: mockSchedules, schedulesByWeek: expect.any(Array) });
 
         collectionSpy.mockRestore();
     });
-});
 
+    test('updates shifts and schedule from posted data', async () => {
+        const mockSchedules = [{ _id: 1, employee: 'Steve', week_start_date: '2025-05-12'}];
+        // mock the find().sort().toArray() method chain
+        const mockToArray = jest.fn().mockResolvedValue(mockSchedules);
+        const mockSort = jest.fn().mockReturnValue({ toArray: mockToArray })
+        const mockFind = jest.fn().mockReturnValue({ sort: mockSort });
+
+        // check if 'updateOne' is called
+        const updateOneMock = jest.fn()
+
+        collectionMock = (name) => {
+            return {
+                find: mockFind,
+                updateOne: updateOneMock,
+            };
+        };
+
+        // mock the mongoose connection succeeding
+        const originalCollection = mongoose.connection.collection;
+        mongoose.connection.collection = (name) => {
+            if(name === 'schedules') {
+                return { find, updateOne };
+            if(name === 'shifts') {
+                return { updateOne };
+            }
+            }
+        }
+
+        const req = {
+            body: {
+                'Steve_Monday_start': '09:00',
+                'Steve_Monday_end': '17:00',
+                'Steve_Tuesday_start': '10:00',
+                'Steve_Tuesday_end': '18:00',
+                'Steve_Wednesday_start': '',
+                'Steve_Wednesday_end': '',
+                'Steve_Thursday_start': '08:00',
+                'Steve_Thursday_end': '16:00',
+                'Steve_Friday_start': '09:30',
+                'Steve_Friday_end': '17:30',
+            },
+        };
+
+        await edit_schedule_post(req, res);
+
+        expect(collectionSpy).toHaveBeenCalledWith('schedules');
+        expect(collectionSpy).toHaveBeenCalledWith('shifts');
+
+        expect(updateOneMock).toHaveBeenCalledWith(
+            { employee: 'Steve', weekday: 'Monday' },
+            { $set: { start: '09:00', end: '17:00'} }
+        )
+
+        expect(updateOneMock).toHaveBeenCalledWith(
+            { _id: '1' },
+            {
+                $set: expect.objectContaining({
+                    employee: 'Steve',
+                    week_start_date: '2025-05-12',
+                    Monday_start: '09:00',
+                    Monday_end: '17:00',
+                    Tuesday_start: '10:00',
+                    Tuesday_end: '18:00',
+                }),
+            }
+        )
+        expect(res.redirect).toHaveBeenCalledWith('/admin/calendar');
+
+        collectionSpy.mockRestore();
+
+    });
+});
