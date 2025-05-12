@@ -54,7 +54,7 @@ def generate_weekday_date_mapping(start_date_str):
 # Vælg hvilken uge du vil generere (mandagsdato)
 today = date.today()
 week_start = today - timedelta(days=today.weekday())
-week_start.isoformat()
+week_start = week_start.isoformat()
 weekday_to_date = generate_weekday_date_mapping(week_start)
 
 opening_hours = {
