@@ -39,8 +39,9 @@ def shifts_overlap(shift_1, shift_2):
     return shift_1_start < shift_2_end and shift_2_start < shift_1_end
 
 # Funktion til at generere datoer for en uge baseret på en given mandagsdato
-def generate_weekday_date_mapping(start_date_str):
-    start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+def generate_weekday_date_mapping(start_date_input):
+    # start_date = datetime.strptime(start_date_input, "%Y-%m-%d")
+    start_date = datetime.combine(start_date_input, datetime.min.time())
     return {
         "Monday": (start_date + timedelta(days=0)).date().isoformat(),
         "Tuesday": (start_date + timedelta(days=1)).date().isoformat(),
