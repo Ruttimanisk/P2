@@ -8,28 +8,20 @@ block content
         const schedulesByWeek = !{JSON.stringify(schedulesByWeek)};
 
         function previousWeek() {
-            if (weekIndex > 0) {
-                weekIndex -= 1;
-                window.location.href = `/admin/edit_schedule?week=${weekIndex}`;
-            } else {
-                alert("You cannot edit previous weeks.");
-            }
+            weekIndex -= 1;
+            window.location.href = `/admin/edit_schedule?week=${weekIndex}`;
         }
 
         function nextWeek() {
-            if (weekIndex < schedulesByWeek.length - 1) {
-                weekIndex += 1;
-                window.location.href = `/admin/edit_schedule?week=${weekIndex}`;
-            } else {
-                alert("No schedules created for the next week.");
-            }
+            weekIndex += 1;
+            window.location.href = `/admin/edit_schedule?week=${weekIndex}`;
         }
 
     if weekIndex === 0
         h2 - This Week
 
-    button#previousWeek(onclick="previousWeek()") <- Previous Week
-    button#nextWeek(onclick="nextWeek()") Next Week ->
+    button#previousWeek(onclick="previousWeek()" disabled=weekIndex === 0) <- Previous Week
+    button#nextWeek(onclick="nextWeek()" disabled=weekIndex === schedulesByWeek.length - 1) Next Week ->
 
     form(action="/admin/edit_schedule" method="POST")
         table(border="1" style="margin-top: 40px;" class='table_schedule')

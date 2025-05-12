@@ -162,3 +162,9 @@ form {
     color: #971a1a;
 }
 
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
