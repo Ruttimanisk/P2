@@ -193,14 +193,14 @@ try:
     db = client["WFM-Database"]
     collection = db["schedules"]
 
-    collection.delete_many({})
+    collection.delete_many({ "week_start_date": week_start })
     collection.insert_many(schedule_output)
 
     print("Schedules uploaded to MongoDB successfully.")
 
     collection = db["shifts"]
 
-    collection.delete_many({})
+    collection.delete_many({ "week_start_date": week_start })
     collection.insert_many(shift_output)
 
     print("Shifts uploaded to MongoDB successfully.")
