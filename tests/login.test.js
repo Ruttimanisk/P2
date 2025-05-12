@@ -235,4 +235,8 @@ describe('login controller', () => {
 
         mongoose.connection.collection = originalCollection;
     });
+
+    test('render schedule', async () => {
+
+    });
 });
