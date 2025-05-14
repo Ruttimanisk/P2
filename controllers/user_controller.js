@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
-const { startOfWeek, parseISO, isAfter, isEqual, getISOWeek } = require('date-fns');
+const { startOfWeek, parseISO, isAfter, isEqual, getISOWeek, addWeeks, addDays } = require('date-fns');
 
 
 exports.login = asyncHandler(async (req, res) => {
@@ -83,7 +83,12 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 });
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
-    const schedules = await mongoose.connection.collection('schedules').find().sort({ employee: 1 }).toArray();
+    const weekIndex = parseInt(req.query.week) || 0;
+    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const displayedWeekStart = addWeeks(currentWeekStart, weekIndex);
+    let dayCounter = 0
+
+    const schedules = await mongoose.connection.collection('schedules').find( {week_start_date: displayedWeekStart} ).sort({ employee: 1 }).toArray();
 
     for (const schedule of schedules) {
         const updatedSchedule = {
@@ -95,15 +100,30 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             updatedSchedule[`${day}_start`] = req.body[`${schedule.employee}_${day}_start`] || '';
             updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_${day}_end`] || '';
 
-            await mongoose.connection.collection('shifts').updateOne(
-                { employee: schedule.employee, weekday: day },
+            const updatedShift = await mongoose.connection.collection('shifts').findOneAndUpdate(
+                { employee: schedule.employee, weekday: day, date: { $gte: displayedWeekStart } },
                 {
                     $set: {
-                        start: req.body[`${schedule.employee}_${day}_start`],
-                        end: req.body[`${schedule.employee}_${day}_end`],
+                        start: req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`],
+                        end: req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`],
                     }
-                }
-            );
+                },
+                {
+                    returnDocument: 'after'
+                })
+
+            if (updatedShift.value) {
+                console.log('Shift updated', updatedShift.value)
+            } else {
+                await mongoose.connection.collection('shifts').insertOne({
+                    employee: schedule.employee,
+                    date: addDays(displayedWeekStart, dayCounter),
+                    weekday: day,
+                    start: req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`],
+                    end: req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`],
+                });
+            }
+            dayCounter += 1
         }
 
         await mongoose.connection.collection('schedules').updateOne(

@@ -42,13 +42,13 @@ block content
                                 td
                                     input(
                                         type="text",
-                                        name=`${schedule.employee}_${dayKey}_start`,
+                                        name=`${schedule.employee}_week_${weekIndex}_${dayKey}_start`,
                                         value=schedule[`${dayKey}_start`] || ''
                                         style="width: 70px; margin-right: 1px;"
                                         )
                                     input(
                                         type="text",
-                                        name=`${schedule.employee}_${dayKey}_end`,
+                                        name=`${schedule.employee}_week_${weekIndex}_${dayKey}_end`,
                                         value=schedule[`${dayKey}_end`] || ''
                                         style="width: 70px; margin-right: 1px;"
                                     )
