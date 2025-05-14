@@ -86,9 +86,10 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const weekIndex = parseInt(req.query.week) || 0;
     const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex);
-    let dayCounter = 0
 
     const schedules = await mongoose.connection.collection('schedules').find( {week_start_date: displayedWeekStart} ).sort({ employee: 1 }).toArray();
+
+    let dayCounter = 0
 
     for (const schedule of schedules) {
         const updatedSchedule = {
