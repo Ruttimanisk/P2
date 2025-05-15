@@ -86,6 +86,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const weekIndex = parseInt(req.query.week) || 0;
     const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex);
+    const nextWeekStart = addWeeks(currentWeekStart, weekIndex + 1);
 
     const schedules = await mongoose.connection.collection('schedules').find( {week_start_date: displayedWeekStart} ).sort({ employee: 1 }).toArray();
 
@@ -102,7 +103,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`] || '';
 
             const updatedShift = await mongoose.connection.collection('shifts').findOneAndUpdate(
-                { employee: schedule.employee, weekday: day, date: { $gte: displayedWeekStart } },
+                { employee: schedule.employee, weekday: day, date: { $gte: displayedWeekStart, $lt: nextWeekStart } },
                 {
                     $set: {
                         start: req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`],
