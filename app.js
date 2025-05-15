@@ -1,9 +1,11 @@
-// app.js
-var express = require('express');
 var createError = require('http-errors');
+var express = require('express');
+var mongoose = require('mongoose')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+require('dotenv').config();
+const asyncHandler = require("express-async-handler");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -13,7 +15,15 @@ var employeeRouter = require('./routes/employee');
 
 var app = express();
 
-app.set('trust proxy', 1);
+// ny
+app.set('trust proxy', 1); // gør Express klar til at forstå HTTPS bag Nginx
+
+
+main().catch((err) => console.log(err));
+
+async function main() {
+  await mongoose.connect(process.env.MONGODB_URI);
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,5 +35,47 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Export app, route setup happens after DB connects
-module.exports = app;
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/admin', adminRouter);
+app.use('/employee', employeeRouter);
+
+app.use('/admin', require('./routes/admin'));
+
+
+const { ObjectId } = require('mongodb');
+
+app.get('/calendar', async (req, res) => {
+  const shifts = await db.collection('shifts').find().toArray();
+
+  const events = shifts.map(shift => ({
+    title: shift.employee,
+    start: `${shift.date}T${shift.start}`,
+    end: `${shift.date}T${shift.end}`,
+  }));
+
+  res.render('calendar', { events: JSON.stringify(events) });
+});
+
+
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = { app, mongoose };
+
+
