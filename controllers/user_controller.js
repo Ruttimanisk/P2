@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
-const mongoose = require("../app.js").mongoose;
+const mongoose = require("mongoose");
 const { startOfWeek, parseISO, isAfter, isEqual, getISOWeek, addWeeks, addDays } = require('date-fns');
 
 
