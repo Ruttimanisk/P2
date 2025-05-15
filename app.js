@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config();
+const asyncHandler = require("express-async-handler");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -19,9 +20,10 @@ app.set('trust proxy', 1); // gør Express klar til at forstå HTTPS bag Nginx
 
 
 main().catch((err) => console.log(err));
-async function main() {
+
+asyncHandler(async function main() {
   await mongoose.connect(process.env.MONGODB_URI);
-}
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
