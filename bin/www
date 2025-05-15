@@ -1,90 +1,102 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
+const http = require('http');
+const debug = require('debug')('p2:server');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-var app = require('../app');
-var debug = require('debug')('p2:server');
-var http = require('http');
-
-/**
- * Get port from environment and store in Express.
- */
-
-var port = normalizePort(process.env.PORT || '3000');
+const app = require('../app');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
 
-var server = http.createServer(app);
+    console.log('✅ MongoDB connected');
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+    // Setup routes after DB is connected
+    app.use('/', require('../routes/index'));
+    app.use('/users', require('../routes/users'));
+    app.use('/login', require('../routes/login'));
+    app.use('/admin', require('../routes/admin'));
+    app.use('/employee', require('../routes/employee'));
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+    app.get('/calendar', async (req, res) => {
+      try {
+        const db = mongoose.connection.db;
+        const shifts = await db.collection('shifts').find().toArray();
 
-/**
- * Normalize a port into a number, string, or false.
- */
+        const events = shifts.map(shift => ({
+          title: shift.employee,
+          start: `${shift.date}T${shift.start}`,
+          end: `${shift.date}T${shift.end}`,
+        }));
+
+        res.render('calendar', { events: JSON.stringify(events) });
+      } catch (err) {
+        console.error('Error loading calendar data:', err);
+        res.status(500).send('Error loading calendar');
+      }
+    });
+
+    app.get('/test-mongo', async (req, res) => {
+      try {
+        const db = mongoose.connection.db;
+        const collections = await db.listCollections().toArray();
+        res.json({
+          status: 'connected',
+          collections: collections.map(c => c.name),
+        });
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({ status: 'error', error: e.message });
+      }
+    });
+
+    const server = http.createServer(app);
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+
+  } catch (err) {
+    console.error('❌ Failed to connect to MongoDB', err);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
+  const port = parseInt(val, 10);
+  if (isNaN(port)) return val;
+  if (port >= 0) return port;
   return false;
 }
 
-/**
- * Event listener for HTTP server "error" event.
- */
-
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+  if (error.syscall !== 'listen') throw error;
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
       process.exit(1);
-      break;
     case 'EADDRINUSE':
       console.error(bind + ' is already in use');
       process.exit(1);
-      break;
     default:
       throw error;
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  const addr = app.get('port');
+  debug('Listening on port ' + addr);
 }
