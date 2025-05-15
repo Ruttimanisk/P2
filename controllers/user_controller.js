@@ -110,9 +110,8 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                         end: req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`],
                     }
                 },
-                {
-                    returnDocument: 'after'
-                })
+                { returnDocument: 'after' }
+            )
 
             if (updatedShift.value) {
                 console.log('Shift updated', updatedShift.value)
