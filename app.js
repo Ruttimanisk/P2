@@ -21,9 +21,9 @@ app.set('trust proxy', 1); // gør Express klar til at forstå HTTPS bag Nginx
 
 main().catch((err) => console.log(err));
 
-asyncHandler(async function main() {
+async function main() {
   await mongoose.connect(process.env.MONGODB_URI);
-});
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
