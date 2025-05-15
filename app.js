@@ -1,10 +1,11 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var mongoose = require('mongoose')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-require('dotenv').config();
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
