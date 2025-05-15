@@ -236,7 +236,7 @@ describe('login controller', () => {
         mongoose.connection.collection = originalCollection;
     });
 
-    test('render schedule', async () => {
+    // test('render schedule', async () => {
 
-    });
+    // });
 });

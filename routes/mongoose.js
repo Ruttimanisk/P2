@@ -1,3 +1,5 @@
+/*
+
 // Import the mongoose module
 const mongoose = require("mongoose");
 require('dotenv').config();
@@ -16,12 +18,4 @@ async function main() {
     await mongoose.connect(process.env.MONGODB_URI);
 }
 
-// Define a schema
-const Schema = mongoose.Schema;
-
-const BooksSchema = new Schema({
-    a_string: String,
-    a_date: Date,
-});
-
-const Books = mongoose.model("Books", BooksSchema);
+*/
