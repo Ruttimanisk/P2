@@ -98,8 +98,8 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
         };
 
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-            updatedSchedule[`${day}_start`] = req.body[`${schedule.employee}_${day}_start`] || '';
-            updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_${day}_end`] || '';
+            updatedSchedule[`${day}_start`] = req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`] || '';
+            updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`] || '';
 
             const updatedShift = await mongoose.connection.collection('shifts').findOneAndUpdate(
                 { employee: schedule.employee, weekday: day, date: { $gte: displayedWeekStart } },
