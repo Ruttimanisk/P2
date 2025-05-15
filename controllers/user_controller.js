@@ -32,7 +32,7 @@ exports.login = asyncHandler(async (req, res) => {
 
     } catch (err) {
         return res.status(500).render('login', { errors: [`login error in catch: ${err.name}, ${err.message}`] });
-        }
+    }
 });
 
 exports.logout = asyncHandler(async (req, res) => {
