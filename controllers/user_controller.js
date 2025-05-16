@@ -121,7 +121,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
         }
 
         await mongoose.connection.collection('schedules').updateOne(
-            { _id: schedule._id },
+            { _id: schedule._id, week_start_date: { $gte: displayedWeekStart, $lt: nextWeekStart}  },
             { $set: updatedSchedule }
         );
     }
