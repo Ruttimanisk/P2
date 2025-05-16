@@ -41,9 +41,6 @@ app.use('/login', loginRouter);
 app.use('/admin', adminRouter);
 app.use('/employee', employeeRouter);
 
-app.use('/admin', require('./routes/admin'));
-
-
 const { ObjectId } = require('mongodb');
 
 app.get('/calendar', async (req, res) => {
