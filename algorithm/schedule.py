@@ -200,7 +200,7 @@ try:
 
     collection = db["shifts"]
 
-    collection.delete_many({ "week_start_date": week_start })
+    collection.delete_many({ "date": { "$gte": week_start } })
     collection.insert_many(shift_output)
 
     print("Shifts uploaded to MongoDB successfully.")
