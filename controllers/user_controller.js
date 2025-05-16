@@ -7,6 +7,9 @@ const path = require("path");
 const mongoose = require("mongoose");
 const { startOfWeek, parseISO, isAfter, isEqual, getISOWeek, addWeeks, addDays } = require('date-fns');
 
+const toUTCStartOfDay = (date) => {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+};
 
 exports.login = asyncHandler(async (req, res) => {
     const errors = validationResult(req);
@@ -84,7 +87,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const weekIndex = parseInt(req.query.week) || 0;
-    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex + 1);
 
