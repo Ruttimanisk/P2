@@ -318,6 +318,11 @@ exports.profile = asyncHandler(async (req, res) => {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
 
+        /*
+        til peter når schedules er blevet knyttet til users:
+        const schedules = await mongoose.connection.collection('schedules').find( { employee._id: userId } ).sort({ week_start_day: 1 }).toArray();
+         */
+
         if (!user) {
             return res.status(404).send('User not found');
         }
