@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
-const { startOfWeek, parseISO, isAfter, isEqual, getISOWeek, addWeeks, addDays } = require('date-fns');
+const { startOfWeek, parseISO, isAfter, isEqual, getISOWeek, addWeeks, addDays, format } = require('date-fns');
 
 const toUTCStartOfDay = (date) => {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -91,7 +91,15 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex + 1);
 
-    const schedules = await mongoose.connection.collection('schedules').find( {week_start_date: displayedWeekStart} ).sort({ employee: 1 }).toArray();
+    const schedules = await mongoose.connection.collection('schedules')
+        .find({
+            $or: [
+                { week_start_date: displayedWeekStart },
+                { week_start_date: format(displayedWeekStart, 'yyyy-MM-dd') }
+            ]
+        })
+        .sort({ employee: 1 })
+        .toArray();
 
     for (const schedule of schedules) {
         const updatedSchedule = {
@@ -99,32 +107,40 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             week_start_date: schedule.week_start_date,
         };
 
-        let dayCounter = 0
+        let dayCounter = 0;
 
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-            updatedSchedule[`${day}_start`] = req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`] || '';
-            updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`] || '';
+            const startInput = req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`] || '';
+            const endInput = req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`] || '';
 
-            if (req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`] && req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`]) {
-               await mongoose.connection.collection('shifts').updateOne(
-                   { employee: schedule.employee, weekday: day, date: { $gte: displayedWeekStart, $lt: nextWeekStart } },
-                   {
-                       $set: {
-                           start: req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`],
-                           end: req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`],
-                           employee: schedule.employee,
-                           date: addDays(displayedWeekStart, dayCounter),
-                           weekday: day,
-                       }
-                   },
-                   { upsert: true }
-               )
+            updatedSchedule[`${day}_start`] = startInput;
+            updatedSchedule[`${day}_end`] = endInput;
+
+            if (startInput && endInput) {
+                await mongoose.connection.collection('shifts').updateOne(
+                    {
+                        employee: schedule.employee,
+                        weekday: day,
+                        date: { $gte: displayedWeekStart, $lt: nextWeekStart }
+                    },
+                    {
+                        $set: {
+                            start: startInput,
+                            end: endInput,
+                            employee: schedule.employee,
+                            date: addDays(displayedWeekStart, dayCounter),
+                            weekday: day,
+                        }
+                    },
+                    { upsert: true }
+                );
             }
-            dayCounter += 1
+
+            dayCounter += 1;
         }
 
         await mongoose.connection.collection('schedules').updateOne(
-            { _id: schedule._id, week_start_date: { $gte: displayedWeekStart, $lt: nextWeekStart}  },
+            { _id: schedule._id },
             { $set: updatedSchedule }
         );
     }
