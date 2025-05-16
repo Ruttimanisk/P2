@@ -3,6 +3,7 @@ extends layout_admin
 block content
     h1 Edit Schedule - Week #{weekNumber}
     link(rel='stylesheet' href='/stylesheets/Schedule.css')
+    script(src="/scripts/buttonRunPyAlgorithm.js")
     script.
         let weekIndex = !{weekIndex};
         const schedulesByWeek = !{JSON.stringify(schedulesByWeek)};
