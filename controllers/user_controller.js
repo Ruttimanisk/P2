@@ -128,7 +128,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                             start: startInput,
                             end: endInput,
                             employee: schedule.employee,
-                            date: addDays(displayedWeekStart, dayCounter),
+                            date: format(addDays(displayedWeekStart, dayCounter), 'yyyy-MM-dd'),
                             weekday: day,
                         }
                     },
