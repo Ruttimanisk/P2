@@ -121,7 +121,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                     {
                         employee: schedule.employee,
                         weekday: day,
-                        date: { $gte: displayedWeekStart, $lt: nextWeekStart }
+                        date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
                     },
                     {
                         $set: {
