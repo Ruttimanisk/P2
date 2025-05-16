@@ -18,6 +18,18 @@ block content
             window.location.href = `/admin/edit_schedule?week=${weekIndex}`;
         }
 
+        function runAlgorithm() {
+            fetch('/admin/run_algorithm', {method: 'POST'})
+                .then(response => {
+                    if (response.ok) {
+                        alert('Algorithm started');
+                    } else {
+                        alert('Failed to start algorithm');
+                    }
+                })
+                .catch(() => alert('Error starting algorithm'));
+        }
+
     if weekIndex === 0
         p - This Week
 
@@ -55,7 +67,7 @@ block content
                                     )
         button(type="submit", class='save_schedule_button' style="margin-left: 148px; transform: translateY(5px)") Save Changes
     button(
-        onclick="if(confirm('Are you sure you want to generate the schedule with the algorithm?')) runpy()"
+        onclick="if(confirm('Are you sure you want to generate the schedule with the algorithm?')) runAlgorithm()"
         class='save_schedule_button'
         style="margin-left: 148px; transform: translateY(10px)"
     ) Generate Schedule with Algorithm

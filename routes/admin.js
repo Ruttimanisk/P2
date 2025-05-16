@@ -6,7 +6,7 @@ const {body} = require("express-validator");
 const Absence = require("../models/absence");
 const { requireAuth } = require('../middleware/auth');
 const mongoose = require('mongoose')
-
+const { runpy } = require('../public/scripts/buttonRunPyAlgorithm.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,11 +15,16 @@ const path = require('path');
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
+
+
+router.post('/admin/run_algorithm', (req, res) => {
+  runpy();
+  res.json({ message: 'Algorithm started' });
+});
+
 // burde måske gøre det her i controller
 router.get('/calendar', requireAuth, async (req, res) => {
-        const db = mongoose.connection;
-        const collection = db.collection('shifts');
-        const shifts = await collection.find().toArray();
+        const shifts = await mongoose.connection.collection('shifts').find().toArray();
 
         // Byg events
         const events = shifts
