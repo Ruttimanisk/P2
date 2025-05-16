@@ -102,27 +102,29 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             updatedSchedule[`${day}_start`] = req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`] || '';
             updatedSchedule[`${day}_end`] = req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`] || '';
 
-            const updatedShift = await mongoose.connection.collection('shifts').findOneAndUpdate(
-                { employee: schedule.employee, weekday: day, date: { $gte: displayedWeekStart, $lt: nextWeekStart } },
-                {
-                    $set: {
+            if (req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`] && req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`]) {
+                const updatedShift = await mongoose.connection.collection('shifts').findOneAndUpdate(
+                    { employee: schedule.employee, weekday: day, date: { $gte: displayedWeekStart, $lt: nextWeekStart } },
+                    {
+                        $set: {
+                            start: req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`],
+                            end: req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`],
+                        }
+                    },
+                    { returnDocument: 'after' }
+                )
+
+                if (updatedShift.value) {
+                    console.log('Shift updated', updatedShift.value)
+                } else {
+                    await mongoose.connection.collection('shifts').insertOne({
+                        employee: schedule.employee,
+                        date: addDays(displayedWeekStart, dayCounter),
+                        weekday: day,
                         start: req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`],
                         end: req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`],
-                    }
-                },
-                { returnDocument: 'after' }
-            )
-
-            if (updatedShift.value) {
-                console.log('Shift updated', updatedShift.value)
-            } else {
-                await mongoose.connection.collection('shifts').insertOne({
-                    employee: schedule.employee,
-                    date: addDays(displayedWeekStart, dayCounter),
-                    weekday: day,
-                    start: req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`],
-                    end: req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`],
-                });
+                    });
+                }
             }
             dayCounter += 1
         }
