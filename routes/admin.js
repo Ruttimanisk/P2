@@ -17,7 +17,7 @@ const path = require('path');
 
 
 
-router.post('/admin/run_algorithm', (req, res) => {
+router.post('/run_algorithm', (req, res) => {
   runpy();
   res.json({ message: 'Algorithm started' });
 });
