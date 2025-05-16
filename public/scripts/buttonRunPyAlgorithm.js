@@ -1,9 +1,10 @@
 const { spawn } = require('child_process');
+const path = require('path');
 
 function runPythonAlgorithm() {
-    const pyProg = spawn('python', ['../algorithm/schedule.py']);
+    const scriptPath = path.resolve(__dirname, '../algorithm/schedule.py');
+    const pyProg = spawn('python', [scriptPath]);
 
-    // errors
     pyProg.stderr.on('data', (stderr) => {
         console.log(`stderr: ${stderr}`);
     });
