@@ -345,7 +345,7 @@ exports.profile = asyncHandler(async (req, res) => {
     try {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
-
+        /*
         const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
 
         let minutesWorked = 0;
@@ -356,18 +356,18 @@ exports.profile = asyncHandler(async (req, res) => {
                 let end = schedule[`${day}_end`]
 
                 if (start !== "" && end !== "") {
-                    minutesWorked += timeToMinutes(end.toString()) - timeToMinutes(start.toString())
+                    minutesWorked += timeToMinutes(end) - timeToMinutes(start)
                 }
             }
         }
 
         const payThisWeek = (minutesWorked / 60) * user.hourly_rate
-
+        */
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        let view = ""
+        let view
 
         if (user.status === 'Admin'){
             view = 'admin_profile'
@@ -383,7 +383,7 @@ exports.profile = asyncHandler(async (req, res) => {
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
                 userId: userId,
-                payThisWeek: payThisWeek,
+                payThisWeek: payThisWeek || 0,
                 view_profile: false,
             })
 
@@ -398,7 +398,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
     try {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
-
+        /*
         const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
 
         let minutesWorked = 0;
@@ -415,7 +415,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
         }
 
         const payThisWeek = (minutesWorked / 60) * user.hourly_rate
-
+        */
         if (!user) {
             return res.status(404).send('User not found');
         }
@@ -429,7 +429,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
                 userId: userId,
-                payThisWeek: payThisWeek,
+                payThisWeek: payThisWeek || 0,
                 view_profile: true,
             })
         }
