@@ -51,10 +51,12 @@ def generate_weekday_date_mapping(start_date_str):
 
 # Vælg hvilken uge du vil generere (mandagsdato)
 today = date.today()
-week_start_datetype = today - timedelta(days=today.weekday())
-week_start = week_start_datetype.isoformat()
-next_week_start_datetype = week_start_datetype + timedelta(weeks=1)
-next_week_start = next_week_start_datetype.isoformat()
+week_start_date = today - timedelta(days=today.weekday())
+week_start_datetime = datetime.combine(week_start_date, datetime.min.time())
+week_start = week_start_date.isoformat()
+next_week_start_date = week_start_date + timedelta(weeks=1)
+next_week_start_datetime = datetime.combine(next_week_start_date, datetime.min.time())
+next_week_start = next_week_start_date.isoformat()
 weekday_to_date = generate_weekday_date_mapping(week_start)
 
 opening_hours = {
@@ -65,19 +67,19 @@ opening_hours = {
     "Friday": ("08:00", "15:30"),
 }
 
+day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
 base_dir = os.path.dirname(__file__)
 
 client = MongoClient("mongodb+srv://prasm24:p2gruppe7@wfm-test.nvx2k.mongodb.net/")
 db = client["WFM-Database"]
 
-day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-
 users_db = db["users"].find().sort("first_name", 1)
 absences_db = (db["absences"]
                 .find( { "archived": { "$ne": True },
                          "$or": [
-                             { "leave_start": { "$gte": week_start_datetype, "$lt": next_week_start_datetype}},
-                             { "leave_end": { "$gte": week_start_datetype, "$lt": next_week_start_datetype}}
+                             { "leave_start": { "$gte": week_start_datetime, "$lt": next_week_start_datetime}},
+                             { "leave_end": { "$gte": week_start_datetime, "$lt": next_week_start_datetime}}
                             ] } )
                 .sort("leave_start", 1)
                 )
