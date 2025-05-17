@@ -45,8 +45,9 @@ block content
                         th= day
             tbody
                 each schedule in schedulesByWeek[weekIndex].schedules
+                    - var user = userMap[schedule.employee.toString()]
                     tr
-                        td= users[schedule.employee].fullname
+                        td= #{user.fullname}
                         each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                             if ['Saturday', 'Sunday'].includes(dayKey)
                                 td
