@@ -5,7 +5,7 @@ import csv
 import os
 from pymongo import MongoClient
 from datetime import date, datetime, timedelta
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 
 os.chdir(os.path.dirname(__file__))
 
@@ -94,7 +94,7 @@ for user  in users_db:
     employees.append(user_id)
     max_hours[user_id] = hours
 
-days_off = {}
+days_off = defaultdict(list)
 indefinite_leave = {}
 
 for absence in absences_db:
