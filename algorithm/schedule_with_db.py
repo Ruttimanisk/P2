@@ -73,11 +73,11 @@ db = client["WFM-Database"]
 day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 users_db = db["users"].find().sort("first_name", 1)
-abseences_db = (db["absences"]
-                .find( { "$not": "archived",
+absences_db = (db["absences"]
+                .find( { "archived": { "$ne": True },
                          "$or": [
-                             { "leave_start": { "gte": week_start_datetype, "lt": next_week_start_datetype}},
-                             { "leave_end": { "gte": week_start_datetype, "lt": next_week_start_datetype}}
+                             { "leave_start": { "$gte": week_start_datetype, "$lt": next_week_start_datetype}},
+                             { "leave_end": { "$gte": week_start_datetype, "$lt": next_week_start_datetype}}
                             ] } )
                 .sort("leave_start", 1)
                 )
@@ -95,7 +95,7 @@ for user  in users_db:
 days_off = {}
 indefinite_leave = {}
 
-for absence in abseences_db:
+for absence in absences_db:
     user_id = absence.get("user")
     start = absence.get("leave_start")
     end = absence.get("leave_end")
