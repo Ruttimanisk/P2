@@ -358,12 +358,12 @@ exports.profile = asyncHandler(async (req, res) => {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
 
-        const schedules = await mongoose.connection.collection('schedules').find( { employee: userId, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        const schedules = await mongoose.connection.collection('schedules').find( { employee: userId.toString(), week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
 
         let minutesWorked = 0;
 
         for (const schedule in schedules) {
-            for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']) {
+            for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
                 minutesWorked += timeToMinutes(schedule[`${day}_end`]) - timeToMinutes(schedule[`${day}_start`])
             }
         }
@@ -406,12 +406,12 @@ exports.view_profile = asyncHandler(async (req, res) => {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
 
-        const schedules = await mongoose.connection.collection('schedules').find( { employee: userId, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        const schedules = await mongoose.connection.collection('schedules').find( { employee: userId.toString(), week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
 
         let minutesWorked = 0;
 
         for (const schedule in schedules) {
-            for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']) {
+            for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
                 minutesWorked += timeToMinutes(schedule[`${day}_end`]) - timeToMinutes(schedule[`${day}_start`])
             }
         }
