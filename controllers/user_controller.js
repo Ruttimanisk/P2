@@ -57,7 +57,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     // burde bare finde schedules med currentWeekStart(udfra weekIndex) <= week_start_date < nextWeekStart
 
     const allSchedules = await mongoose.connection.collection('schedules').find().sort({ week_start_date: 1, employee: 1 }).toArray();
-    const users = User.find().exec();
+    const users = await User.find().exec();
     const userMap = {};
     users.forEach(u => {
         userMap[u._id.toString()] = u;
@@ -89,6 +89,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
         schedulesByWeek: schedulesByWeek,
         weekIndex: weekIndex,
         weekNumber: weekNumber,
+        users: users,
         userMap: userMap,
     });
 });
