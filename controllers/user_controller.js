@@ -400,6 +400,8 @@ exports.profile = asyncHandler(async (req, res) => {
 })
 
 exports.view_profile = asyncHandler(async (req, res) => {
+    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
+
     try {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
