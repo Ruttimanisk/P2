@@ -356,7 +356,12 @@ exports.profile = asyncHandler(async (req, res) => {
 
         for (const schedule in schedules) {
             for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-                minutesWorked += timeToMinutes(schedule[`${day}_end`]) - timeToMinutes(schedule[`${day}_start`])
+                let start = schedule[`${day}_start`]
+                let end = schedule[`${day}_end`]
+
+                if (start !== "" && end !== "") {
+                    minutesWorked += timeToMinutes(end) - timeToMinutes(start)
+                }
             }
         }
 
