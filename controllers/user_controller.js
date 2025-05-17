@@ -358,7 +358,7 @@ exports.profile = asyncHandler(async (req, res) => {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
 
-        const schedules = await mongoose.connection.collection('schedules').find( { employee: userId.toString(), week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
 
         let minutesWorked = 0;
 
@@ -406,7 +406,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
 
-        const schedules = await mongoose.connection.collection('schedules').find( { employee: userId.toString(), week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
 
         let minutesWorked = 0;
 
