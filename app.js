@@ -40,18 +40,12 @@ app.use('/admin', adminRouter);
 app.use('/employee', employeeRouter);
 
 const { ObjectId } = require('mongodb');
-const User = require("./models/user");
 
 app.get('/calendar', async (req, res) => {
   const shifts = await db.collection('shifts').find().toArray();
-  const users = await User.find().exec();
-  const userMap = {};
-  users.forEach(u => {
-      userMap[u._id.toString()] = u;
-  });
 
   const events = shifts.map(shift => ({
-    title: shift.userMap[employee.toString()].fullname,
+    title: shift.employee,
     start: `${shift.date}T${shift.start}`,
     end: `${shift.date}T${shift.end}`,
   }));
