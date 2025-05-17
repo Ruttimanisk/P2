@@ -17,14 +17,6 @@ function timeToMinutes(timeStr) {
         const hour = parseInt(hourStr, 10);
         const min = parseInt(minStr, 10);
 
-        if (
-            isNaN(hour) || isNaN(min) ||
-            hour < 0 || hour > 23 ||
-            min < 0 || min > 59
-        ) {
-            throw new Error("Time out of range");
-        }
-
         return hour * 60 + min;
     } catch (e) {
         throw new Error("Invalid time format. Expected 'HH:MM'");
