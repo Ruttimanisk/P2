@@ -352,8 +352,8 @@ exports.profile = asyncHandler(async (req, res) => {
 
         for (const schedule in schedules) {
             for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-                let start = schedule[`${day}_start`]
-                let end = schedule[`${day}_end`]
+                let start = schedule[`${day}_start`].toString()
+                let end = schedule[`${day}_end`].toString()
 
                 if (start !== "" && end !== "") {
                     minutesWorked += timeToMinutes(end) - timeToMinutes(start)
@@ -405,8 +405,8 @@ exports.view_profile = asyncHandler(async (req, res) => {
 
         for (const schedule in schedules) {
             for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-                let start = schedule[`${day}_start`]
-                let end = schedule[`${day}_end`]
+                let start = schedule[`${day}_start`].toString()
+                let end = schedule[`${day}_end`].toString()
 
                 if (start !== "" && end !== "") {
                     minutesWorked += timeToMinutes(end) - timeToMinutes(start)
