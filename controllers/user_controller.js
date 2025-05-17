@@ -12,15 +12,11 @@ const toUTCStartOfDay = (date) => {
 };
 
 function timeToMinutes(timeStr) {
-    try {
         const [hourStr, minStr] = timeStr.split(":");
         const hour = parseInt(hourStr, 10);
         const min = parseInt(minStr, 10);
 
         return hour * 60 + min;
-    } catch (e) {
-        throw new Error("Invalid time format. Expected 'HH:MM'");
-    }
 }
 
 exports.login = asyncHandler(async (req, res) => {
@@ -409,7 +405,12 @@ exports.view_profile = asyncHandler(async (req, res) => {
 
         for (const schedule in schedules) {
             for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-                minutesWorked += timeToMinutes(schedule[`${day}_end`]) - timeToMinutes(schedule[`${day}_start`])
+                let start = schedule[`${day}_start`]
+                let end = schedule[`${day}_end`]
+
+                if (start !== "" && end !== "") {
+                    minutesWorked += timeToMinutes(end) - timeToMinutes(start)
+                }
             }
         }
 
