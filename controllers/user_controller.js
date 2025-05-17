@@ -55,6 +55,7 @@ exports.admin_home = asyncHandler( async(req, res) => {
 
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const allSchedules = await mongoose.connection.collection('schedules').find().sort({ week_start_date: 1, employee: 1 }).toArray();
+    const users = User.find().exec();
 
     const weekIndex = parseInt(req.query.week) || 0;
     const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -82,6 +83,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
         schedulesByWeek: schedulesByWeek,
         weekIndex: weekIndex,
         weekNumber: weekNumber,
+        users: users,
     });
 });
 
@@ -98,6 +100,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                 { week_start_date: format(displayedWeekStart, 'yyyy-MM-dd') }
             ]
         })
+        .populate("employee")
         .sort({ employee: 1 })
         .toArray();
 
