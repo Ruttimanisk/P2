@@ -46,7 +46,7 @@ block content
             tbody
                 each schedule in schedulesByWeek[weekIndex].schedules
                     tr
-                        td= users[schedule].fullname
+                        td= users[schedule.employee].fullname
                         each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
                             if ['Saturday', 'Sunday'].includes(dayKey)
                                 td
