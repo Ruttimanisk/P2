@@ -37,7 +37,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
             }));
 
         // Unikke medarbejdere som resources
-        const resources = [...new Set(shifts.map(shift => shift.employee))]
+        const resources = [...new Set(shifts.map(shift => shift.employee.fullname))]
             .map(name => ({ id: name, title: name }));
 
         // Debug
