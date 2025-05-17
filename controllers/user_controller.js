@@ -89,7 +89,6 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
         schedulesByWeek: schedulesByWeek,
         weekIndex: weekIndex,
         weekNumber: weekNumber,
-        users: users,
         userMap: userMap,
     });
 });
