@@ -341,6 +341,7 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
 
 exports.profile = asyncHandler(async (req, res) => {
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
+    let payThisWeek = 0
 
     try {
         const userId = req.cookies.userId;
@@ -361,7 +362,7 @@ exports.profile = asyncHandler(async (req, res) => {
             }
         }
 
-        const payThisWeek = (minutesWorked / 60) * user.hourly_rate
+        payThisWeek = (minutesWorked / 60) * user.hourly_rate
         */
         if (!user) {
             return res.status(404).send('User not found');
@@ -383,7 +384,7 @@ exports.profile = asyncHandler(async (req, res) => {
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
                 userId: userId,
-                payThisWeek: payThisWeek || 0,
+                payThisWeek: payThisWeek,
                 view_profile: false,
             })
 
@@ -394,6 +395,7 @@ exports.profile = asyncHandler(async (req, res) => {
 
 exports.view_profile = asyncHandler(async (req, res) => {
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
+    let payThisWeek = 0
 
     try {
         const userId = req.params.userId;
@@ -414,7 +416,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
             }
         }
 
-        const payThisWeek = (minutesWorked / 60) * user.hourly_rate
+        payThisWeek = (minutesWorked / 60) * user.hourly_rate
         */
         if (!user) {
             return res.status(404).send('User not found');
@@ -429,7 +431,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
                 userId: userId,
-                payThisWeek: payThisWeek || 0,
+                payThisWeek: payThisWeek,
                 view_profile: true,
             })
         }
