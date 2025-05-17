@@ -11,6 +11,26 @@ const toUTCStartOfDay = (date) => {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 };
 
+function timeToMinutes(timeStr) {
+    try {
+        const [hourStr, minStr] = timeStr.split(":");
+        const hour = parseInt(hourStr, 10);
+        const min = parseInt(minStr, 10);
+
+        if (
+            isNaN(hour) || isNaN(min) ||
+            hour < 0 || hour > 23 ||
+            min < 0 || min > 59
+        ) {
+            throw new Error("Time out of range");
+        }
+
+        return hour * 60 + min;
+    } catch (e) {
+        throw new Error("Invalid time format. Expected 'HH:MM'");
+    }
+}
+
 exports.login = asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -106,7 +126,6 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                 { week_start_date: format(displayedWeekStart, 'yyyy-MM-dd') }
             ]
         })
-        .populate("employee")
         .sort({ employee: 1 })
         .toArray();
 
@@ -333,20 +352,36 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
 });
 
 exports.profile = asyncHandler(async (req, res) => {
+    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
+
     try {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
 
-        /*
-        til peter når schedules er blevet knyttet til users:
-        const schedules = await mongoose.connection.collection('schedules').find( { employee._id: userId } ).sort({ week_start_day: 1 }).toArray();
-         */
+        const schedules = await mongoose.connection.collection('schedules').find( { employee: userId, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+
+        let minutesWorked = 0;
+
+        for (const schedule in schedules) {
+            for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']) {
+                minutesWorked += timeToMinutes(schedule[`${day}_end`]) - timeToMinutes(schedule[`${day}_start`])
+            }
+        }
+
+        const payThisWeek = (minutesWorked / 60) * user.hourly_rate
 
         if (!user) {
             return res.status(404).send('User not found');
         }
-        if (user.status === 'Employee'){
-            return res.render('employee_profile', {
+
+        let view = ""
+
+        if (user.status === 'Admin'){
+            view = 'admin_profile'
+        }
+        else { view = 'employee_profile'}
+
+        return res.render(view, {
                 fullname: user.fullname,
                 lifespan: user.lifespan,
                 statuss: user.status,
@@ -355,27 +390,9 @@ exports.profile = asyncHandler(async (req, res) => {
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
                 userId: userId,
+                payThisWeek: payThisWeek,
                 view_profile: false,
             })
-        }
-
-        else if (user.status === 'Admin'){
-            return res.render('admin_profile', {
-                fullname: user.fullname,
-                lifespan: user.lifespan,
-                statuss: user.status,
-                role: user.role,
-                address: user.address,
-                hourly_rate: user.hourly_rate,
-                hours_per_week: user.hours_per_week,
-                userId: userId,
-                view_profile: false,
-            })
-        }
-
-        else {
-            return res.status(400).send('Invalid user status');
-        }
 
     } catch (err) {
         return res.status(500).send(`profile error in catch: ${err.name}, ${err.message}`)
@@ -387,6 +404,18 @@ exports.view_profile = asyncHandler(async (req, res) => {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
 
+        const schedules = await mongoose.connection.collection('schedules').find( { employee: userId, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+
+        let minutesWorked = 0;
+
+        for (const schedule in schedules) {
+            for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']) {
+                minutesWorked += timeToMinutes(schedule[`${day}_end`]) - timeToMinutes(schedule[`${day}_start`])
+            }
+        }
+
+        const payThisWeek = (minutesWorked / 60) * user.hourly_rate
+
         if (!user) {
             return res.status(404).send('User not found');
         }
@@ -400,6 +429,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
                 hourly_rate: user.hourly_rate,
                 hours_per_week: user.hours_per_week,
                 userId: userId,
+                payThisWeek: payThisWeek,
                 view_profile: true,
             })
         }
