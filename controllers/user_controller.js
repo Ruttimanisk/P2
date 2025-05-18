@@ -390,7 +390,6 @@ exports.profile = asyncHandler(async (req, res) => {
                 hours_per_week: user.hours_per_week,
                 userId: userId,
                 payThisWeek: payThisWeek,
-                view_profile: false,
             })
 
     } catch (err) {
@@ -424,7 +423,6 @@ exports.view_profile = asyncHandler(async (req, res) => {
                 hours_per_week: user.hours_per_week,
                 userId: userId,
                 payThisWeek: payThisWeek,
-                view_profile: true,
             })
         }
 
