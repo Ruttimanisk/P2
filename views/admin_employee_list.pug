@@ -44,6 +44,7 @@ block content
 
     p#totalPay Total pay this week: #{totalPay} Kroner
 
+    - let sortedUsers = [...users].sort((a, b) => individualPay[b] - individualPay[a])
     table#individualPayTable
         thead
             tr
