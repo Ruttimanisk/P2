@@ -49,11 +49,12 @@ block content
             tr
                 th Name
                 th Hourly Rate
+                th Hours This Week
                 th Pay This Week
         each user in users
             - let hoursThisWeek = individualPay[user] / hourlyRate[user]
             tr
                 th #{user.fullname}
-                td #{hoursThisWeek} Hours This Week
                 td #{hourlyRate[user]} DKK/h
+                td #{hoursThisWeek}
                 td #{individualPay[user]} Kroner
