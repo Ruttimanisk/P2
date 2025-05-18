@@ -35,10 +35,16 @@ block content
     else
         p.error No admins found.
 
-    p Total pay this week: #{totalPay}
+    p Total pay this week: #{totalPay} Kroner
 
     table#individualPayTable
+        thead
+            tr
+                th Name
+                th Hourly Rate
+                th Pay This Week
         each user in users
             tr
                 th #{user.fullname}
+                td #{hourlyRate[user]} DKK/h
                 td #{individualPay[user]} Kroner
