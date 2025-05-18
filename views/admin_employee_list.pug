@@ -4,6 +4,9 @@ block content
     link(rel='stylesheet' href='/stylesheets/Schedule.css')
     style.
         ul {transform: translateX(20px);}
+        #individualPayTable {
+            margin-left: 148px;
+        }
         #individualPayTable td, #individualPayTable th {
             border: 1px solid #707070;
             text-align: left;
@@ -15,6 +18,10 @@ block content
             min-width: 50px;
         }
 
+        #totalPay {
+            margin-left: 148px;
+            font-size: 20px;
+        }
     h1= title
 
     p= "Employees:"
@@ -35,7 +42,7 @@ block content
     else
         p.error No admins found.
 
-    p Total pay this week: #{totalPay} Kroner
+    p#totalPay Total pay this week: #{totalPay} Kroner
 
     table#individualPayTable
         thead
