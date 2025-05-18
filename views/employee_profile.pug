@@ -35,6 +35,10 @@ block content
             th Hours per Week:
             td #{hours_per_week}
         tr
+            th Hours This Week:
+            - let hoursThisWeek = payThisWeek / hourly_rate
+            td #{hoursThisWeek} Hours
+        tr
             th Pay This Week:
             td #{payThisWeek} Kroner
 
