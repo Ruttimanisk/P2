@@ -42,20 +42,21 @@ block content
     else
         p.error No admins found.
 
-    p#totalPay Total pay this week: #{totalPay} Kroner
+    if users && users.length
+        p#totalPay Total pay this week: #{totalPay} Kroner
 
-    - let sortedUsers = [...users].sort((a, b) => individualPay[b] - individualPay[a])
-    table#individualPayTable
-        thead
-            tr
-                th Name
-                th Hours
-                th Hourly Rate
-                th Pay This Week
-        each user in users
-            - let hoursThisWeek = individualPay[user] / hourlyRate[user]
-            tr
-                th #{user.fullname}
-                td #{hoursThisWeek}
-                td #{hourlyRate[user]} DKK/h
-                td #{individualPay[user]} Kroner
+        - let sortedUsers = [...users].sort((a, b) => individualPay[b] - individualPay[a])
+        table#individualPayTable
+            thead
+                tr
+                    th Name
+                    th Hours
+                    th Hourly Rate
+                    th Pay This Week
+            each user in sortedUsers
+                - let hoursThisWeek = individualPay[user] / hourlyRate[user]
+                tr
+                    th #{user.fullname}
+                    td #{hoursThisWeek}
+                    td #{hourlyRate[user]} DKK/h
+                    td #{individualPay[user]} Kroner
