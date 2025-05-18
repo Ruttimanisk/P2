@@ -25,3 +25,9 @@ block content
         p.error No admins found.
 
     p Total pay this week: #{totalPay}
+
+    table#individualPayTable
+        each user in users
+            tr
+                th #{user.fullname}
+                td #{individualPay[user]}

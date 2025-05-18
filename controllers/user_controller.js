@@ -531,17 +531,23 @@ exports.admin_employee_list = asyncHandler(async (req, res) => {
     const users = allEmployees.concat(allAdmins);
 
     let totalPay = 0
+    let individualPay = {}
 
     for (const user of users) {
         let schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
-        totalPay += payThisWeekCalculation(schedules, user.hourly_rate)
+        let payThisWeek = payThisWeekCalculation(schedules, user.hourly_rate)
+        totalPay += payThisWeek
+        individualPay[user] = payThisWeek
+
     }
 
     res.render("admin_employee_list", {
         title: "Employee List",
         employees: allEmployees,
         admins: allAdmins,
+        users: users,
         totalPay: totalPay,
+        individualPay: individualPay,
     });
 });
 
