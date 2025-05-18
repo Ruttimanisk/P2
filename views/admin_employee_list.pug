@@ -4,6 +4,17 @@ block content
     link(rel='stylesheet' href='/stylesheets/Schedule.css')
     style.
         ul {transform: translateX(20px);}
+        #individualPayTable td, #individualPayTable th {
+            border: 1px solid #707070;
+            text-align: left;
+            padding: 8px;
+            background-color: #FAFAFA;
+        }
+
+        #individualPayTable td {
+            min-width: 50px;
+        }
+
     h1= title
 
     p= "Employees:"
@@ -30,4 +41,4 @@ block content
         each user in users
             tr
                 th #{user.fullname}
-                td #{individualPay[user]}
+                td #{individualPay[user]} Kroner
