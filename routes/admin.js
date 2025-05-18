@@ -15,8 +15,6 @@ const path = require('path');
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
-
-
 router.post('/run_algorithm', (req, res) => {
   runpy();
   res.json({ message: 'Algorithm started' });
@@ -96,8 +94,6 @@ router.post('/create_shift', async (req, res) => {
 
 router.get('/home', requireAuth, user_controller.admin_home)
 
-// router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
-
 router.get('/profile/', requireAuth, user_controller.profile);
 
 router.get('/view_profile/:userId', requireAuth, user_controller.view_profile)
@@ -139,47 +135,9 @@ router.post(
 
 router.get('/logout', user_controller.logout)
 
-// router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
-
 router.get('/edit_schedule', requireAuth, user_controller.edit_schedule_get);
 
 router.post('/edit_schedule', requireAuth, user_controller.edit_schedule_post);
-
-
-/*router.get('/edit_employee_schedule/:username', requireAuth, (req, res) => {
-        const username = req.params.username;
-
-        const userPath = path.join(__dirname, "../user_info.json");
-        const schedulePath = path.join(__dirname, "../schedules.json");
-
-        const users = JSON.parse(fs.readFileSync(userPath, "utf8"));
-        const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
-
-        const user = users.find(u => u.username === username);
-        const userSchedule = schedules[username] || {}; // fallback if no schedule exists
-
-        if (!user) {
-                return res.status(404).send("User not found");
-        }
-
-        res.render("edit_employee_schedule", {
-                username: user.username,
-                schedule: userSchedule
-        });
-});
-
-router.post('/edit_employee_schedule/:username', (req, res) => {
-        const username = req.params.username;
-        const schedulePath = path.join(__dirname, "../schedules.json");
-
-        const newSchedule = JSON.parse(req.body.schedule); // comes from the hidden input
-
-        const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
-        schedules[username] = newSchedule;
-
-        fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
-        res.redirect(`/edit_employee_schedule/${username}`);
-});*/
 
 router.get('/employee_list', requireAuth, user_controller.admin_employee_list)
 
@@ -256,5 +214,81 @@ router.delete('/absence/:id', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+/*
+router.get('/edit_schedule', userschedule_controller.admin_edit_schedule)
+
+router.get('/edit_employee_schedule/:username', requireAuth, (req, res) => {
+        const username = req.params.username;
+
+        const userPath = path.join(__dirname, "../user_info.json");
+        const schedulePath = path.join(__dirname, "../schedules.json");
+
+        const users = JSON.parse(fs.readFileSync(userPath, "utf8"));
+        const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
+
+        const user = users.find(u => u.username === username);
+        const userSchedule = schedules[username] || {}; // fallback if no schedule exists
+
+        if (!user) {
+                return res.status(404).send("User not found");
+        }
+
+        res.render("edit_employee_schedule", {
+                username: user.username,
+                schedule: userSchedule
+        });
+});
+
+router.post('/edit_employee_schedule/:username', (req, res) => {
+        const username = req.params.username;
+        const schedulePath = path.join(__dirname, "../schedules.json");
+
+        const newSchedule = JSON.parse(req.body.schedule); // comes from the hidden input
+
+        const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
+        schedules[username] = newSchedule;
+
+        fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
+        res.redirect(`/edit_employee_schedule/${username}`);
+});
+
+router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
+
+router.get('/edit_employee_schedule/:username', requireAuth, (req, res) => {
+        const username = req.params.username;
+
+        const userPath = path.join(__dirname, "../user_info.json");
+        const schedulePath = path.join(__dirname, "../schedules.json");
+
+        const users = JSON.parse(fs.readFileSync(userPath, "utf8"));
+        const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
+
+        const user = users.find(u => u.username === username);
+        const userSchedule = schedules[username] || {}; // fallback if no schedule exists
+
+        if (!user) {
+                return res.status(404).send("User not found");
+        }
+
+        res.render("edit_employee_schedule", {
+                username: user.username,
+                schedule: userSchedule
+        });
+});
+
+router.post('/edit_employee_schedule/:username', (req, res) => {
+        const username = req.params.username;
+        const schedulePath = path.join(__dirname, "../schedules.json");
+
+        const newSchedule = JSON.parse(req.body.schedule); // comes from the hidden input
+
+        const schedules = JSON.parse(fs.readFileSync(schedulePath, "utf8"));
+        schedules[username] = newSchedule;
+
+        fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
+        res.redirect(`/edit_employee_schedule/${username}`);
+});
+*/
 
 module.exports = router;

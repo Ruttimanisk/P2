@@ -12,8 +12,6 @@ const { requireAuth } = require("../middleware/auth");
 
 router.get('/home', requireAuth, user_controller.employee_home);
 
-router.get('/schedule', requireAuth, user_controller.show_employee_schedule);
-
 // Kalender med FullCalendar visning
 router.get('/calendar', requireAuth, async (req, res) => {
     try {
@@ -42,8 +40,6 @@ router.get('/calendar', requireAuth, async (req, res) => {
         res.status(500).send('Server fejl');
     }
 });
-
-
 
 router.get('/prof_old', requireAuth, (req, res) => {
     const username = req.session.username;
@@ -74,7 +70,9 @@ router.get('/prof_old', requireAuth, (req, res) => {
 
 router.get('/profile', requireAuth, user_controller.profile);
 
-// Logout
 router.get('/logout', user_controller.logout);
 
+// router.get('/schedule', requireAuth, user_controller.show_employee_schedule);
+
 module.exports = router;
+
