@@ -183,149 +183,6 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
     res.redirect(`/admin/edit_schedule?week=${weekIndex}`);
 });
 
-
-// de her skal ændres
-exports.show_admin_schedule = asyncHandler(async (req, res) => {
-    const userId = req.cookies.userId;
-    const scheduleFile = path.join(__dirname, "../schedules.json");
-    let scheduleData = {};
-
-    try {
-        if (fs.existsSync(scheduleFile)) {
-            const fileData = await fs.promises.readFile(scheduleFile, "utf8");
-            scheduleData = JSON.parse(fileData);
-        }
-
-        const schedule = scheduleData[userId] || {
-            Monday: "", Tuesday: "", Wednesday: "", Thursday: "",
-            Friday: "", Saturday: "", Sunday: ""
-        };
-
-        res.render("admin_schedule", {
-            schedule: schedule,
-            userId: userId
-        });
-
-    } catch (err) {
-        console.error("Error loading admin schedule:", err);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-exports.show_employee_schedule = asyncHandler(async (req, res) => {
-    const userId = req.cookies.userId;
-    const filePath = path.join(__dirname, "../user_info.json");
-
-    try {
-        const data = await fs.promises.readFile(filePath, "utf8");
-        const users = JSON.parse(data);
-        const user = users.find(u => u.username === username);
-
-        if (!user) {
-            return res.status(404).send("User not found");
-        }
-
-        res.render("admin_edit_employee_schedule", {
-            title: `Edit Schedule for ${user.first_name} ${user.last_name}`,
-            employee: employee
-        });
-
-    } catch (err) {
-        console.error("Failed to load user:", err);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-/*
-exports.save_edited_schedule = (req, res) => {
-    const flatData = req.body;
-    const schedulePath = path.join(__dirname, "../schedules.json");
-
-    const newSchedule = {};
-
-    for (let key in flatData) {
-        // Skip dropdowns – they'll be handled via companion key
-        if (key.endsWith("_preset")) continue;
-
-        const [username, day] = key.split(".");
-        const typedValue = flatData[key];
-        const dropdownValue = flatData[`${username}.${day}_preset`] || "";
-
-        const finalValue = typedValue.trim() || dropdownValue;
-
-        if (!newSchedule[username]) newSchedule[username] = {};
-        newSchedule[username][day] = finalValue;
-    }
-
-    try {
-        fs.writeFileSync(schedulePath, JSON.stringify(newSchedule, null, 2), "utf8");
-        res.redirect("/admin/edit_schedule");
-    } catch (err) {
-        console.error("Error saving schedule:", err);
-        res.status(500).send("Failed to save schedule.");
-    }
-};
-
-// (Additional functions for scheduling can be implemented similarly)
-
-exports.list_employees_for_schedule_edit = async (req, res) => {
-    const filePath = path.join(__dirname, "../user_info.json");
-
-    try {
-        const data = await fs.promises.readFile(filePath, "utf8");
-        const users = JSON.parse(data);
-        const employees = users.filter(u => u.status === "employee");
-
-        res.render("admin_edit_employee_list", {
-            title: "Edit Employee Schedules",
-            employees: employees
-        });
-    } catch (err) {
-        console.error("Error loading users for schedule edit:", err);
-        res.status(500).send("Internal Server Error");
-    }
-};
-
-exports.save_employee_schedule = async (req, res) => {
-    const userId = req.params.id;
-    const newSchedule = req.body.schedule; // expecting schedule to be an object
-    const scheduleFile = path.join(__dirname, "../schedules.json");
-
-    try {
-        let schedule = {};
-        if (fs.existsSync(scheduleFile)) {
-            const data = await fs.promises.readFile(scheduleFile, "utf8");
-            schedule = JSON.parse(data);
-        }
-
-        schedule[userId] = newSchedule;
-
-        await fs.promises.writeFile(scheduleFile, JSON.stringify(schedule, null, 2));
-        res.redirect(`/admin/edit_employee_schedule/${userId}`);
-    } catch (err) {
-        console.error("Error saving schedule:", err);
-        res.status(500).send("Failed to save schedule");
-    }
-};
-
-
-
-
-exports.profile_old = (req, res) => {
-    const username = req.session.username;
-    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
-    const user = users.find(u => u.username === username);
-
-    if (!user) {
-        return res.status(404).send('User not found');
-    }
-
-    res.render('profile', {
-        name: user.first_name,  // Make sure the JSON contains "firstName"
-        status: user.status     // Ensure it's "status", not "role"
-    })
-};
-*/
 exports.admin_user_creation = asyncHandler(async (req,res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -518,7 +375,6 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
     }
 });
 
-
 exports.admin_employee_list = asyncHandler(async (req, res) => {
     const [allEmployees, allAdmins] = await Promise.all([
         User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec(),
@@ -594,3 +450,146 @@ exports.absence_post = asyncHandler(async (req,res) => {
         res.redirect(`/admin/absence`)
     }
 });
+
+/*
+exports.show_admin_schedule = asyncHandler(async (req, res) => {
+    const userId = req.cookies.userId;
+    const scheduleFile = path.join(__dirname, "../schedules.json");
+    let scheduleData = {};
+
+    try {
+        if (fs.existsSync(scheduleFile)) {
+            const fileData = await fs.promises.readFile(scheduleFile, "utf8");
+            scheduleData = JSON.parse(fileData);
+        }
+
+        const schedule = scheduleData[userId] || {
+            Monday: "", Tuesday: "", Wednesday: "", Thursday: "",
+            Friday: "", Saturday: "", Sunday: ""
+        };
+
+        res.render("admin_schedule", {
+            schedule: schedule,
+            userId: userId
+        });
+
+    } catch (err) {
+        console.error("Error loading admin schedule:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+exports.show_employee_schedule = asyncHandler(async (req, res) => {
+    const userId = req.cookies.userId;
+    const filePath = path.join(__dirname, "../user_info.json");
+
+    try {
+        const data = await fs.promises.readFile(filePath, "utf8");
+        const users = JSON.parse(data);
+        const user = users.find(u => u.username === username);
+
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        res.render("admin_edit_employee_schedule", {
+            title: `Edit Schedule for ${user.first_name} ${user.last_name}`,
+            employee: employee
+        });
+
+    } catch (err) {
+        console.error("Failed to load user:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+exports.save_edited_schedule = (req, res) => {
+    const flatData = req.body;
+    const schedulePath = path.join(__dirname, "../schedules.json");
+
+    const newSchedule = {};
+
+    for (let key in flatData) {
+        // Skip dropdowns – they'll be handled via companion key
+        if (key.endsWith("_preset")) continue;
+
+        const [username, day] = key.split(".");
+        const typedValue = flatData[key];
+        const dropdownValue = flatData[`${username}.${day}_preset`] || "";
+
+        const finalValue = typedValue.trim() || dropdownValue;
+
+        if (!newSchedule[username]) newSchedule[username] = {};
+        newSchedule[username][day] = finalValue;
+    }
+
+    try {
+        fs.writeFileSync(schedulePath, JSON.stringify(newSchedule, null, 2), "utf8");
+        res.redirect("/admin/edit_schedule");
+    } catch (err) {
+        console.error("Error saving schedule:", err);
+        res.status(500).send("Failed to save schedule.");
+    }
+};
+
+// (Additional functions for scheduling can be implemented similarly)
+
+exports.list_employees_for_schedule_edit = async (req, res) => {
+    const filePath = path.join(__dirname, "../user_info.json");
+
+    try {
+        const data = await fs.promises.readFile(filePath, "utf8");
+        const users = JSON.parse(data);
+        const employees = users.filter(u => u.status === "employee");
+
+        res.render("admin_edit_employee_list", {
+            title: "Edit Employee Schedules",
+            employees: employees
+        });
+    } catch (err) {
+        console.error("Error loading users for schedule edit:", err);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+exports.save_employee_schedule = async (req, res) => {
+    const userId = req.params.id;
+    const newSchedule = req.body.schedule; // expecting schedule to be an object
+    const scheduleFile = path.join(__dirname, "../schedules.json");
+
+    try {
+        let schedule = {};
+        if (fs.existsSync(scheduleFile)) {
+            const data = await fs.promises.readFile(scheduleFile, "utf8");
+            schedule = JSON.parse(data);
+        }
+
+        schedule[userId] = newSchedule;
+
+        await fs.promises.writeFile(scheduleFile, JSON.stringify(schedule, null, 2));
+        res.redirect(`/admin/edit_employee_schedule/${userId}`);
+    } catch (err) {
+        console.error("Error saving schedule:", err);
+        res.status(500).send("Failed to save schedule");
+    }
+};
+
+
+
+
+exports.profile_old = (req, res) => {
+    const username = req.session.username;
+    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
+    const user = users.find(u => u.username === username);
+
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    res.render('profile', {
+        name: user.first_name,  // Make sure the JSON contains "firstName"
+        status: user.status     // Ensure it's "status", not "role"
+    })
+};
+*/

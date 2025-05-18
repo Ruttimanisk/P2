@@ -96,7 +96,7 @@ router.post('/create_shift', async (req, res) => {
 
 router.get('/home', requireAuth, user_controller.admin_home)
 
-router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
+// router.get('/schedule', requireAuth, user_controller.show_admin_schedule)
 
 router.get('/profile/', requireAuth, user_controller.profile);
 
