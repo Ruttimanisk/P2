@@ -522,15 +522,26 @@ exports.update_profile_post = asyncHandler(async (req,res) => {
 
 
 exports.admin_employee_list = asyncHandler(async (req, res) => {
-        const [allEmployees, allAdmins] = await Promise.all([
+    const [allEmployees, allAdmins] = await Promise.all([
         User.find({ status: 'Employee'}).sort({ first_name: 1 }).exec(),
         User.find({ status: 'Admin'}).sort({ first_name: 1 }).exec(),
     ]);
+    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
+
+    const users = allEmployees.concat(allAdmins);
+
+    let totalPay = 0
+
+    for (const user of users) {
+        let schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        totalPay += payThisWeekCalculation(schedules, user.hourly_rate)
+    }
 
     res.render("admin_employee_list", {
         title: "Employee List",
         employees: allEmployees,
         admins: allAdmins,
+        totalPay: totalPay,
     });
 });
 
