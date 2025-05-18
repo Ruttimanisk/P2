@@ -349,9 +349,6 @@ exports.profile = asyncHandler(async (req, res) => {
 
         const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
 
-        console.log("Schedules found:", schedules.length);
-        console.log("First schedule:", schedules[0]);
-
         let minutesWorked = 0;
 
         for (const schedule of schedules) {
@@ -402,12 +399,12 @@ exports.view_profile = asyncHandler(async (req, res) => {
     try {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
-        /*
+
         const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
 
         let minutesWorked = 0;
 
-        for (const schedule in schedules) {
+        for (const schedule of schedules) {
             for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
                 let start = schedule[`${day}_start`]
                 let end = schedule[`${day}_end`]
@@ -419,7 +416,7 @@ exports.view_profile = asyncHandler(async (req, res) => {
         }
 
         payThisWeek = (minutesWorked / 60) * user.hourly_rate
-        */
+
         if (!user) {
             return res.status(404).send('User not found');
         }
