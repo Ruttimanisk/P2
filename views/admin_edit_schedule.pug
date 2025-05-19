@@ -1,7 +1,6 @@
 extends layout_admin
 
 block content
-    h1 Edit Schedule - Week #{weekIndex}
     link(rel='stylesheet' href='/stylesheets/Schedule.css')
     script(src="/scripts/buttonRunPyAlgorithm.js")
     script.
@@ -30,7 +29,9 @@ block content
         }
 
     if weekIndex === weekNumber
-        p - This Week
+        h1 Edit Schedule - Week #{weekIndex} - This week
+    else
+        h1 Edit Schedule - Week #{weekIndex}
 
     button#previousWeek(onclick="previousWeek()" disabled=weekIndex === 1) <- Previous Week
     button#nextWeek(onclick="nextWeek()" style="margin-left: 5px;") Next Week ->
