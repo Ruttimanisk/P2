@@ -17,8 +17,8 @@ const path = require('path');
 
 router.post('/run_algorithm', (req, res) => {
     const arg = req.body?.param;
-    res.json({ message: 'Algorithm started with param: ' + arg });
     runpy(String(arg));
+    res.json({ message: 'Algorithm started with param: ' + arg });
 });
 
 // burde måske gøre det her i controller
