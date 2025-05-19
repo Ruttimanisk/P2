@@ -101,6 +101,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     });
 
     res.render("admin_edit_schedule", {
+        allSchedules,
         schedules: schedules,
         weekIndex: weekIndex,
         weekNumber: weekNumber,

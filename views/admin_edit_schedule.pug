@@ -35,6 +35,8 @@ block content
     button#previousWeek(onclick="previousWeek()" disabled=weekIndex === 1) <- Previous Week
     button#nextWeek(onclick="nextWeek()" style="margin-left: 5px;") Next Week ->
 
+    if allSchedules && allSchedules.length
+        p worked before sort
     if schedules && schedules.length
         form(action="/admin/edit_schedule" method="POST")
             table(border="1" style="margin-top: 40px;" class='table_schedule')
