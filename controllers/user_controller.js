@@ -81,7 +81,7 @@ exports.admin_home = asyncHandler( async(req, res) => {
 });
 
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
-    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
     const weekNumber = getISOWeek(currentWeekStart);
     const weekIndex = parseInt(req.query.week) || weekNumber;
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
@@ -109,7 +109,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 });
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
-    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
     const weekNumber = getISOWeek(currentWeekStart);
     const weekIndex = parseInt(req.query.week) || weekNumber;
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
