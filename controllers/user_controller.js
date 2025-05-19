@@ -91,16 +91,6 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
         .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
         .toArray();
     const users = await User.find().sort({ first_name: 1 }).exec();
-    // const userMap = {};
-    // users.forEach(u => {
-    //     userMap[u._id.toString()] = u;
-    // });
-    //
-    // let schedules = [...allSchedules].sort((a, b) => {
-    //     const nameA = userMap[a.employee?.toString()]?.first_name || '';
-    //     const nameB = userMap[b.employee?.toString()]?.first_name || '';
-    //     return nameA.localeCompare(nameB);
-    // });
 
     const scheduleMap = new Map();
     schedules.forEach(schedule => scheduleMap.set(schedule.employee.toString(), schedule));
@@ -110,8 +100,6 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
         weekIndex: weekIndex,
         weekNumber: weekNumber,
         scheduleMap: scheduleMap,
-        // schedules: schedules,
-        // userMap: userMap,
     });
 });
 
@@ -122,20 +110,20 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
-    const schedules = await mongoose.connection.collection('schedules')
-        .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
-        .toArray();
-
-    const users = await User.find().exec();
+    const users = await User.find().sort({ first_name: 1 }).exec();
     const scheduleCollection = mongoose.connection.collection('schedules');
     const shiftCollection = mongoose.connection.collection('shifts');
 
+    const schedules = await scheduleCollection
+        .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
+        .toArray();
+
+    const scheduleMap = new Map();
+    schedules.forEach(schedule => scheduleMap.set(schedule.employee.toString(), schedule));
+
     for (const user of users) {
         const employeeId = user._id;
-        const schedule = await scheduleCollection.findOne({
-            employee: employeeId,
-            week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
-        });
+        const schedule = scheduleMap.get(employeeId.toString())
 
         const updatedSchedule = {
             employee: employeeId,
