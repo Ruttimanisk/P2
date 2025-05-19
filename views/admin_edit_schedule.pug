@@ -33,7 +33,7 @@ block content
     if weekIndex === 0
         p - This Week
 
-    button#previousWeek(onclick="previousWeek()" disabled=weekIndex === 0) <- Previous Week
+    button#previousWeek(onclick="previousWeek()" disabled=weekIndex === 1) <- Previous Week
     button#nextWeek(onclick="nextWeek()" ) Next Week ->
 
     form(action="/admin/edit_schedule" method="POST")
