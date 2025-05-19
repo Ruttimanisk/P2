@@ -195,7 +195,7 @@ for employee in employees:
             print(f"{employee} works on {applied_shift['date']} from {shift.start} to {shift.end}")
 
     schedule_output.append(schedule)
-    print(f'Schedule for {schedule['employee']} saved.')
+    print(f"Schedule for {schedule['employee']} saved.")
 
 # Upload til MongoDB
 try:
