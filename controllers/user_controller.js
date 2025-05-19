@@ -106,7 +106,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
     const weekNumber = getISOWeek(currentWeekStart);
-    const weekIndex = parseInt(req.query.week) || weekNumber;
+    const weekIndex = parseInt(req.body.weekIndex || req.query.week) || weekNumber;
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
