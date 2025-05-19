@@ -106,8 +106,8 @@ indefinite_leave = {}
 
 for absence in absences_db:
     user_id = absence.get("user")
-    start = absence.get("leave_start").isoformat()
-    end = absence.get("leave_end").isoformat()
+    start = absence.get("leave_start")
+    end = absence.get("leave_end")
     if end is None:
         indefinite_leave[user_id] = start
     else:
