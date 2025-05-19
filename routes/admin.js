@@ -25,20 +25,29 @@ router.get('/calendar', requireAuth, async (req, res) => {
         const shifts = await mongoose.connection.collection('shifts').find().toArray();
 
         // Byg events
-        const events = shifts
-            .filter(shift => shift.date && shift.start && shift.end && shift.employee)
-            .map(shift => ({
-                    title: `${shift.start} - ${shift.end}`, // valgfrit
-                    start: `${shift.date}T${shift.start}`,
-                    end: `${shift.date}T${shift.end}`,
-                    resourceId: shift.employee
-            }));
+    const events = shifts
+        .filter(shift => shift.date && shift.start && shift.end && shift.employee_id)
+        .map(shift => ({
+            id: shift._id?.toString(),
+            title: `${shift.start} - ${shift.end}`,
+            start: `${shift.date}T${shift.start}`,
+            end: `${shift.date}T${shift.end}`,
+            resourceId: shift.employee_id
+        }));
 
-        // Unikke medarbejdere som resources
-        const resources = [...new Set(shifts.map(shift => shift.employee))]
-            .map(name => ({ id: name, title: name }));
+    const userIds = [...new Set(shifts.map(shift => shift.employee_id))].map(id => new mongoose.Types.ObjectId(id));
+    const users = await db.collection('users').find({ _id: { $in: userIds } }).toArray();
 
-        // Debug
+    const resources = userIds.map(id => {
+        const user = users.find(u => u._id.toString() === id.toString());
+        return {
+            id: id.toString(),
+            title: user ? `${user.first_name} ${user.family_name}` : 'Ukendt'
+        };
+    });
+
+
+    // Debug
         console.log("📅 Events:", events);
         console.log("🧑‍🤝‍🧑 Resources:", resources);
 
