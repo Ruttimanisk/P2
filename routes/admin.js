@@ -23,9 +23,9 @@ router.post('/run_algorithm', (req, res) => {
 
 // burde måske gøre det her i controller
 router.get('/calendar', requireAuth, async (req, res) => {
-        const shifts = await mongoose.connection.collection('shifts').find().toArray();
+    const db = mongoose.connection;
+    const shifts = await db.collection('shifts').find().toArray();
 
-        // Byg events
     const events = shifts
         .filter(shift => shift.date && shift.start && shift.end && shift.employee_id)
         .map(shift => ({
@@ -39,25 +39,60 @@ router.get('/calendar', requireAuth, async (req, res) => {
     const userIds = [...new Set(shifts.map(shift => shift.employee_id))].map(id => new mongoose.Types.ObjectId(id));
     const users = await db.collection('users').find({ _id: { $in: userIds } }).toArray();
 
-    const resources = userIds.map(id => {
+    // Funktion til at beregne antal arbejdstimer mellem to tidspunkter
+    const calculateShiftHours = (start, end) => {
+        const startDate = new Date(`1970-01-01T${start}`);
+        const endDate = new Date(`1970-01-01T${end}`);
+        const diffMs = endDate - startDate;
+        return diffMs > 0 ? diffMs / (1000 * 60 * 60) : 0;
+    };
+
+    // Beregn arbejdstimer og saldoer for hver medarbejder
+    const now = new Date();
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(now.getDate() - 14);
+
+    const resourceData = userIds.map(id => {
         const user = users.find(u => u._id.toString() === id.toString());
+        const userShifts = shifts.filter(s => s.employee_id === id.toString());
+
+        let hoursTotal = 0;
+        let hoursTwoWeeks = 0;
+
+        for (const shift of userShifts) {
+            const shiftHours = calculateShiftHours(shift.start, shift.end);
+            hoursTotal += shiftHours;
+
+            const shiftDate = new Date(shift.date);
+            if (shiftDate >= twoWeeksAgo) {
+                hoursTwoWeeks += shiftHours;
+            }
+        }
+
+        const contractHours = user?.hours_per_week || 0;
+        const expectedTwoWeeks = contractHours * 2;
+        const balanceTwoWeeks = hoursTwoWeeks - expectedTwoWeeks;
+        const balanceTotal = hoursTotal - contractHours * (Math.floor((now - new Date(user?.createdAt || now)) / (1000 * 60 * 60 * 24 * 7)) || 1);
+
         return {
             id: id.toString(),
-            title: user ? `${user.first_name} ${user.family_name}` : 'Ukendt'
+            title: user ? `${user.first_name} ${user.family_name}` : 'Ukendt',
+            currentHours: hoursTwoWeeks.toFixed(1),
+            expectedHours: expectedTwoWeeks.toFixed(1),
+            saldoTwoWeeks: balanceTwoWeeks.toFixed(1),
+            saldoTotal: balanceTotal.toFixed(1)
         };
     });
 
+    console.log("📅 Events:", events);
+    console.log("🧑‍🤝‍🧑 Resources with saldo:", resourceData);
 
-    // Debug
-        console.log("📅 Events:", events);
-        console.log("🧑‍🤝‍🧑 Resources:", resources);
-
-        // RENDER - vigtigt: send IKKE JSON.stringify her
-        res.render('admin_calendar', {
-                events,
-                resources
-        });
+    res.render('admin_calendar', {
+        events,
+        resources: resourceData
+    });
 });
+
 
 router.post('/update_shift', async (req, res) => {
     const { id, start, end, resourceId, title } = req.body;
