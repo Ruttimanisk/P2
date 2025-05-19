@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
-const { startOfWeek, parseISO, isAfter, isEqual, getISOWeek, addWeeks, addDays, format } = require('date-fns');
+const { startOfWeek, getISOWeek, addWeeks, addDays, format } = require('date-fns');
 
 // Shared Functions:
 const toUTCStartOfDay = (date) => {
@@ -81,39 +81,22 @@ exports.admin_home = asyncHandler( async(req, res) => {
 });
 
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
-    // burde bare finde schedules med currentWeekStart(udfra weekIndex) <= week_start_date < nextWeekStart
+    const weekIndex = parseInt(req.query.week) || 0;
+    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const displayedWeekStart = addWeeks(currentWeekStart, weekIndex);
+    const nextWeekStart = addWeeks(currentWeekStart, weekIndex + 1);
 
-    const allSchedules = await mongoose.connection.collection('schedules').find().sort({ week_start_date: 1, employee: 1 }).toArray();
+    const schedules = await mongoose.connection.collection('schedules').find( {week_start_date: { $gte: displayedWeekStart, $lt: nextWeekStart}}).toArray();
     const users = await User.find().exec();
     const userMap = {};
     users.forEach(u => {
         userMap[u._id.toString()] = u;
     });
 
-    const weekIndex = parseInt(req.query.week) || 0;
-    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
     const weekNumber = getISOWeek(currentWeekStart);
-    const schedulesByWeek = [];
-
-    allSchedules.forEach(schedule => {
-        const scheduleDate = parseISO(schedule.week_start_date);
-
-        if (isAfter(scheduleDate, currentWeekStart) || isEqual(scheduleDate, currentWeekStart)) { // filters out previous weeks
-            let week = schedulesByWeek.find(w => w.week_start_date === schedule.week_start_date);
-            if (week) {
-                week.schedules.push(schedule);
-            } else {
-                schedulesByWeek.push({
-                    week_start_date: schedule.week_start_date,
-                    schedules: [schedule]
-                });
-            }
-        }
-    });
 
     res.render("admin_edit_schedule", {
-        schedules: allSchedules,
-        schedulesByWeek: schedulesByWeek,
+        schedules: schedules,
         weekIndex: weekIndex,
         weekNumber: weekNumber,
         userMap: userMap,
