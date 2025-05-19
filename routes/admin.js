@@ -23,7 +23,8 @@ router.post('/run_algorithm', (req, res) => {
 
 // burde måske gøre det her i controller
 router.get('/calendar', requireAuth, async (req, res) => {
-    const db = mongoose.connection;
+    const db = mongoose.connection; // ← tilføjet for at undgå ReferenceError
+
     const shifts = await db.collection('shifts').find().toArray();
 
     const events = shifts
@@ -39,7 +40,6 @@ router.get('/calendar', requireAuth, async (req, res) => {
     const userIds = [...new Set(shifts.map(shift => shift.employee_id))].map(id => new mongoose.Types.ObjectId(id));
     const users = await db.collection('users').find({ _id: { $in: userIds } }).toArray();
 
-    // Funktion til at beregne antal arbejdstimer mellem to tidspunkter
     const calculateShiftHours = (start, end) => {
         const startDate = new Date(`1970-01-01T${start}`);
         const endDate = new Date(`1970-01-01T${end}`);
@@ -47,7 +47,6 @@ router.get('/calendar', requireAuth, async (req, res) => {
         return diffMs > 0 ? diffMs / (1000 * 60 * 60) : 0;
     };
 
-    // Beregn arbejdstimer og saldoer for hver medarbejder
     const now = new Date();
     const twoWeeksAgo = new Date();
     twoWeeksAgo.setDate(now.getDate() - 14);
@@ -71,8 +70,9 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
         const contractHours = user?.hours_per_week || 0;
         const expectedTwoWeeks = contractHours * 2;
+        const weeksSince = Math.max(1, Math.floor((now - new Date(user?.createdAt || now)) / (1000 * 60 * 60 * 24 * 7)));
         const balanceTwoWeeks = hoursTwoWeeks - expectedTwoWeeks;
-        const balanceTotal = hoursTotal - contractHours * (Math.floor((now - new Date(user?.createdAt || now)) / (1000 * 60 * 60 * 24 * 7)) || 1);
+        const balanceTotal = hoursTotal - contractHours * weeksSince;
 
         return {
             id: id.toString(),
@@ -92,6 +92,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
         resources: resourceData
     });
 });
+
 
 
 router.post('/update_shift', async (req, res) => {
