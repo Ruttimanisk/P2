@@ -85,9 +85,9 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const weekNumber = getISOWeek(currentWeekStart);
     const weekIndex = parseInt(req.query.week) || weekNumber;
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
-    const nextWeekStart = addWeeks(currentWeekStart, weekIndex + 1);
+    const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
-    const allSchedules = await mongoose.connection.collection('schedules').find( {week_start_date: { $gte: displayedWeekStart, $lt: nextWeekStart}}).toArray();
+    const allSchedules = await mongoose.connection.collection('schedules').find( {week_start_date: { $gte: displayedWeekStart, $lt: nextWeekStart }}).toArray();
     const users = await User.find().exec();
     const userMap = {};
     users.forEach(u => {
@@ -95,10 +95,10 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     });
 
     let schedules = [...allSchedules].sort((a, b) => {
-        return userMap[a.employee.toString()].first_name.localeCompare(userMap[b.employee.toString()].first_name);
-    })
-
-
+        const nameA = userMap[a.employee?.toString()]?.first_name || '';
+        const nameB = userMap[b.employee?.toString()]?.first_name || '';
+        return nameA.localeCompare(nameB);
+    });
 
     res.render("admin_edit_schedule", {
         schedules: schedules,
@@ -109,10 +109,11 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 });
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
-    const weekIndex = parseInt(req.query.week) || 0;
-    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
-    const displayedWeekStart = addWeeks(currentWeekStart, weekIndex);
-    const nextWeekStart = addWeeks(currentWeekStart, weekIndex + 1);
+    const currentWeekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const weekNumber = getISOWeek(currentWeekStart);
+    const weekIndex = parseInt(req.query.week) || weekNumber;
+    const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
+    const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
     const schedules = await mongoose.connection.collection('schedules')
         .find({
