@@ -35,40 +35,39 @@ block content
     button#previousWeek(onclick="previousWeek()" disabled=weekIndex === 1) <- Previous Week
     button#nextWeek(onclick="nextWeek()" style="margin-left: 5px;") Next Week ->
 
-    if schedules && schedules.length
-        form(action="/admin/edit_schedule" method="POST")
-            table(border="1" style="margin-top: 40px;" class='table_schedule')
-                thead
+
+    form(action="/admin/edit_schedule" method="POST")
+        table(border="1" style="margin-top: 40px;" class='table_schedule')
+            thead
+                tr
+                    th Username
+                    each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                        th= day
+            tbody
+                each user in users
+                    - var schedule = scheduleMap.get(user._id.toString()) || {}
                     tr
-                        th Username
-                        each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                            th= day
-                tbody
-                    each schedule in schedules
-                        - var user = userMap[schedule.employee.toString()]
-                        tr
-                            td= user.fullname
-                            each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                                if ['Saturday', 'Sunday'].includes(dayKey)
-                                    td
-                                        span(style="color: black") Closed
-                                else
-                                    td
-                                        input(
-                                            type="text",
-                                            name=`${schedule.employee}_week_${weekIndex}_${dayKey}_start`,
-                                            value=schedule[`${dayKey}_start`] || ''
-                                            style="width: 70px; margin-right: 1px;"
-                                            )
-                                        input(
-                                            type="text",
-                                            name=`${schedule.employee}_week_${weekIndex}_${dayKey}_end`,
-                                            value=schedule[`${dayKey}_end`] || ''
-                                            style="width: 70px; margin-right: 1px;"
+                        td= user.fullname
+                        each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                            if ['Saturday', 'Sunday'].includes(dayKey)
+                                td
+                                    span(style="color: black") Closed
+                            else
+                                td
+                                    input(
+                                        type="text",
+                                        name=`${schedule.employee}_week_${weekIndex}_${dayKey}_start`,
+                                        value=schedule[`${dayKey}_start`] || ''
+                                        style="width: 70px; margin-right: 1px;"
                                         )
-            button(type="submit", class='save_schedule_button' style="margin-left: 148px; transform: translateY(5px)") Save Changes
-    else
-        p No schedules for this week.
+                                    input(
+                                        type="text",
+                                        name=`${schedule.employee}_week_${weekIndex}_${dayKey}_end`,
+                                        value=schedule[`${dayKey}_end`] || ''
+                                        style="width: 70px; margin-right: 1px;"
+                                    )
+        button(type="submit", class='save_schedule_button' style="margin-left: 148px; transform: translateY(5px)") Save Changes
+
     button(
         onclick="if(confirm('Are you sure you want to generate the schedule with the algorithm?')) runAlgorithm()"
         class='save_schedule_button'

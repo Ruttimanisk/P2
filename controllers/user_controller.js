@@ -87,25 +87,31 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
-    const allSchedules = await mongoose.connection.collection('schedules').find( {week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }}).toArray();
-    const users = await User.find().exec();
-    const userMap = {};
-    users.forEach(u => {
-        userMap[u._id.toString()] = u;
-    });
+    const schedules = await mongoose.connection.collection('schedules')
+        .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
+        .toArray();
+    const users = await User.find().sort({ first_name: 1 }).exec();
+    // const userMap = {};
+    // users.forEach(u => {
+    //     userMap[u._id.toString()] = u;
+    // });
+    //
+    // let schedules = [...allSchedules].sort((a, b) => {
+    //     const nameA = userMap[a.employee?.toString()]?.first_name || '';
+    //     const nameB = userMap[b.employee?.toString()]?.first_name || '';
+    //     return nameA.localeCompare(nameB);
+    // });
 
-    let schedules = [...allSchedules].sort((a, b) => {
-        const nameA = userMap[a.employee?.toString()]?.first_name || '';
-        const nameB = userMap[b.employee?.toString()]?.first_name || '';
-        return nameA.localeCompare(nameB);
-    });
+    const scheduleMap = new Map();
+    schedules.forEach(schedule => scheduleMap.set(schedule.employee.toString(), schedule));
 
     res.render("admin_edit_schedule", {
-        allSchedules,
-        schedules: schedules,
+        users: users,
         weekIndex: weekIndex,
         weekNumber: weekNumber,
-        userMap: userMap,
+        scheduleMap: scheduleMap,
+        // schedules: schedules,
+        // userMap: userMap,
     });
 });
 
@@ -117,34 +123,38 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
     const schedules = await mongoose.connection.collection('schedules')
-        .find({
-            $or: [
-                { week_start_date: displayedWeekStart },
-                { week_start_date: format(displayedWeekStart, 'yyyy-MM-dd') }
-            ]
-        })
-        .sort({ employee: 1 })
+        .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
         .toArray();
 
-    for (const schedule of schedules) {
+    const users = await User.find().exec();
+    const scheduleCollection = mongoose.connection.collection('schedules');
+    const shiftCollection = mongoose.connection.collection('shifts');
+
+    for (const user of users) {
+        const employeeId = user._id;
+        const schedule = await scheduleCollection.findOne({
+            employee: employeeId,
+            week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
+        });
+
         const updatedSchedule = {
-            employee: schedule.employee,
-            week_start_date: schedule.week_start_date,
+            employee: employeeId,
+            week_start_date: format(displayedWeekStart, 'yyyy-MM-dd'),
         };
 
         let dayCounter = 0;
 
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-            const startInput = req.body[`${schedule.employee}_week_${weekIndex}_${day}_start`] || '';
-            const endInput = req.body[`${schedule.employee}_week_${weekIndex}_${day}_end`] || '';
+            const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || '';
+            const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || '';
 
             updatedSchedule[`${day}_start`] = startInput;
             updatedSchedule[`${day}_end`] = endInput;
 
             if (startInput && endInput) {
-                await mongoose.connection.collection('shifts').updateOne(
+                await shiftCollection.updateOne(
                     {
-                        employee: schedule.employee,
+                        employee: employeeId,
                         weekday: day,
                         date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
                     },
@@ -152,7 +162,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                         $set: {
                             start: startInput,
                             end: endInput,
-                            employee: schedule.employee,
+                            employee: employeeId,
                             date: format(addDays(displayedWeekStart, dayCounter), 'yyyy-MM-dd'),
                             weekday: day,
                         }
@@ -161,13 +171,17 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                 );
             }
 
-            dayCounter += 1;
+            dayCounter++;
         }
 
-        await mongoose.connection.collection('schedules').updateOne(
-            { _id: schedule._id },
-            { $set: updatedSchedule }
-        );
+        if (schedule) {
+            await scheduleCollection.updateOne(
+                { _id: schedule._id },
+                { $set: updatedSchedule }
+            );
+        } else {
+            await scheduleCollection.insertOne(updatedSchedule);
+        }
     }
 
     res.redirect(`/admin/edit_schedule?week=${weekIndex}`);
