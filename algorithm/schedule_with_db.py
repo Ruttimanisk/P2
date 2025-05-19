@@ -194,14 +194,14 @@ for employee in employees:
 try:
     collection = db["schedules"]
 
-    collection.delete_many({ "week_start_date": { "$gte": week_start } })
+    collection.delete_many({ "week_start_date": { "$gte": week_start, "lt": next_week_start } })
     collection.insert_many(schedule_output)
 
     print("Schedules uploaded to MongoDB successfully.")
 
     collection = db["shifts"]
 
-    collection.delete_many({ "date": { "$gte": week_start } })
+    collection.delete_many({ "date": { "$gte": week_start, "lt": next_week_start } })
     collection.insert_many(shift_output)
 
     print("Shifts uploaded to MongoDB successfully.")
