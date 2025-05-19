@@ -87,7 +87,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
-    const allSchedules = await mongoose.connection.collection('schedules').find( {week_start_date: { $gte: displayedWeekStart, $lt: nextWeekStart }}).toArray();
+    const allSchedules = await mongoose.connection.collection('schedules').find( {week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }}).toArray();
     const users = await User.find().exec();
     const userMap = {};
     users.forEach(u => {
