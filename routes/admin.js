@@ -16,8 +16,9 @@ const path = require('path');
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
 router.post('/run_algorithm', (req, res) => {
-  runpy();
-  res.json({ message: 'Algorithm started' });
+    const arg = req.body?.param;
+    res.json({ message: 'Algorithm started with param: ' + arg });
+    runpy(String(arg));
 });
 
 // burde måske gøre det her i controller

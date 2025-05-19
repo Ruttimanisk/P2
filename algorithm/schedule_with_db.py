@@ -1,5 +1,5 @@
 # from fileinput import close
-
+import sys
 import pulp
 import csv
 import os
@@ -8,6 +8,9 @@ from datetime import date, datetime, timedelta
 from collections import namedtuple, defaultdict
 
 os.chdir(os.path.dirname(__file__))
+
+week_diff = int(sys.argv[1])
+print("Received param:", week_diff)
 
 # Improved readability and renamed variables to be more intuitive. Sue me.
 # - Peter
@@ -50,7 +53,11 @@ def generate_weekday_date_mapping(start_date_str):
 
 
 # Vælg hvilken uge du vil generere (mandagsdato)
-today = date.today()
+if week_diff:
+    today = date.today() + timedelta(weeks=week_diff)
+else:
+    today = date.today()
+
 week_start_date = today - timedelta(days=today.weekday())
 week_start_datetime = datetime.combine(week_start_date, datetime.min.time())
 week_start = week_start_date.isoformat()
