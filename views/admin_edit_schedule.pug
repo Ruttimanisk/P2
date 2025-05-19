@@ -33,8 +33,8 @@ block content
     else
         h1 Edit Schedule - Week #{weekIndex}
 
-    button#previousWeek(onclick="previousWeek()" disabled=weekIndex === 1) <- Previous Week
-    button#nextWeek(onclick="nextWeek()" style="margin-left: 5px;") Next Week ->
+    button#previousWeek(onclick="previousWeek()" class="save_schedule_button" disabled=weekIndex === 1) <- Previous Week
+    button#nextWeek(onclick="nextWeek()" class="save_schedule_button" style="margin-left: 5px;") Next Week ->
 
 
     form(action="/admin/edit_schedule" method="POST")
