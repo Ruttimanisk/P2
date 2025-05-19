@@ -86,12 +86,16 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex + 1);
 
-    const schedules = await mongoose.connection.collection('schedules').find( {week_start_date: { $gte: displayedWeekStart, $lt: nextWeekStart}}).toArray();
+    const allSchedules = await mongoose.connection.collection('schedules').find( {week_start_date: { $gte: displayedWeekStart, $lt: nextWeekStart}}).toArray();
     const users = await User.find().exec();
     const userMap = {};
     users.forEach(u => {
         userMap[u._id.toString()] = u;
     });
+
+    let schedules = [...allSchedules].sort((a, b) => {
+        return userMap[a.employee.toString()].first_name.localeCompare(userMap[b.employee.toString()].first_name);
+    })
 
     const weekNumber = getISOWeek(currentWeekStart);
 
