@@ -167,6 +167,7 @@ for employee in employees:
             schedule[f'{shift.day}_end'] = shift.end
             applied_shift = {
                 "employee": employee,
+                "employee_id": user_lookup.get(employee, None),
                 "date": weekday_to_date.get(shift.day, week_start),
                 "weekday": shift.day,
                 "start": shift.start,
