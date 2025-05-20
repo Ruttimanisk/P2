@@ -52,6 +52,7 @@ block content
                     th Name
                     th Max Hours
                     th Hours
+                    th Overtime
                     th Hourly Rate
                     th Pay This Week
             each user in sortedUsers
@@ -60,5 +61,13 @@ block content
                     th #{user.fullname}
                     td #{user.hours_per_week}
                     td #{hoursThisWeek}
+                    - let overtime = 0
+                    - let finalPay = individualPay[user]
+                    if hoursThisWeek > user.hours_per_week
+                        - overtime = hoursThisWeek - user.hours_per_week
+                        - finalPay = individualPay[user] + overtime * hourlyRate[user] * 0.5
+                        td #{overtime}
+                    else
+                        td
                     td #{hourlyRate[user]} DKK/h
-                    td #{individualPay[user]} Kroner
+                    td #{finalPay} Kroner
