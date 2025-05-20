@@ -23,9 +23,13 @@ router.post('/run_algorithm', async (req, res) => {
 
 // burde måske gøre det her i controller
 router.get('/calendar', requireAuth, async (req, res) => {
-    const db = mongoose.connection; // ← tilføjet for at undgå ReferenceError
-
+    const db = mongoose.connection;
     const shifts = await db.collection('shifts').find().toArray();
+
+    const employeeIds = [...new Set(shifts.map(shift => shift.employee_id?.toString()))];
+    const userObjectIds = employeeIds.map(id => new mongoose.Types.ObjectId(id));
+
+    const users = await db.collection('users').find({ _id: { $in: userObjectIds } }).toArray();
 
     const events = shifts
         .filter(shift => shift.date && shift.start && shift.end && shift.employee_id)
@@ -34,11 +38,8 @@ router.get('/calendar', requireAuth, async (req, res) => {
             title: `${shift.start} - ${shift.end}`,
             start: `${shift.date}T${shift.start}`,
             end: `${shift.date}T${shift.end}`,
-            resourceId: shift.employee_id
+            resourceId: shift.employee_id.toString()
         }));
-
-    const userIds = [...new Set(shifts.map(shift => shift.employee_id))].map(id => new mongoose.Types.ObjectId(id));
-    const users = await db.collection('users').find({ _id: { $in: userIds } }).toArray();
 
     const calculateShiftHours = (start, end) => {
         const startDate = new Date(`1970-01-01T${start}`);
@@ -51,9 +52,9 @@ router.get('/calendar', requireAuth, async (req, res) => {
     const twoWeeksAgo = new Date();
     twoWeeksAgo.setDate(now.getDate() - 14);
 
-    const resourceData = userIds.map(id => {
-        const user = users.find(u => u._id.toString() === id.toString());
-        const userShifts = shifts.filter(s => s.employee_id?.toString() === id.toString());
+    const resources = employeeIds.map(idStr => {
+        const user = users.find(u => u._id.toString() === idStr);
+        const userShifts = shifts.filter(s => s.employee_id?.toString() === idStr);
 
         let hoursTotal = 0;
         let hoursTwoWeeks = 0;
@@ -70,12 +71,15 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
         const contractHours = user?.hours_per_week || 0;
         const expectedTwoWeeks = contractHours * 2;
-        const weeksSince = Math.max(1, Math.floor((now - new Date(user?.createdAt || now)) / (1000 * 60 * 60 * 24 * 7)));
+
+        const createdAt = user?.createdAt ? new Date(user.createdAt) : new Date('2024-01-01');
+        const weeksSince = Math.max(1, Math.floor((now - createdAt) / (1000 * 60 * 60 * 24 * 7)));
+
         const balanceTwoWeeks = hoursTwoWeeks - expectedTwoWeeks;
         const balanceTotal = hoursTotal - contractHours * weeksSince;
 
         return {
-            id: id.toString(),
+            id: idStr,
             title: user ? `${user.first_name} ${user.family_name}` : 'Ukendt',
             currentHours: hoursTwoWeeks.toFixed(1),
             expectedHours: expectedTwoWeeks.toFixed(1),
@@ -84,16 +88,14 @@ router.get('/calendar', requireAuth, async (req, res) => {
         };
     });
 
-    console.log("📅 Events:", events);
-    console.log("🧑‍🤝‍🧑 Resources with saldo:", resourceData);
+    console.log("Events:", events);
+    console.log("Resources:", resources);
 
     res.render('admin_calendar', {
         events,
-        resources: resourceData
+        resources
     });
 });
-
-
 
 router.post('/update_shift', async (req, res) => {
     const { id, start, end, resourceId, title } = req.body;
