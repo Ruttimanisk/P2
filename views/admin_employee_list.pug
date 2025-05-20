@@ -57,12 +57,12 @@ block content
                     th Pay This Week
             each user in sortedUsers
                 - let hoursThisWeek = individualPay[user] / hourlyRate[user]
+                - let overtime = 0
+                - let finalPay = individualPay[user]
                 tr
                     th #{user.fullname}
                     td #{user.hours_per_week}
                     td #{hoursThisWeek}
-                    - let overtime = 0
-                    - let finalPay = individualPay[user]
                     if hoursThisWeek > user.hours_per_week
                         - overtime = hoursThisWeek - user.hours_per_week
                         - finalPay = individualPay[user] + overtime * hourlyRate[user] * 0.5
