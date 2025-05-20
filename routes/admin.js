@@ -15,7 +15,7 @@ const path = require('path');
 // skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
 // router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
 
-router.post('/run_algorithm', (req, res) => {
+router.post('/run_algorithm', async (req, res) => {
     const arg = req.body?.param;
     runpy(String(arg));
     res.json({ message: 'Algorithm started with param: ' + arg });

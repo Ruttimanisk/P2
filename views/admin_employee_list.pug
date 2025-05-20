@@ -50,6 +50,7 @@ block content
             thead
                 tr
                     th Name
+                    th Max Hours
                     th Hours
                     th Hourly Rate
                     th Pay This Week
@@ -57,6 +58,7 @@ block content
                 - let hoursThisWeek = individualPay[user] / hourlyRate[user]
                 tr
                     th #{user.fullname}
+                    td #{user.hours_per_week}
                     td #{hoursThisWeek}
                     td #{hourlyRate[user]} DKK/h
                     td #{individualPay[user]} Kroner
