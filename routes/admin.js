@@ -19,8 +19,6 @@ router.post('/run_algorithm', async (req, res) => {
     const arg = req.body?.param;
     runpy(String(arg));
     res.json({ message: 'Algorithm started with param: ' + arg });
-    await new Promise(r => setTimeout(r, 1000));
-    location.reload()
 });
 
 // burde måske gøre det her i controller
