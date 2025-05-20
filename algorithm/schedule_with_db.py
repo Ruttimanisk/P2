@@ -108,12 +108,12 @@ for absence in absences_db:
     user_id = absence.get("user")
     start = absence.get("leave_start")
     end = absence.get("leave_end")
-    if end is None:
-        indefinite_leave[user_id] = start
-    else:
-        for i in range((end.weekday() - start.weekday())):
-            day = day_names[start.weekday() + i]
-            days_off[user_id].append(day)
+    if start and not:
+        end = next_week_start_date - timedelta(days=1)
+
+    for i in range((end.weekday() - start.weekday())):
+        day = day_names[start.weekday() + i]
+        days_off[user_id].append(day)
 
 # kunne lægge de faste shifts i db, men ikke super vigtigt lige nu
 all_shifts = []
