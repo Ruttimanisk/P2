@@ -53,7 +53,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
     const resourceData = userIds.map(id => {
         const user = users.find(u => u._id.toString() === id.toString());
-        const userShifts = shifts.filter(s => s.employee_id === id.toString());
+        const userShifts = shifts.filter(s => s.employee_id?.toString() === id.toString());
 
         let hoursTotal = 0;
         let hoursTwoWeeks = 0;
