@@ -108,9 +108,10 @@ for absence in absences_db:
     user_id = absence.get("user")
     start = absence.get("leave_start")
     end = absence.get("leave_end")
-    if start and not:
+    if start and not end:
         end = next_week_start_date - timedelta(days=1)
 
+    if start and end:
     for i in range((end.weekday() - start.weekday())):
         day = day_names[start.weekday() + i]
         days_off[user_id].append(day)
