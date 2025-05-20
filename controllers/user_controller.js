@@ -403,7 +403,6 @@ exports.admin_employee_list = asyncHandler(async (req, res) => {
         users: users,
         totalPay: totalPay,
         hourlyRate: hourlyRate,
-        maximumHours: maximumHours,
         individualPay: individualPay,
     });
 });
