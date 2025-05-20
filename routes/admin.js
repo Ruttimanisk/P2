@@ -25,6 +25,9 @@ router.post('/run_algorithm', async (req, res) => {
 router.get('/calendar', requireAuth, async (req, res) => {
     const db = mongoose.connection;
     const shifts = await db.collection('shifts').find().toArray();
+    console.log("📄 Eksempel på shift:");
+    console.log(shifts[0]);
+    console.log("➡️ employee_id type:", typeof shifts[0]?.employee_id);
 
     const employeeIds = [...new Set(shifts.map(shift => shift.employee_id?.toString()))];
     const userObjectIds = employeeIds.map(id => new mongoose.Types.ObjectId(id));
@@ -88,9 +91,6 @@ router.get('/calendar', requireAuth, async (req, res) => {
         };
     });
 
-    console.log("📄 Eksempel på shift:");
-    console.log(shifts[0]);
-    console.log("➡️ employee_id type:", typeof shifts[0]?.employee_id);
 
     console.log("Events:", events);
     console.log("Resources:", resources);
