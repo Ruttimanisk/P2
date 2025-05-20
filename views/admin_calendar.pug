@@ -1,117 +1,99 @@
-extends layout_admin
+script.
+    const events = !{JSON.stringify(events)};
+    const resources = !{JSON.stringify(resources)};
+    console.log("💬 Events:", events);
+    console.log("📋 Resources:", resources);
 
-block content
-    h1 Calendar
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+            initialView: 'resourceTimelineWeek',
+            firstDay: 1,
+            nowIndicator: false,
+            now: new Date(),
+            contentHeight: 'auto',
+            slotDuration: {days: 1},
+            slotLabelFormat: [{weekday: 'short', day: 'numeric', month: 'short'}],
+            slotMinTime: "00:00:00",
+            slotMaxTime: "24:00:00",
+            allDaySlot: false,
+            displayEventTime: false,
+            editable: true,
+            selectable: true,
+            selectMirror: true,
+            eventDurationEditable: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'resourceTimelineWeek,dayGridMonth'
+            },
+            resourceAreaHeaderContent: 'Medarbejdere',
+            resourceAreaColumns: [
+                {field: 'title', headerContent: 'Navn'},
+                {field: 'currentHours', headerContent: 'Timer (2 uger)'},
+                {field: 'saldoTwoWeeks', headerContent: 'Saldo (2 uger)'},
+                {field: 'saldoTotal', headerContent: 'Saldo i alt'}
+            ],
+            resources: resources,
+            events: events,
 
-    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css")
-    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.css")
+            eventDrop: function (info) {
+                console.log('Vagt flyttet:', info.event);
+                saveEventChange(info.event);
+            },
+            eventResize: function (info) {
+                console.log('Vagt ændret varighed:', info.event);
+                saveEventChange(info.event);
+            },
+            dateClick: function (info) {
+                console.log('Klikket på tom plads:', info);
+                createNewEvent(info);
+            }
+        });
+        calendar.render();
 
-    style.
-        .fc-day-today {
-            background-color: #f5f5f5;
-        }
-
-        .fc-resourceTimelineWeek .fc-day-today .fc-col-header-cell-cushion {
-            font-weight: bold;
-            color: #333;
-        }
-
-
-    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js")
-    script(src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.3/main.min.js")
-
-    div#calendar(style="max-width: 1200px; margin: 40px auto;")
-
-    script.
-        const events = !{JSON.stringify(events)};
-        const resources = !{JSON.stringify(resources)};
-        console.log("💬 Events:", events);
-        console.log("📋 Resources:", resources);
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-                initialView: 'resourceTimelineWeek',
-                firstDay: 1,
-                nowIndicator: false,
-                now: new Date(),
-                contentHeight: 'auto',
-                slotDuration: { days: 1 },
-                slotLabelFormat: [{ weekday: 'short', day: 'numeric', month: 'short' }],
-                slotMinTime: "00:00:00",
-                slotMaxTime: "24:00:00",
-                allDaySlot: false,
-                displayEventTime: false,
-                editable: true,
-                selectable: true,
-                selectMirror: true,
-                eventDurationEditable: true,
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'resourceTimelineWeek,dayGridMonth'
+        function saveEventChange(event) {
+            fetch('/admin/update_shift', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                resourceAreaHeaderContent: 'Employees',
-                resources: resources,
-                events: events,
-
-                eventDrop: function(info) {
-                    console.log('Vagt flyttet:', info.event);
-                    saveEventChange(info.event);
-                },
-                eventResize: function(info) {
-                    console.log('Vagt ændret varighed:', info.event);
-                    saveEventChange(info.event);
-                },
-                dateClick: function(info) {
-                    console.log('Klikket på tom plads:', info);
-                    createNewEvent(info);
+                body: JSON.stringify({
+                    id: event.id,
+                    start: event.start.toISOString(),
+                    end: event.end.toISOString(),
+                    resourceId: event.getResources()[0].id,
+                    title: event.title
+                })
+            }).then(response => {
+                if (!response.ok) {
+                    alert('Something went wrong!');
                 }
             });
-            calendar.render();
+        }
 
-            function saveEventChange(event) {
-                fetch('/admin/update_shift', {
+        function createNewEvent(info) {
+            const title = prompt('Insert title for new shift:');
+            if (title) {
+                fetch('/admin/create_shift', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        id: event.id,
-                        start: event.start.toISOString(),
-                        end: event.end.toISOString(),
-                        resourceId: event.getResources()[0].id,
-                        title: event.title
+                        start: info.dateStr,
+                        end: info.dateStr,
+                        resourceId: info.resource.id,
+                        title: title
                     })
                 }).then(response => {
-                    if (!response.ok) {
-                        alert('Something went wrong!');
+                    if (response.ok) {
+                        calendar.refetchEvents();
+                    } else {
+                        alert('Error trying to create new shift');
                     }
                 });
             }
-
-            function createNewEvent(info) {
-                const title = prompt('Insert title for new shift:');
-                if (title) {
-                    fetch('/admin/create_shift', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            start: info.dateStr,
-                            end: info.dateStr,
-                            resourceId: info.resource.id,
-                            title: title
-                        })
-                    }).then(response => {
-                        if (response.ok) {
-                            calendar.refetchEvents();
-                        } else {
-                            alert('Error trying to create new shift');
-                        }
-                    });
-                }
-            }
-        });
+        }
+    });
