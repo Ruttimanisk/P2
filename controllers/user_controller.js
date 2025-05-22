@@ -20,7 +20,7 @@ function timeToMinutes(timeStr) {
         return hour * 60 + min;
 }
 
-function payThisWeekCalculation(schedules, hourly_rate) {
+function payThisWeekCalculation(schedule, hourly_rate) {
     let minutesWorked = 0;
 
     for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
