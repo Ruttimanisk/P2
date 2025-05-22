@@ -243,7 +243,7 @@ exports.profile = asyncHandler(async (req, res) => {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
 
-        const schedules = await mongoose.connection.collection('schedules').find(
+        const schedule = await mongoose.connection.collection('schedules').findOne(
             {
                 employee: user._id,
                 week_start_date: format(currentWeekStart, 'yyyy-MM-dd')
@@ -251,7 +251,7 @@ exports.profile = asyncHandler(async (req, res) => {
             .sort({ week_start_day: 1 })
             .toArray();
 
-        payThisWeek = payThisWeekCalculation(schedules, user.hourly_rate)
+        payThisWeek = payThisWeekCalculation(schedule, user.hourly_rate)
 
         if (!user) {
             return res.status(404).send('User not found');
