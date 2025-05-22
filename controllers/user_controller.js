@@ -95,11 +95,19 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const scheduleMap = new Map();
     schedules.forEach(schedule => scheduleMap.set(schedule.employee.toString(), schedule));
 
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    const datesForWeek = {}
+    for(let i = 0; i < 7; i++) {
+        let today = addDays(currentWeekStart, i)
+        datesForWeek[days[i]] = format(today, 'MMMM d')
+    }
+
     res.render("admin_edit_schedule", {
         users: users,
         weekIndex: weekIndex,
         weekNumber: weekNumber,
         scheduleMap: scheduleMap,
+        datesForWeek: datesForWeek,
     });
 });
 
