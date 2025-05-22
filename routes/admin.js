@@ -59,7 +59,6 @@ router.post('/update_shift', async (req, res) => {
     const schedulePath = path.join(__dirname, '../schedules.json');
     const schedules = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
 
-    // Find og opdatér eksisterende vagt
     for (const [user, shifts] of Object.entries(schedules)) {
         for (const day in shifts) {
             if (shifts[day].id === id) {
