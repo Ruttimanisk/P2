@@ -28,8 +28,6 @@ const User = require('../models/user');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 
-console.log("🚨 KALENDERROUTE FRA admin.js ER I BRUG");
-
 router.get('/calendar', requireAuth, async (req, res) => {
     const db = mongoose.connection;
     const shifts = await db.collection('shifts').find().toArray();
@@ -52,12 +50,11 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
     const resources = employeeIds.map(id => ({
         id: id.toString(),
-        title: userMap[id.toString()] || 'this is from admin.js'
+        title: userMap[id.toString()] || 'Unknown user'
     }));
 
     console.log("Events:", events);
     console.log("Resources:", resources);
-    console.log("Final resources:", resources);
 
 
     res.render('admin_calendar', {
