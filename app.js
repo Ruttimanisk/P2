@@ -41,6 +41,7 @@ app.use('/employee', employeeRouter);
 
 const { ObjectId } = require('mongodb');
 
+/*
 app.get('/calendar', async (req, res) => {
   const shifts = await db.collection('shifts').find().toArray();
 
@@ -51,7 +52,7 @@ app.get('/calendar', async (req, res) => {
   }));
 
   res.render('calendar', { events: JSON.stringify(events) });
-});
+}); */
 
 
 
