@@ -133,13 +133,13 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
         let dayCounter = 0;
 
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-            const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || '';
-            const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || '';
+            const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || "";
+            const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || "";
 
             const validTimeStart = /^([01]\d|2[0-3]):([0-5]\d)$/.test(startInput);
             const validTimeEnd = /^([01]\d|2[0-3]):([0-5]\d)$/.test(endInput);
 
-            if (!validTimeStart || !validTimeEnd) {
+            if ((startInput !== "" && !validTimeStart) || (endInput !== "" && !validTimeEnd)) {
                 continue
             }
 
