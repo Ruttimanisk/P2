@@ -38,7 +38,8 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
     const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))];
 
-    const users = await User.find({ _id: { $in: employeeIds } }).lean();
+    const users = await User.find({ _id: { $in: employeeIds } })
+        .lean({ virtuals: true });
 
     const resources = users.map(user => ({
         id: user._id.toString(),
