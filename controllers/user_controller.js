@@ -20,18 +20,30 @@ function timeToMinutes(timeStr) {
         return hour * 60 + min;
 }
 
-function payThisWeekCalculation(schedule, hourly_rate) {
+function payThisWeekCalculation(schedules, hourly_rate) {
     let minutesWorked = 0;
+    if (Array.isArray(schedules)) {
+        for (const schedule of schedules) {
+            for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
+                let start = schedule[`${day}_start`]
+                let end = schedule[`${day}_end`]
 
-    for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-        let start = schedule[`${day}_start`]
-        let end = schedule[`${day}_end`]
-
-        if (start !== "" && end !== "") {
-            minutesWorked += timeToMinutes(end) - timeToMinutes(start)
+                if (start !== "" && end !== "") {
+                    minutesWorked += timeToMinutes(end) - timeToMinutes(start)
+                }
+            }
         }
-    }
+    } else {
+        let schedule = schedules
+        for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
+                let start = schedule[`${day}_start`]
+                let end = schedule[`${day}_end`]
 
+                if (start !== "" && end !== "") {
+                    minutesWorked += timeToMinutes(end) - timeToMinutes(start)
+                }
+            }
+    }
     return (minutesWorked / 60) * hourly_rate
 }
 
