@@ -98,7 +98,7 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     const datesForWeek = {}
     for(let i = 0; i < 7; i++) {
-        let today = addDays(currentWeekStart, i)
+        let today = addDays(displayedWeekStart, i)
         datesForWeek[days[i]] = format(today, 'MMMM d')
     }
 
