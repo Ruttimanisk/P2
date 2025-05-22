@@ -53,6 +53,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
         title: userMap[id.toString()] || 'Unknown user'
     }));
 
+    console.log(resources.title)
     console.log("Events:", events);
     console.log("Resources:", resources);
 
