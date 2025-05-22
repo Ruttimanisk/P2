@@ -12,14 +12,11 @@ const { requireAuth } = require("../middleware/auth");
 
 router.get('/home', requireAuth, user_controller.employee_home);
 
-// Kalender med FullCalendar visning
 router.get('/calendar', requireAuth, async (req, res) => {
     try {
         const db = mongoose.connection;
         const collection = db.collection('shifts');
         const shifts = await collection.find().toArray();
-
-        console.log("📋 RAW SHIFTS:", shifts); // <--- HER logger vi hele shifts fra databasen
 
         const events = shifts
             .filter(shift => shift.date && shift.start && shift.end && shift.employee)
@@ -36,8 +33,8 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
         res.render('employee_calendar', { events, resources });
     } catch (err) {
-        console.error('Fejl i /employee/calendar:', err);
-        res.status(500).send('Server fejl');
+        console.error('error in /employee/calendar:', err);
+        res.status(500).send('Server error');
     }
 });
 
