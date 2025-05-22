@@ -55,6 +55,8 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
     console.log("Events:", events);
     console.log("Resources:", resources);
+    console.log("Final resources:", resources);
+
 
     res.render('admin_calendar', {
         events,
