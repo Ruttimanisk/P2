@@ -143,38 +143,41 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                 continue
             }
 
+            if (startInput === "" && endInput === "") {
+                await shiftCollection.deleteOne(
+                    {
+                        employee: employeeId,
+                        weekday: day,
+                        date: {
+                            $gte: format(displayedWeekStart, 'yyyy-MM-dd'),
+                            $lt: format(nextWeekStart, 'yyyy-MM-dd')
+                        }
+                    }
+                )
+            }
+
+            else if (startInput && endInput) {
+                await shiftCollection.updateOne(
+                    {
+                        employee: employeeId,
+                        weekday: day,
+                        date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
+                    },
+                    {
+                        $set: {
+                            start: startInput,
+                            end: endInput,
+                            employee: employeeId,
+                            date: format(addDays(displayedWeekStart, dayCounter), 'yyyy-MM-dd'),
+                            weekday: day,
+                        }
+                    },
+                    { upsert: true }
+                );
+            }
+
             updatedSchedule[`${day}_start`] = startInput;
             updatedSchedule[`${day}_end`] = endInput;
-
-            if (startInput && endInput) {
-                if (startInput === "" && endInput === "") {
-                    await shiftCollection.deleteOne(
-                        {
-                            employee: employeeId,
-                            weekday: day,
-                            date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
-                        }
-                    )
-                } else {
-                    await shiftCollection.updateOne(
-                        {
-                            employee: employeeId,
-                            weekday: day,
-                            date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
-                        },
-                        {
-                            $set: {
-                                start: startInput,
-                                end: endInput,
-                                employee: employeeId,
-                                date: format(addDays(displayedWeekStart, dayCounter), 'yyyy-MM-dd'),
-                                weekday: day,
-                            }
-                        },
-                        { upsert: true }
-                    );
-                }
-            }
 
             dayCounter++;
         }
