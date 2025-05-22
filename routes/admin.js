@@ -28,6 +28,8 @@ const User = require('../models/user');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 
+console.log("🚨 KALENDERROUTE FRA admin.js ER I BRUG");
+
 router.get('/calendar', requireAuth, async (req, res) => {
     const db = mongoose.connection;
     const shifts = await db.collection('shifts').find().toArray();
