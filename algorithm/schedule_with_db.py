@@ -116,7 +116,8 @@ for absence in absences_db:
         end = next_week_start_date - timedelta(days=1)
 
     if start and end:
-        current = start
+        current = start.date()
+        end = end.date()
         while current <= end:
             day = day_names[current.weekday()]
             if day not in days_off[user_id]:
