@@ -25,6 +25,9 @@ router.post('/run_algorithm', async (req, res) => {
 // burde måske gøre det her i controller
 const User = require('../models/user');
 
+const User = require('../models/user');
+const mongoose = require('mongoose');
+
 router.get('/calendar', requireAuth, async (req, res) => {
     const db = mongoose.connection;
     const shifts = await db.collection('shifts').find().toArray();
@@ -35,19 +38,19 @@ router.get('/calendar', requireAuth, async (req, res) => {
             title: `${shift.start} - ${shift.end}`,
             start: `${shift.date}T${shift.start}`,
             end: `${shift.date}T${shift.end}`,
-            resourceId: shift.employee  // her bruger vi username
+            resourceId: shift.employee.toString()
         }));
 
-    const usernames = [...new Set(shifts.map(shift => shift.employee))];
+    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))]
+        .map(id => new mongoose.Types.ObjectId(id));
 
-    const users = await User.find({ username: { $in: usernames } })
-        .lean({ virtuals: true });
+    const users = await User.find({ _id: { $in: employeeIds } }).lean({ virtuals: true });
 
-    const userMap = Object.fromEntries(users.map(user => [user.username, `${user.first_name} ${user.family_name}`]));
+    const userMap = Object.fromEntries(users.map(user => [user._id.toString(), `${user.first_name} ${user.family_name}`]));
 
-    const resources = usernames.map(username => ({
-        id: username,
-        title: userMap[username] || username  // fallback til username hvis ikke fundet
+    const resources = employeeIds.map(id => ({
+        id: id.toString(),
+        title: userMap[id.toString()] || 'Ukendt'
     }));
 
     console.log("Events:", events);
