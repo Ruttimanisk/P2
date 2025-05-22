@@ -23,6 +23,8 @@ router.post('/run_algorithm', async (req, res) => {
 });
 
 // burde måske gøre det her i controller
+const User = require('../models/user');
+
 router.get('/calendar', requireAuth, async (req, res) => {
     const db = mongoose.connection;
     const shifts = await db.collection('shifts').find().toArray();
@@ -33,17 +35,19 @@ router.get('/calendar', requireAuth, async (req, res) => {
             title: `${shift.start} - ${shift.end}`,
             start: `${shift.date}T${shift.start}`,
             end: `${shift.date}T${shift.end}`,
-            resourceId: shift.employee.toString()
+            resourceId: shift.employee  // her bruger vi username
         }));
 
-    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))];
+    const usernames = [...new Set(shifts.map(shift => shift.employee))];
 
-    const users = await User.find({ _id: { $in: employeeIds } })
+    const users = await User.find({ username: { $in: usernames } })
         .lean({ virtuals: true });
 
-    const resources = users.map(user => ({
-        id: user._id.toString(),
-        title: user.fullname
+    const userMap = Object.fromEntries(users.map(user => [user.username, `${user.first_name} ${user.family_name}`]));
+
+    const resources = usernames.map(username => ({
+        id: username,
+        title: userMap[username] || username  // fallback til username hvis ikke fundet
     }));
 
     console.log("Events:", events);
