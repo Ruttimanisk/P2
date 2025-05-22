@@ -112,10 +112,11 @@ for absence in absences_db:
         end = next_week_start_date - timedelta(days=1)
 
     if start and end:
-        for i in range((end.weekday() - start.weekday())):
-            day = day_names[start.weekday() + i]
+        current = start
+        while current <= end
+            day = day_names[current.weekday()]
             days_off[user_id].append(day)
-
+            current += timedelta(days=1)
 # kunne lægge de faste shifts i db, men ikke super vigtigt lige nu
 all_shifts = []
 with open(shifts_file, "r", encoding="utf-8") as file:

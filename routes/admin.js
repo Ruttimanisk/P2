@@ -22,7 +22,7 @@ router.post('/run_algorithm', async (req, res) => {
     res.json({ message: 'Algorithm started with param: ' + arg });
 });
 
-// burde måske gøre det her i controller
+// Mads lav en controller til det her!!
 
 router.get('/calendar', requireAuth, async (req, res) => {
     const db = mongoose.connection;
