@@ -115,7 +115,8 @@ for absence in absences_db:
         current = start
         while current <= end:
             day = day_names[current.weekday()]
-            days_off[user_id].append(day)
+            if day not in days_off[user_id]:
+                days_off[user_id].append(day)
             current += timedelta(days=1)
 # kunne lægge de faste shifts i db, men ikke super vigtigt lige nu
 all_shifts = []
