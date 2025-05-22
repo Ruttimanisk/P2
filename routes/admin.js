@@ -9,6 +9,7 @@ const mongoose = require('mongoose')
 const { runpy } = require('../public/scripts/buttonRunPyAlgorithm.js');
 const fs = require('fs');
 const path = require('path');
+const User = require('../models/user');
 
 // med rotes herfra skal man gå ud fra at de allerede er på /admin/
 // tilføj requireAuth til alle når vi har fået login til at fungere
@@ -23,19 +24,26 @@ router.post('/run_algorithm', async (req, res) => {
 
 // burde måske gøre det her i controller
 router.get('/calendar', requireAuth, async (req, res) => {
-    const shifts = await mongoose.connection.collection('shifts').find().toArray();
+    const db = mongoose.connection;
+    const shifts = await db.collection('shifts').find().toArray();
 
     const events = shifts
         .filter(shift => shift.date && shift.start && shift.end && shift.employee)
         .map(shift => ({
-            title: `${shift.start} - ${shift.end}`, // valgfrit
+            title: `${shift.start} - ${shift.end}`,
             start: `${shift.date}T${shift.start}`,
             end: `${shift.date}T${shift.end}`,
-            resourceId: shift.employee
+            resourceId: shift.employee.toString()
         }));
 
-    const resources = [...new Set(shifts.map(shift => shift.employee))]
-        .map(name => ({ id: name, title: name }));
+    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))];
+
+    const users = await User.find({ _id: { $in: employeeIds } }).lean();
+
+    const resources = users.map(user => ({
+        id: user._id.toString(),
+        title: user.fullname
+    }));
 
     console.log("Events:", events);
     console.log("Resources:", resources);
