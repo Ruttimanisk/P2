@@ -147,23 +147,33 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             updatedSchedule[`${day}_end`] = endInput;
 
             if (startInput && endInput) {
-                await shiftCollection.updateOne(
-                    {
-                        employee: employeeId,
-                        weekday: day,
-                        date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
-                    },
-                    {
-                        $set: {
-                            start: startInput,
-                            end: endInput,
+                if (startInput === "" && endInput === "") {
+                    await shiftCollection.deleteOne(
+                        {
                             employee: employeeId,
-                            date: format(addDays(displayedWeekStart, dayCounter), 'yyyy-MM-dd'),
                             weekday: day,
+                            date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
                         }
-                    },
-                    { upsert: true }
-                );
+                    )
+                } else {
+                    await shiftCollection.updateOne(
+                        {
+                            employee: employeeId,
+                            weekday: day,
+                            date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }
+                        },
+                        {
+                            $set: {
+                                start: startInput,
+                                end: endInput,
+                                employee: employeeId,
+                                date: format(addDays(displayedWeekStart, dayCounter), 'yyyy-MM-dd'),
+                                weekday: day,
+                            }
+                        },
+                        { upsert: true }
+                    );
+                }
             }
 
             dayCounter++;
