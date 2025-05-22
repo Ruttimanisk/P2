@@ -23,10 +23,6 @@ router.post('/run_algorithm', async (req, res) => {
 });
 
 // burde måske gøre det her i controller
-const User = require('../models/user');
-
-const User = require('../models/user');
-const mongoose = require('mongoose');
 
 router.get('/calendar', requireAuth, async (req, res) => {
     const db = mongoose.connection;
