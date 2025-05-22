@@ -243,7 +243,13 @@ exports.profile = asyncHandler(async (req, res) => {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
 
-        const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        const schedules = await mongoose.connection.collection('schedules').find(
+            {
+                employee: user._id,
+                week_start_date: format(currentWeekStart, 'yyyy-MM-dd')
+            })
+            .sort({ week_start_day: 1 })
+            .toArray();
 
         payThisWeek = payThisWeekCalculation(schedules, user.hourly_rate)
 
@@ -282,7 +288,13 @@ exports.view_profile = asyncHandler(async (req, res) => {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
 
-        const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        const schedules = await mongoose.connection.collection('schedules').find(
+            {
+                employee: user._id,
+                week_start_date: format(currentWeekStart, 'yyyy-MM-dd')
+            })
+            .sort({ week_start_day: 1 })
+            .toArray();
 
         payThisWeek = payThisWeekCalculation(schedules, user.hourly_rate)
 
@@ -409,7 +421,14 @@ exports.admin_employee_list = asyncHandler(async (req, res) => {
     let hourlyRate = {}
 
     for (const user of users) {
-        let schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        let schedules = await mongoose.connection.collection('schedules').find(
+            {
+                employee: user._id,
+                week_start_date: format(currentWeekStart, 'yyyy-MM-dd')
+            })
+            .sort({ week_start_day: 1 })
+            .toArray();
+
         let payThisWeek = payThisWeekCalculation(schedules, user.hourly_rate)
         totalPay += payThisWeek
         hourlyRate[user] = user.hourly_rate
