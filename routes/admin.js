@@ -50,7 +50,7 @@ router.get('/calendar', requireAuth, async (req, res) => {
 
     const resources = employeeIds.map(id => ({
         id: id.toString(),
-        title: userMap[id.toString()] || 'Unknown'
+        title: userMap[id.toString()] || 'this is from admin.js'
     }));
 
     console.log("Events:", events);
