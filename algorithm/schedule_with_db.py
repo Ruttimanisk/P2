@@ -113,7 +113,7 @@ for absence in absences_db:
 
     if start and end:
         current = start
-        while current <= end
+        while current <= end:
             day = day_names[current.weekday()]
             days_off[user_id].append(day)
             current += timedelta(days=1)
