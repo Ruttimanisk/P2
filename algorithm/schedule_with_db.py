@@ -82,14 +82,18 @@ client = MongoClient("mongodb+srv://prasm24:p2gruppe7@wfm-test.nvx2k.mongodb.net
 db = client["WFM-Database"]
 
 users_db = db["users"].find().sort("first_name", 1)
-absences_db = (db["absences"]
-                .find( { "archived": { "$ne": True },
-                         "$or": [
-                             { "leave_start": { "$gte": week_start_datetime, "$lt": next_week_start_datetime}},
-                             { "leave_end": { "$gte": week_start_datetime, "$lt": next_week_start_datetime}}
-                            ] } )
-                .sort("leave_start", 1)
-                )
+absences_db = db["absences"].find({
+    "archived": {"$ne": True},
+    "$and": [
+        { "leave_start": { "$lte": next_week_start_datetime } },
+        {
+            "$or": [
+                { "leave_end": None },
+                { "leave_end": { "$gte": week_start_datetime } }
+            ]
+        }
+    ]
+}).sort("leave_start", 1)
 shifts_file = os.path.join(base_dir, "Shifts.csv")
 
 max_hours = {}
