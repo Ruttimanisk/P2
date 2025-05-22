@@ -248,8 +248,6 @@ exports.profile = asyncHandler(async (req, res) => {
                 employee: user._id,
                 week_start_date: format(currentWeekStart, 'yyyy-MM-dd')
             })
-            .sort({ week_start_day: 1 })
-            .toArray();
 
         payThisWeek = payThisWeekCalculation(schedule, user.hourly_rate)
 
