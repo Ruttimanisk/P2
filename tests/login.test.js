@@ -144,14 +144,14 @@ describe('logout', () => {
     test('logout to login page and clear cookie', async () => {
         let req = { cookies: {} }
         let res = { status: jest.fn(() => res),
-                         render: jest.fn(),
+                         redirect: jest.fn(),
                          cookies: jest.fn(),
                          clearCookie: jest.fn()};
 
         await logout(req, res);
 
         expect(res.clearCookie).toHaveBeenCalledWith('userId');
-        expect(res.render).toHaveBeenCalledWith('login');
+        expect(res.redirect).toHaveBeenCalledWith('/');
     });
 });
 
