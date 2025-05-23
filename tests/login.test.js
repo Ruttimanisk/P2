@@ -193,6 +193,7 @@ describe('login controller', () => {
 
     test('updates shifts and schedule from posted data', async () => {
         const mockSchedules = [{ _id: 1, employee: 'Steve', week_start_date: '2025-05-12'}];
+
         // mock the find().sort().toArray() method chain
         const mockToArray = jest.fn().mockResolvedValue(mockSchedules);
         const mockSort = jest.fn().mockReturnValue({ toArray: mockToArray })
