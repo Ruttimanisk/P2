@@ -1,11 +1,14 @@
+// doctype html means we are using html5, which is needed for morden html features
 doctype html
 html
+    // head contins all the meta content, like links to stylesheets, scripts ect.
     head
         meta(charset='UTF-8')
         title LOGIN
         meta(name='viewport' content='width=device-width, initial-scale=1')
         link(rel='stylesheet' type='text/css' href='/stylesheets/login.css')
         link(rel='stylesheet' href='/stylesheets/Schedule.css')
+    // body displays all the visible content of the website (also what there is to interact with)
     body
         //
             img(src='/images/WFM.webp' alt='WFM logo')
@@ -16,7 +19,10 @@ html
                 each err in errors
                     li.error-item= typeof err === 'object' && err.msg ? err.msg : err
         div.box
-            form(action="/login" method="POST")
+
+            // form can be thougth of like abox, where a person can type inside
+
+            form(action="/login"    method="POST")
                 .login
                     label.form-label(for="username") Username:&nbsp;
                     input#username.form-control(type="text" name="username" required)
