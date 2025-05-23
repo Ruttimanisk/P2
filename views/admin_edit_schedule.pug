@@ -48,7 +48,7 @@ block content
                 tr
                     th Username
                     each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                        th= day
+                        th= day.slice(0, 3) + ", " + datesForWeek[day]
             tbody
                 each user in users
                     - var schedule = scheduleMap.get(user._id.toString()) || {}

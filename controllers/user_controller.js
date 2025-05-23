@@ -22,18 +22,28 @@ function timeToMinutes(timeStr) {
 
 function payThisWeekCalculation(schedules, hourly_rate) {
     let minutesWorked = 0;
+    if (Array.isArray(schedules)) {
+        for (const schedule of schedules) {
+            for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
+                let start = schedule[`${day}_start`]
+                let end = schedule[`${day}_end`]
 
-    for (const schedule of schedules) {
-        for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-            let start = schedule[`${day}_start`]
-            let end = schedule[`${day}_end`]
-
-            if (start !== "" && end !== "") {
-                minutesWorked += timeToMinutes(end) - timeToMinutes(start)
+                if (start !== "" && end !== "") {
+                    minutesWorked += timeToMinutes(end) - timeToMinutes(start)
+                }
             }
         }
-    }
+    } else {
+        let schedule = schedules
+        for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
+                let start = schedule[`${day}_start`]
+                let end = schedule[`${day}_end`]
 
+                if (start !== "" && end !== "") {
+                    minutesWorked += timeToMinutes(end) - timeToMinutes(start)
+                }
+            }
+    }
     return (minutesWorked / 60) * hourly_rate
 }
 
@@ -95,11 +105,19 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const scheduleMap = new Map();
     schedules.forEach(schedule => scheduleMap.set(schedule.employee.toString(), schedule));
 
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    const datesForWeek = {}
+    for(let i = 0; i < 7; i++) {
+        let today = addDays(displayedWeekStart, i)
+        datesForWeek[days[i]] = format(today, 'MMMM d')
+    }
+
     res.render("admin_edit_schedule", {
         users: users,
         weekIndex: weekIndex,
         weekNumber: weekNumber,
         scheduleMap: scheduleMap,
+        datesForWeek: datesForWeek,
     });
 });
 
@@ -133,20 +151,30 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
         let dayCounter = 0;
 
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-            const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || '';
-            const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || '';
+            const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || "";
+            const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || "";
 
             const validTimeStart = /^([01]\d|2[0-3]):([0-5]\d)$/.test(startInput);
             const validTimeEnd = /^([01]\d|2[0-3]):([0-5]\d)$/.test(endInput);
 
-            if (!validTimeStart || !validTimeEnd) {
+            if ((startInput !== "" && !validTimeStart) || (endInput !== "" && !validTimeEnd)) {
                 continue
             }
 
-            updatedSchedule[`${day}_start`] = startInput;
-            updatedSchedule[`${day}_end`] = endInput;
+            if (startInput === "" && endInput === "") {
+                await shiftCollection.deleteOne(
+                    {
+                        employee: employeeId,
+                        weekday: day,
+                        date: {
+                            $gte: format(displayedWeekStart, 'yyyy-MM-dd'),
+                            $lt: format(nextWeekStart, 'yyyy-MM-dd')
+                        }
+                    }
+                )
+            }
 
-            if (startInput && endInput) {
+            else if (startInput && endInput) {
                 await shiftCollection.updateOne(
                     {
                         employee: employeeId,
@@ -165,6 +193,9 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                     { upsert: true }
                 );
             }
+
+            updatedSchedule[`${day}_start`] = startInput;
+            updatedSchedule[`${day}_end`] = endInput;
 
             dayCounter++;
         }
@@ -222,9 +253,13 @@ exports.profile = asyncHandler(async (req, res) => {
         const userId = req.cookies.userId;
         const user = await User.findOne({ _id: userId });
 
-        const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        const schedule = await mongoose.connection.collection('schedules').findOne(
+            {
+                employee: user._id,
+                week_start_date: format(currentWeekStart, 'yyyy-MM-dd')
+            })
 
-        payThisWeek = payThisWeekCalculation(schedules, user.hourly_rate)
+        payThisWeek = payThisWeekCalculation(schedule, user.hourly_rate)
 
         if (!user) {
             return res.status(404).send('User not found');
@@ -261,7 +296,13 @@ exports.view_profile = asyncHandler(async (req, res) => {
         const userId = req.params.userId;
         const user = await User.findOne({_id: userId});
 
-        const schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        const schedules = await mongoose.connection.collection('schedules').find(
+            {
+                employee: user._id,
+                week_start_date: format(currentWeekStart, 'yyyy-MM-dd')
+            })
+            .sort({ week_start_day: 1 })
+            .toArray();
 
         payThisWeek = payThisWeekCalculation(schedules, user.hourly_rate)
 
@@ -388,7 +429,14 @@ exports.admin_employee_list = asyncHandler(async (req, res) => {
     let hourlyRate = {}
 
     for (const user of users) {
-        let schedules = await mongoose.connection.collection('schedules').find( { employee: user._id, week_start_date: format(currentWeekStart, 'yyyy-MM-dd') } ).sort({ week_start_day: 1 }).toArray();
+        let schedules = await mongoose.connection.collection('schedules').find(
+            {
+                employee: user._id,
+                week_start_date: format(currentWeekStart, 'yyyy-MM-dd')
+            })
+            .sort({ week_start_day: 1 })
+            .toArray();
+
         let payThisWeek = payThisWeekCalculation(schedules, user.hourly_rate)
         totalPay += payThisWeek
         hourlyRate[user] = user.hourly_rate
