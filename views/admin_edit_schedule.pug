@@ -18,19 +18,17 @@ block content
         }
 
         function runAlgorithmWithParam(param) {
-            fetch('/admin/run_algorithm', {
+            fetch('/run_algorithm', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({param: param})
+                body: JSON.stringify({param: param}),
             })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Algorithm started with param: ' + param);
-                    } else {
-                        alert('Failed to start algorithm');
+                .then(res => res.json())
+                .then(data => {
+                    if (data.redirect === 'back') {
+                        window.history.back();
                     }
-                })
-                .catch(() => alert('Error starting algorithm'));
+                });
         }
 
     if weekIndex === weekNumber
