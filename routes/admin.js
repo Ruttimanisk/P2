@@ -18,7 +18,7 @@ const User = require('../models/user');
 
 router.post('/run_algorithm', async (req, res) => {
     const arg = req.body?.param;
-    runpy(String(arg));
+    await runpy(String(arg));
     res.redirect('back');
 });
 
