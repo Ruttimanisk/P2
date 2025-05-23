@@ -77,7 +77,7 @@ exports.login = asyncHandler(async (req, res) => {
 
 exports.logout = asyncHandler(async (req, res) => {
     res.clearCookie('userId');
-    res.render('login')
+    res.redirect('/')
 });
 
 exports.employee_home = asyncHandler( async(req, res) => {
