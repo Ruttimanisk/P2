@@ -19,7 +19,7 @@ const User = require('../models/user');
 router.post('/run_algorithm', async (req, res) => {
     const arg = req.body?.param;
     runpy(String(arg));
-    res.json({ redirect: 'back' });
+    res.json({ message: 'Algorithm started, reload the page.' });
 });
 
 // Mads lav en controller til det her!!
