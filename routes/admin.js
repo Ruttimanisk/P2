@@ -18,7 +18,8 @@ const User = require('../models/user');
 
 router.post('/run_algorithm', async (req, res) => {
     const arg = req.body?.param;
-    await runpy(String(arg));
+    runpy(String(arg));
+    res.json({ message: 'Algorithm started with param: ' + arg });
     res.redirect('back');
 });
 
