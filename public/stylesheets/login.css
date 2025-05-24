@@ -10,8 +10,10 @@ h1 {
     text-align: center;
     margin-bottom: 20px;
     /*transform: translateY(-80px);*/
+    position: absolute;
 }
 .box {
+    position: absolute;
     width: 300px;
     height: 200px;
     background-color: lightblue;
