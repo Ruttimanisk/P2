@@ -8,7 +8,7 @@ body {
 }
 h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 200px;
     /*transform: translateY(-80px);*/
     position: absolute;
 }
@@ -55,7 +55,9 @@ img {
     left: 17px;
 }
 .error-list {
-    transform: translate(-15px, -4px);
+    /*transform: translate(-15px, -4px);*/
+    position: absolute;
+    margin-bottom: 100px;
     z-index: 1;
     color: red;
 }
