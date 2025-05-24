@@ -57,7 +57,7 @@ img {
 .error-list {
     /*transform: translate(-15px, -4px);*/
     position: absolute;
-    margin-bottom: 210px;
+    margin-bottom: 180px;
     z-index: 1;
     color: red;
 }
