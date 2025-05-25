@@ -7,35 +7,46 @@ const fs = require("fs");
 const user_controller = require("../controllers/user_controller");
 const userschedule_controller = require("../controllers/userschedule_controller");
 const { requireAuth } = require("../middleware/auth");
+const User = require("../models/user");
 
 
 
 router.get('/home', requireAuth, user_controller.employee_home);
 
 router.get('/calendar', requireAuth, async (req, res) => {
-    try {
-        const db = mongoose.connection;
-        const collection = db.collection('shifts');
-        const shifts = await collection.find().toArray();
+    const db = mongoose.connection;
+    const shifts = await db.collection('shifts').find().toArray();
 
-        const events = shifts
-            .filter(shift => shift.date && shift.start && shift.end && shift.employee)
-            .map(shift => ({
-                title: `${shift.start} - ${shift.end}`,
-                start: `${shift.date}T${shift.start}`,
-                end: `${shift.date}T${shift.end}`,
-                resourceId: shift.employee
-            }));
+    const events = shifts
+        .filter(shift => shift.date && shift.start && shift.end && shift.employee)
+        .map(shift => ({
+            title: `${shift.start} - ${shift.end}`,
+            start: `${shift.date}T${shift.start}`,
+            end: `${shift.date}T${shift.end}`,
+            resourceId: shift.employee.toString()
+        }));
 
-        const resources = [...new Set(shifts.map(shift => shift.employee))]
-            .filter(name => name)
-            .map(name => ({ id: name, title: name }));
+    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))]
+        .map(id => new mongoose.Types.ObjectId(id));
 
-        res.render('employee_calendar', { events, resources });
-    } catch (err) {
-        console.error('error in /employee/calendar:', err);
-        res.status(500).send('Server error');
-    }
+    const users = await User.find({ _id: { $in: employeeIds } }).lean({ virtuals: true }).sort({ first_name: 1 });
+
+    const userMap = Object.fromEntries(users.map(user => [user._id.toString(), `${user.first_name} ${user.family_name}`]));
+
+    const resources = employeeIds.map(id => ({
+        id: id.toString(),
+        title: userMap[id.toString()] || 'Unknown user'
+    }));
+
+    console.log(resources.title)
+    console.log("Events:", events);
+    console.log("Resources:", resources);
+
+
+    res.render('employee_calendar', {
+        events,
+        resources
+    });
 });
 
 router.get('/prof_old', requireAuth, (req, res) => {
