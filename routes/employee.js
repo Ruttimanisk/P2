@@ -26,10 +26,9 @@ router.get('/calendar', requireAuth, async (req, res) => {
             resourceId: shift.employee.toString()
         }));
 
-    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))]
-        .map(id => new mongoose.Types.ObjectId(id));
+    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))];
 
-    const users = await User.find({ _id: { $in: employeeIds } }).lean({ virtuals: true }).sort({ first_name: 1 });
+    const users = await User.find({ _id: { $in: employeeIds } }).lean().sort({ first_name: 1 });
 
     const userMap = Object.fromEntries(users.map(user => [user._id.toString(), `${user.first_name} ${user.family_name}`]));
 
