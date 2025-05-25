@@ -1,9 +1,14 @@
 import unittest
+import sys
+
+sys.argv = ["test_runner", "1"]
+
 from algorithm.schedule_with_db import (time_to_minutes,
                                 shift_hours,
                                 shifts_overlap,
                                 Shift,
                                 generate_weekday_date_mapping)
+
 
 class TestTimeToMinutes(unittest.TestCase):
 
@@ -128,5 +133,5 @@ class TestGenerateWeekdayDateMapping(unittest.TestCase):
 
 
 
-if __name__ == '_main__':
+if __name__ == '__main__':
     unittest.main()
