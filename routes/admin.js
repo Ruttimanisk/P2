@@ -22,9 +22,9 @@ router.post('/run_algorithm', async (req, res) => {
     res.json({ message: 'Algorithm started, reload the page.' });
 });
 
-// Mads lav en controller til det her!!
-
 router.get('/calendar', requireAuth, user_controller.calendar);
+
+// kan de to funktioner nedenunder bare fjernes?
 
 router.post('/update_shift', async (req, res) => {
     const { id, start, end, resourceId, title } = req.body;
