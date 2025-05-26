@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 
 const user_controller = require("../controllers/user_controller");
-const userschedule_controller = require("../controllers/userschedule_controller");
+// const userschedule_controller = require("../controllers/userschedule_controller");
 const { requireAuth } = require("../middleware/auth");
 const User = require("../models/user");
 
@@ -26,7 +26,8 @@ router.get('/calendar', requireAuth, async (req, res) => {
             resourceId: shift.employee.toString()
         }));
 
-    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))];
+    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))]
+        .map(id => new mongoose.Types.ObjectId(id));
 
     const users = await User.find({ _id: { $in: employeeIds } }).lean().sort({ first_name: 1 });
 
