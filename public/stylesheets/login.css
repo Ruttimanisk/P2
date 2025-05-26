@@ -8,10 +8,12 @@ body {
 }
 h1 {
     text-align: center;
-    margin-bottom: 20px;
-    transform: translateY(-80px);
+    margin-bottom: 350px;
+    /*transform: translateY(-80px);*/
+    position: absolute;
 }
 .box {
+    position: absolute;
     width: 300px;
     height: 200px;
     background-color: lightblue;
@@ -21,7 +23,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translateY(-100px);
+    /*transform: translateY(-100px);*/
 }
 .login {
     gap: 10px;
@@ -53,7 +55,9 @@ img {
     left: 17px;
 }
 .error-list {
-    transform: translate(-15px, -4px);
+    /*transform: translate(-15px, -4px);*/
+    position: absolute;
+    margin-bottom: 180px;
     z-index: 1;
     color: red;
 }

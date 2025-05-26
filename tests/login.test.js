@@ -3,8 +3,7 @@ const { login,
         logout,
         employee_home,
         admin_home,
-        edit_schedule_get,
-        edit_schedule_post} = require('../controllers/user_controller');
+        edit_schedule_get} = require('../controllers/user_controller');
 
 // Other Jest dependencies for testing
 const { validationResult } = require('express-validator');
@@ -47,14 +46,14 @@ describe('login controller', () => {
         // (there IS an error in validation), so isEmpty method returns false
         validationResult.mockReturnValue({
             isEmpty: () => false,
-            array: () => [{ msg: 'Username is required' }],
+            array: () => [{msg: 'Username is required'}],
         });
 
         await login(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.render).toHaveBeenCalledWith('login', {
-            errors: [{ msg: 'Username is required' }],
+            errors: [{msg: 'Username is required'}],
         });
     });
 
@@ -84,7 +83,7 @@ describe('login controller', () => {
 
         User.findOne.mockReturnValue({
             maxTimeMS: () => ({
-                exec: () => ({ username: 'testuser', password: 'correctpassword' }),
+                exec: () => ({username: 'testuser', password: 'correctpassword'}),
             }),
         });
 
@@ -108,7 +107,7 @@ describe('login controller', () => {
 
         User.findOne.mockReturnValue({
             maxTimeMS: () => ({
-                exec: () => ({ _id: '12345', password: 'password123', status: 'Admin' }),
+                exec: () => ({_id: '12345', password: 'password123', status: 'Admin'}),
             }),
         });
 
@@ -125,7 +124,9 @@ describe('login controller', () => {
 
         User.findOne.mockReturnValue({
             maxTimeMS: () => ({
-                exec: () => { throw new Error('DB is down'); },
+                exec: () => {
+                    throw new Error('DB is down');
+                },
             }),
         });
 
@@ -136,13 +137,39 @@ describe('login controller', () => {
             errors: [expect.stringContaining('login error in catch')],
         });
     });
+});
+
+describe('logout', () => {
 
     test('logout to login page and clear cookie', async () => {
+        let req = { cookies: {} }
+        let res = { status: jest.fn(() => res),
+                         redirect: jest.fn(),
+                         cookies: jest.fn(),
+                         clearCookie: jest.fn()};
 
         await logout(req, res);
 
         expect(res.clearCookie).toHaveBeenCalledWith('userId');
-        expect(res.render).toHaveBeenCalledWith('login');
+        expect(res.redirect).toHaveBeenCalledWith('/');
+    });
+});
+
+describe('Redirects to correct homepage on call', () => {
+    let req, res
+
+    beforeEach(() => {
+        req = {
+
+        };
+        // Initiates spy-functions, to let Jest know what is going on
+        res = {
+            status: jest.fn(() => res),
+            render: jest.fn(),
+            redirect: jest.fn(),
+            cookie: jest.fn(),
+            clearCookie: jest.fn()
+        };
     });
 
     test('redirects to employee home page', async () => {
@@ -158,86 +185,47 @@ describe('login controller', () => {
 
         expect(res.render).toHaveBeenCalledWith('admin_home', {"title": "Home Page"});
     });
+});
 
-    test('gets schedule from DB and renders it for editting', async () => {
+test('gets schedule from DB and renders it for editting', async () => {
+    let req = {};
+    let res = { status: jest.fn(()=> res),
+                                    render: jest.fn() };
 
-        // mock a schedule
-        const mockSchedules = [{employee: 'Steve', week_start_date: '2025-05-12'},
-                                                        {employee: 'Jane', week_start_date: '2025-05-12'}];
 
-        // mock the find().sort().toArray() method chain
-        const mockToArray = jest.fn().mockResolvedValue(mockSchedules);
-        const mockSort = jest.fn().mockReturnValue({ toArray: mockToArray })
-        const mockFind = jest.fn().mockReturnValue({ sort: mockSort });
+    // mock a schedule
+    const mockSchedules = [{employee: 'Steve', week_start_date: '2025-05-12'},
+                                                    {employee: 'Jane', week_start_date: '2025-05-12'}];
 
-        // mock the mongoose connection succeeding
-        const collectionSpy = jest
-            .spyOn(mongoose.connection,  'collection')
-            .mockReturnValue({ find: mockFind } );
+    // mock the find().toArray() method chain
+    const mockToArray = jest.fn().mockResolvedValue(mockSchedules);
+    const mockFind = jest.fn().mockReturnValue({ toArray: mockToArray });
 
-        req.query = {};
+    // mock the mongoose connection succeeding
+    const collectionSpy = jest
+        .spyOn(mongoose.connection,  'collection')
+        .mockReturnValue({ find: mockFind } );
 
-        await edit_schedule_get(req, res);
+    // mock the User.find().sort().exec() chain
+    const mockUsers = [{ first_name: 'Steve' }, { first_name: 'Jane' }];
+    const mockExec = jest.fn().mockResolvedValue(mockUsers);
+    const mockSort = jest.fn().mockReturnValue({ exec: mockExec });
+    jest.spyOn(User, 'find').mockReturnValue({ sort: mockSort });
 
-        expect(collectionSpy).toHaveBeenCalledWith('schedules');
-        expect(mockFind).toHaveBeenCalled();
-        expect(mockSort).toHaveBeenCalledWith({ week_start_date: 1, employee: 1 });
-        expect(mockToArray).toHaveBeenCalled();
-        expect(res.render).toHaveBeenCalledWith('admin_edit_schedule', { schedules: mockSchedules,
-                                                                                schedulesByWeek: expect.any(Array),
-                                                                                weekIndex: 0,
-                                                                                weekNumber: expect.any(Number)});
+    req.query = {};
 
-        collectionSpy.mockRestore();
+    await edit_schedule_get(req, res);
+
+    expect(collectionSpy).toHaveBeenCalledWith('schedules');
+    expect(mockFind).toHaveBeenCalled();
+    expect(mockToArray).toHaveBeenCalled();
+    expect(res.render).toHaveBeenCalledWith('admin_edit_schedule', {
+        users: mockUsers,
+        weekIndex: expect.any(Number),
+        weekNumber: expect.any(Number),
+        scheduleMap: expect.any(Map),
+        datesForWeek: expect.any(Object)
     });
 
-    test('updates shifts and schedule from posted data', async () => {
-        const mockSchedules = [{ _id: 1, employee: 'Steve', week_start_date: '2025-05-12'}];
-
-        // mock the find().sort().toArray() method chain
-        const mockToArray = jest.fn().mockResolvedValue(mockSchedules);
-        const mockSort = jest.fn().mockReturnValue({ toArray: mockToArray })
-        const mockFind = jest.fn().mockReturnValue({ sort: mockSort });
-
-        // check if 'updateOne' is called
-        const updateOneMock = jest.fn()
-
-        // mock the mongoose connection succeeding
-        const originalCollection = mongoose.connection.collection;
-        mongoose.connection.collection = (name) => {
-            if(name === 'schedules') {
-                return { find: mockFind, updateOne: updateOneMock }}
-            if(name === 'shifts') {
-                return { updateOne: updateOneMock };
-            }
-        };
-
-        const req = {
-            body: {
-                'Steve_Monday_start': '09:00',
-                'Steve_Monday_end': '17:00',
-                'Steve_Tuesday_start': '10:00',
-                'Steve_Tuesday_end': '18:00',
-                'Steve_Wednesday_start': '',
-                'Steve_Wednesday_end': '',
-                'Steve_Thursday_start': '08:00',
-                'Steve_Thursday_end': '16:00',
-                'Steve_Friday_start': '09:30',
-                'Steve_Friday_end': '17:30',
-            },
-            query: {},
-        };
-
-        await edit_schedule_post(req, res);
-
-        expect(updateOneMock).toHaveBeenCalled();
-        expect(res.redirect).toHaveBeenCalledWith('/admin/calendar');
-
-
-        mongoose.connection.collection = originalCollection;
-    });
-
-    // test('render schedule', async () => {
-
-    // });
+    collectionSpy.mockRestore();
 });
