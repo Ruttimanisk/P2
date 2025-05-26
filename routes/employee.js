@@ -5,7 +5,6 @@ const path = require("path");
 const fs = require("fs");
 
 const user_controller = require("../controllers/user_controller");
-// const userschedule_controller = require("../controllers/userschedule_controller");
 const { requireAuth } = require("../middleware/auth");
 const User = require("../models/user");
 
@@ -79,8 +78,6 @@ router.get('/prof_old', requireAuth, (req, res) => {
 router.get('/profile', requireAuth, user_controller.profile);
 
 router.get('/logout', user_controller.logout);
-
-// router.get('/schedule', requireAuth, user_controller.show_employee_schedule);
 
 module.exports = router;
 
