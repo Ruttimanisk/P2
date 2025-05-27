@@ -168,6 +168,10 @@ model.solve()
 print("Status:", pulp.LpStatus[model.status])
 print("\nShift Plan:")
 
+if pulp.LpStatus[model.status] != "Optimal":
+    sys.exit(1)
+
+
 schedule_output = []
 shift_output = []
 
