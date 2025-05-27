@@ -169,6 +169,7 @@ print("Status:", pulp.LpStatus[model.status])
 print("\nShift Plan:")
 
 if pulp.LpStatus[model.status] != "Optimal":
+    print("if statement virker")
     sys.exit(1)
 
 
