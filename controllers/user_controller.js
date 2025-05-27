@@ -121,8 +121,6 @@ exports.calendar = asyncHandler(async (req, res) => {
     });
 })
 
-// ---------------------- ADMIN PAGES ---------------------- //
-
 exports.admin_home = asyncHandler(async (req, res) => {
     res.render('admin_home', {title: "Home Page"});
 });
