@@ -20,7 +20,7 @@ function timeToMinutes(timeStr) {
         return hour * 60 + min;
 }
 
-function payThisWeekCalculation(schedules, hourly_rate) {
+function payThisWeekCalculation(schedules, hourly_rate) { // count hours worked this week and multiply it by hourly rate
     let minutesWorked = 0;
     if (Array.isArray(schedules)) {
         for (const schedule of schedules) {
@@ -33,7 +33,7 @@ function payThisWeekCalculation(schedules, hourly_rate) {
                 }
             }
         }
-    } else {
+    } else { // works even if its not an array
         let schedule = schedules
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
                 let start = schedule[`${day}_start`]
@@ -63,6 +63,7 @@ exports.login = asyncHandler(async (req, res) => {
             return res.status(401).render('login', { errors: ['Invalid username or password'] });
         }
 
+        // create cookie for the logged in user
         res.cookie('userId', user._id.toString(), {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
@@ -80,23 +81,60 @@ exports.logout = asyncHandler(async (req, res) => {
     res.redirect('/')
 });
 
-exports.employee_home = asyncHandler( async(req, res) => {
+exports.employee_home = asyncHandler(async (req, res) => {
     res.render('employee_home', {title: "Home Page"});
 });
 
+exports.calendar = asyncHandler(async (req, res) => {
+    const db = mongoose.connection;
+    const shifts = await db.collection('shifts').find().toArray();
+
+    const events = shifts
+        .filter(shift => shift.date && shift.start && shift.end && shift.employee)
+        .map(shift => ({
+            title: `${shift.start} - ${shift.end}`,
+            start: `${shift.date}T${shift.start}`,
+            end: `${shift.date}T${shift.end}`,
+            resourceId: shift.employee.toString()
+        }));
+
+    const employeeIds = [...new Set(shifts.map(shift => shift.employee.toString()))]
+        .map(id => new mongoose.Types.ObjectId(id));
+
+    const users = await User.find({ _id: { $in: employeeIds } }).lean({ virtuals: true }).sort({ first_name: 1 });
+
+    const userMap = Object.fromEntries(users.map(user => [user._id.toString(), `${user.first_name} ${user.family_name}`]));
+
+    const resources = employeeIds.map(id => ({
+        id: id.toString(),
+        title: userMap[id.toString()] || 'Unknown user'
+    }));
+
+    console.log(resources.title)
+    console.log("Events:", events);
+    console.log("Resources:", resources);
+
+
+    res.render('admin_calendar', {
+        events,
+        resources
+    });
+})
+
 // ---------------------- ADMIN PAGES ---------------------- //
 
-exports.admin_home = asyncHandler( async(req, res) => {
+exports.admin_home = asyncHandler(async (req, res) => {
     res.render('admin_home', {title: "Home Page"});
 });
 
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
     const weekNumber = getISOWeek(currentWeekStart);
-    const weekIndex = parseInt(req.query.week) || weekNumber;
+    const weekIndex = parseInt(req.query.week) || weekNumber; // selected week
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
+    // find schedules for the selected week
     const schedules = await mongoose.connection.collection('schedules')
         .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
         .toArray();
@@ -154,6 +192,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || "";
             const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || "";
 
+            // regex for validating timestamp
             const validTimeStart = /^([01]\d|2[0-3]):([0-5]\d)$/.test(startInput);
             const validTimeEnd = /^([01]\d|2[0-3]):([0-5]\d)$/.test(endInput);
 
@@ -199,7 +238,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
 
             dayCounter++;
         }
-
+        // update if schedule exists or create a new document
         if (schedule) {
             await scheduleCollection.updateOne(
                 { _id: schedule._id },
@@ -218,7 +257,7 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
     if (!errors.isEmpty()) {
         return res.status(400).render('admin_user_creation', { errors: errors.array() });
     }
-
+    // check if the user already exists
     const userExists = await User.findOne({ first_name: req.body.first_name, family_name: req.body.family_name })
         .collation({ locale: "en", strength: 2 })
         .exec();
@@ -422,6 +461,7 @@ exports.admin_employee_list = asyncHandler(async (req, res) => {
     ]);
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
 
+    // make one array with both employees and admins
     const users = allEmployees.concat(allAdmins);
 
     let totalPay = 0
@@ -497,146 +537,3 @@ exports.absence_post = asyncHandler(async (req,res) => {
         res.redirect(`/admin/absence`)
     }
 });
-
-/*
-exports.show_admin_schedule = asyncHandler(async (req, res) => {
-    const userId = req.cookies.userId;
-    const scheduleFile = path.join(__dirname, "../schedules.json");
-    let scheduleData = {};
-
-    try {
-        if (fs.existsSync(scheduleFile)) {
-            const fileData = await fs.promises.readFile(scheduleFile, "utf8");
-            scheduleData = JSON.parse(fileData);
-        }
-
-        const schedule = scheduleData[userId] || {
-            Monday: "", Tuesday: "", Wednesday: "", Thursday: "",
-            Friday: "", Saturday: "", Sunday: ""
-        };
-
-        res.render("admin_schedule", {
-            schedule: schedule,
-            userId: userId
-        });
-
-    } catch (err) {
-        console.error("Error loading admin schedule:", err);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-exports.show_employee_schedule = asyncHandler(async (req, res) => {
-    const userId = req.cookies.userId;
-    const filePath = path.join(__dirname, "../user_info.json");
-
-    try {
-        const data = await fs.promises.readFile(filePath, "utf8");
-        const users = JSON.parse(data);
-        const user = users.find(u => u.username === username);
-
-        if (!user) {
-            return res.status(404).send("User not found");
-        }
-
-        res.render("admin_edit_employee_schedule", {
-            title: `Edit Schedule for ${user.first_name} ${user.last_name}`,
-            employee: employee
-        });
-
-    } catch (err) {
-        console.error("Failed to load user:", err);
-        res.status(500).send("Internal Server Error");
-    }
-});
-
-
-exports.save_edited_schedule = (req, res) => {
-    const flatData = req.body;
-    const schedulePath = path.join(__dirname, "../schedules.json");
-
-    const newSchedule = {};
-
-    for (let key in flatData) {
-        // Skip dropdowns – they'll be handled via companion key
-        if (key.endsWith("_preset")) continue;
-
-        const [username, day] = key.split(".");
-        const typedValue = flatData[key];
-        const dropdownValue = flatData[`${username}.${day}_preset`] || "";
-
-        const finalValue = typedValue.trim() || dropdownValue;
-
-        if (!newSchedule[username]) newSchedule[username] = {};
-        newSchedule[username][day] = finalValue;
-    }
-
-    try {
-        fs.writeFileSync(schedulePath, JSON.stringify(newSchedule, null, 2), "utf8");
-        res.redirect("/admin/edit_schedule");
-    } catch (err) {
-        console.error("Error saving schedule:", err);
-        res.status(500).send("Failed to save schedule.");
-    }
-};
-
-// (Additional functions for scheduling can be implemented similarly)
-
-exports.list_employees_for_schedule_edit = async (req, res) => {
-    const filePath = path.join(__dirname, "../user_info.json");
-
-    try {
-        const data = await fs.promises.readFile(filePath, "utf8");
-        const users = JSON.parse(data);
-        const employees = users.filter(u => u.status === "employee");
-
-        res.render("admin_edit_employee_list", {
-            title: "Edit Employee Schedules",
-            employees: employees
-        });
-    } catch (err) {
-        console.error("Error loading users for schedule edit:", err);
-        res.status(500).send("Internal Server Error");
-    }
-};
-
-exports.save_employee_schedule = async (req, res) => {
-    const userId = req.params.id;
-    const newSchedule = req.body.schedule; // expecting schedule to be an object
-    const scheduleFile = path.join(__dirname, "../schedules.json");
-
-    try {
-        let schedule = {};
-        if (fs.existsSync(scheduleFile)) {
-            const data = await fs.promises.readFile(scheduleFile, "utf8");
-            schedule = JSON.parse(data);
-        }
-
-        schedule[userId] = newSchedule;
-
-        await fs.promises.writeFile(scheduleFile, JSON.stringify(schedule, null, 2));
-        res.redirect(`/admin/edit_employee_schedule/${userId}`);
-    } catch (err) {
-        console.error("Error saving schedule:", err);
-        res.status(500).send("Failed to save schedule");
-    }
-};
-
-
-
-
-exports.profile_old = (req, res) => {
-    const username = req.session.username;
-    const users = JSON.parse(fs.readFileSync(path.join(__dirname, '../user_info.json')));
-    const user = users.find(u => u.username === username);
-
-    if (!user) {
-        return res.status(404).send('User not found');
-    }
-
-    res.render('profile', {
-        name: user.first_name,  // Make sure the JSON contains "firstName"
-        status: user.status     // Ensure it's "status", not "role"
-    })
-};
-*/
