@@ -39,7 +39,6 @@ def shifts_overlap(shift_1, shift_2):
     shift_2_start, shift_2_end = time_to_minutes(shift_2.start), time_to_minutes(shift_2.end)
     return shift_1_start < shift_2_end and shift_2_start < shift_1_end
 
-# Funktion til at generere datoer for en uge baseret på en given mandagsdato
 def generate_weekday_date_mapping(start_date_str):
     start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
     return {
@@ -123,7 +122,7 @@ for absence in absences_db:
             if day not in days_off[user_id]:
                 days_off[user_id].append(day)
             current += timedelta(days=1)
-# kunne lægge de faste shifts i db, men ikke super vigtigt lige nu
+
 all_shifts = []
 with open(shifts_file, "r", encoding="utf-8") as file:
     reader = csv.DictReader(file)
