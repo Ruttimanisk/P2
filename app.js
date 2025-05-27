@@ -41,21 +41,6 @@ app.use('/employee', employeeRouter);
 
 const { ObjectId } = require('mongodb');
 
-/*
-app.get('/calendar', async (req, res) => {
-  const shifts = await db.collection('shifts').find().toArray();
-
-  const events = shifts.map(shift => ({
-    title: shift.employee,
-    start: `${shift.date}T${shift.start}`,
-    end: `${shift.date}T${shift.end}`,
-  }));
-
-  res.render('calendar', { events: JSON.stringify(events) });
-}); */
-
-
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

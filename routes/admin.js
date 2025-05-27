@@ -24,50 +24,6 @@ router.post('/run_algorithm', async (req, res) => {
 
 router.get('/calendar', requireAuth, user_controller.calendar);
 
-// kan de to funktioner nedenunder bare fjernes?
-
-router.post('/update_shift', async (req, res) => {
-    const { id, start, end, resourceId, title } = req.body;
-    const schedulePath = path.join(__dirname, '../schedules.json');
-    const schedules = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
-
-    for (const [user, shifts] of Object.entries(schedules)) {
-        for (const day in shifts) {
-            if (shifts[day].id === id) {
-                shifts[day] = { id, start, end, title };
-                break;
-            }
-        }
-    }
-
-    fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
-    res.sendStatus(200);
-});
-
-router.post('/create_shift', async (req, res) => {
-    const { start, end, resourceId, title } = req.body;
-    const schedulePath = path.join(__dirname, '../schedules.json');
-    const schedules = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
-
-    const newId = Date.now().toString(); // simpelt ID baseret på timestamp
-
-    if (!schedules[resourceId]) {
-        schedules[resourceId] = {};
-    }
-
-    const dateKey = new Date(start).toLocaleDateString('en-CA'); // 2025-05-02 format
-
-    schedules[resourceId][dateKey] = {
-        id: newId,
-        title,
-        start,
-        end
-    };
-
-    fs.writeFileSync(schedulePath, JSON.stringify(schedules, null, 2));
-    res.sendStatus(200);
-});
-
 router.get('/home', requireAuth, user_controller.admin_home)
 
 router.get('/profile/', requireAuth, user_controller.profile);
