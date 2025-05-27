@@ -24,7 +24,6 @@ block content
     script.
         const events = !{JSON.stringify(events)};
         const resources = !{JSON.stringify(resources)};
-        resources.sort((a, b) => a.title.localeCompare(b.title));
         console.log("Events:", events);
         console.log("Resources:", resources);
 
@@ -53,6 +52,7 @@ block content
                     right: 'resourceTimelineWeek,dayGridMonth'
                 },
                 resourceAreaHeaderContent: 'Employees',
+                resourceOrder: 'title',
                 resources: resources,
                 events: events,
             });
