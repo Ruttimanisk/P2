@@ -33,7 +33,7 @@ function payThisWeekCalculation(schedules, hourly_rate) { // count hours worked 
                 }
             }
         }
-    } else {
+    } else { // works even if its not an array
         let schedule = schedules
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
                 let start = schedule[`${day}_start`]
@@ -63,6 +63,7 @@ exports.login = asyncHandler(async (req, res) => {
             return res.status(401).render('login', { errors: ['Invalid username or password'] });
         }
 
+        // create cookie for the logged in user
         res.cookie('userId', user._id.toString(), {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
