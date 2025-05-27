@@ -185,7 +185,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
         let dayCounter = 0;
 
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
-            const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || "";
+            const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || ""; // name from input in view
             const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || "";
 
             // regex for validating timestamp

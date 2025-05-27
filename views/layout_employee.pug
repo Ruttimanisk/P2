@@ -5,7 +5,7 @@ html
         title WFM App
         meta(name='viewport' content='width=device-width, initial-scale=1')
         link(rel='stylesheet' href='/stylesheets/HOME%20ADMIN.css')
-        //link(rel='stylesheet' href='/stylesheets/Shared.css')
+
     body
         script.
             function confirmLogout() {
@@ -14,7 +14,6 @@ html
         .topnav
             a(href='/employee/home') Home
             a(href='/employee/profile') Profile
-            // a(href='/employee/schedule') Schedule
             a(href='/employee/calendar') Calendar
             a(href="/admin/logout", onclick="return confirm('Are you sure you want to log out?')") Logout
 
@@ -24,4 +23,5 @@ html
                 p.Message_box_header(style='text-align: center') Message box
                 p.Messages(style='text-align: center') You have 3 pending requests
 
+                // make extendable to other pages
         block content

@@ -48,10 +48,10 @@ block content
                 tr
                     th Username
                     each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                        th= day.slice(0, 3) + ", " + datesForWeek[day]
+                        th= day.slice(0, 3) + ", " + datesForWeek[day] // first three letters of weekday + date
             tbody
                 each user in users
-                    - var schedule = scheduleMap.get(user._id.toString()) || {}
+                    - var schedule = scheduleMap.get(user._id.toString()) || {} // get schedule from scheduleMap
                     tr
                         td= user.fullname
                         each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -60,6 +60,7 @@ block content
                                     span(style="color: black") Closed
                             else
                                 td
+                                    // name is this long to ensure that each field has a unique name
                                     input(
                                         type="text",
                                         name=`${schedule.employee}_week_${weekIndex}_${dayKey}_start`,
