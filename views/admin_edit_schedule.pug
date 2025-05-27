@@ -25,7 +25,7 @@ block content
             })
                 .then(response => {
                     if (response.ok) {
-                        if(confirm('Algorithm started, reload the page?')) history.back()
+                        if(confirm('Algorithm started, reload the page?')) location.reload()
                     } else {
                         alert('Failed to start algorithm');
                     }
