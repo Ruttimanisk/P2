@@ -48,10 +48,12 @@ block content
                 tr
                     th Username
                     each day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-                        th= day.slice(0, 3) + ", " + datesForWeek[day] // first three letters of weekday + date
+                        // first three letters of weekday + date
+                        th= day.slice(0, 3) + ", " + datesForWeek[day]
             tbody
                 each user in users
-                    - var schedule = scheduleMap.get(user._id.toString()) || {} // get schedule from scheduleMap
+                    // get schedule from scheduleMap
+                    - var schedule = scheduleMap.get(user._id.toString()) || {}
                     tr
                         td= user.fullname
                         each dayKey in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
