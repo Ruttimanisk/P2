@@ -12,9 +12,19 @@ const { runpy } = require('../public/scripts/buttonRunPyAlgorithm.js');
 // We generally follow this format: router.get('*url*', requireAuth, user_controller.*function*)
 
 router.post('/run_algorithm', async (req, res) => {
-    const arg = req.body?.param;
-    runpy(String(arg));
-    res.json({ message: 'Algorithm started, reload the page.' });
+    const param = req.body.param;
+
+    try {
+        const result = await runpy(param);
+        console.log('Algorithm success:', result.stdout);
+        res.status(200).send({ message: 'Algorithm ran successfully' });
+    } catch (error) {
+        console.error('Algorithm infeasible:', error.stderr);
+        res.status(400).send({
+            message: 'Algorithm solution was infeasible - You need more available employees!',
+            details: error.stderr || `Exit code: ${error.code}`
+        });
+    }
 });
 
 router.get('/calendar', requireAuth, user_controller.calendar);

@@ -2,19 +2,28 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 function runPythonAlgorithm(arg) {
-    const scriptPath = path.resolve(__dirname, '../../algorithm/schedule_with_db.py');
-    const pyProg = spawn('/usr/bin/python3', [scriptPath, arg]);
+    return new Promise((resolve, reject) => {
+        const scriptPath = path.resolve(__dirname, '../../algorithm/schedule_with_db.py');
+        const pyProg = spawn('/usr/bin/python3', [scriptPath, arg]);
 
-    pyProg.stdout.on('data', (data) => {
-        console.log(`stdout: ${data.toString()}`);
-    });
+        let stdoutData = '';
+        let stderrData = '';
 
-    pyProg.stderr.on('data', (stderr) => {
-        console.error(`stderr: ${stderr.toString()}`);
-    });
+        pyProg.stdout.on('data', (data) => {
+            stdoutData += data.toString();
+        });
 
-    pyProg.on('close', (code) => {
-        console.log(`child process exited with code ${code}`);
+        pyProg.stderr.on('data', (data) => {
+            stderrData += data.toString();
+        });
+
+        pyProg.on('close', (code) => {
+            if (code === 0) {
+                resolve({ code, stdout: stdoutData });
+            } else {
+                reject({ code, stderr: stderrData });
+            }
+        });
     });
 }
 

@@ -25,12 +25,18 @@ block content
             })
                 .then(response => {
                     if (response.ok) {
-                        if(confirm('Algorithm started, reload the page?')) location.reload()
+                        if (confirm('Algorithm ran successfully. Reload the page?')) {
+                            location.reload();
+                        }
                     } else {
-                        alert('Failed to start algorithm');
+                        response.json().then(data => {
+                            alert('Algorithm status was infeasible.\nDetails: ' + (data.details || 'Unknown error'));
+                        }).catch(() => {
+                            alert('Algorithm failed, and no error details were provided.');
+                        });
                     }
                 })
-                .catch(() => alert('Error starting algorithm'));
+                .catch(() => alert('Error contacting server or starting algorithm'));
         }
 
     if weekIndex === weekNumber

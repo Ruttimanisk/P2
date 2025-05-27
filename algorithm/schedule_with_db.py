@@ -169,8 +169,10 @@ print("Status:", pulp.LpStatus[model.status])
 print("\nShift Plan:")
 
 if pulp.LpStatus[model.status] != "Optimal":
-    print("if statement virker")
+    print("Algorithm status: Infeasible or not optimal", file=sys.stderr)
     sys.exit(1)
+
+print("Algorithm completed successfully")
 
 
 schedule_output = []
