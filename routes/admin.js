@@ -7,14 +7,9 @@ const Absence = require("../models/absence");
 const { requireAuth } = require('../middleware/auth');
 const mongoose = require('mongoose')
 const { runpy } = require('../public/scripts/buttonRunPyAlgorithm.js');
-const fs = require('fs');
-const path = require('path');
-const User = require('../models/user');
 
-// med rotes herfra skal man gå ud fra at de allerede er på /admin/
-// tilføj requireAuth til alle når vi har fået login til at fungere
-// skal se sådan her ud: router.get('/home', requireAuth, user_controller.home)
-// router der står som kommentare er ting der ikke er lavet en controller funktion til endnu.
+// The urls shown here are all under /admin/
+// We generally follow this format: router.get('*url*', requireAuth, user_controller.*function*)
 
 router.post('/run_algorithm', async (req, res) => {
     const arg = req.body?.param;
