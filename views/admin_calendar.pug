@@ -27,7 +27,7 @@ block content
         console.log("Events:", events);
         console.log("Resources from server:", resources);
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -36,81 +36,24 @@ block content
                 nowIndicator: false,
                 now: new Date(),
                 contentHeight: 'auto',
-                slotDuration: { days: 1 },
-                slotLabelFormat: [{ weekday: 'short', day: 'numeric', month: 'short' }],
+                slotDuration: {days: 1},
+                slotLabelFormat: [{weekday: 'short', day: 'numeric', month: 'short'}],
                 slotMinTime: "00:00:00",
                 slotMaxTime: "24:00:00",
                 allDaySlot: false,
                 displayEventTime: false,
-                editable: true,
-                selectable: true,
-                selectMirror: true,
-                eventDurationEditable: true,
+                editable: false,
+                selectable: false,
+                selectMirror: false,
+                eventDurationEditable: false,
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'resourceTimelineWeek,dayGridMonth'
                 },
-                resourceAreaHeaderContent: 'Employees:',
+                resourceAreaHeaderContent: 'Employees',
                 resources: resources,
                 events: events,
-
-                eventDrop: function(info) {
-                    console.log('Shift moved:', info.event);
-                    saveEventChange(info.event);
-                },
-                eventResize: function(info) {
-                    console.log('Shift length changed:', info.event);
-                    saveEventChange(info.event);
-                },
-                dateClick: function(info) {
-                    console.log('Empty space clicked:', info);
-                    createNewEvent(info);
-                }
             });
             calendar.render();
-
-            function saveEventChange(event) {
-                fetch('/admin/update_shift', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: event.id,
-                        start: event.start.toISOString(),
-                        end: event.end.toISOString(),
-                        resourceId: event.getResources()[0].id,
-                        title: event.title
-                    })
-                }).then(response => {
-                    if (!response.ok) {
-                        alert('Something went wrong!');
-                    }
-                });
-            }
-
-            function createNewEvent(info) {
-                const title = prompt('Insert title for new shift:');
-                if (title) {
-                    fetch('/admin/create_shift', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            start: info.dateStr,
-                            end: info.dateStr,
-                            resourceId: info.resource.id,
-                            title: title
-                        })
-                    }).then(response => {
-                        if (response.ok) {
-                            calendar.refetchEvents();
-                        } else {
-                            alert('Error trying to create new shift');
-                        }
-                    });
-                }
-            }
         });
