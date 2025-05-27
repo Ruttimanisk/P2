@@ -14,8 +14,8 @@ var employeeRouter = require('./routes/employee');
 
 var app = express();
 
-// ny
-app.set('trust proxy', 1); // gør Express klar til at forstå HTTPS bag Nginx
+// Prepare Express for Nginx
+app.set('trust proxy', 1);
 
 
 main().catch((err) => console.log(err));
