@@ -2,8 +2,6 @@ const User = require("../models/user");
 const Absence = require("../models/absence")
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require('express-validator');
-const fs = require("fs");
-const path = require("path");
 const mongoose = require("mongoose");
 const { startOfWeek, getISOWeek, addWeeks, addDays, format } = require('date-fns');
 
