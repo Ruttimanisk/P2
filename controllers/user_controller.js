@@ -20,7 +20,7 @@ function timeToMinutes(timeStr) {
         return hour * 60 + min;
 }
 
-function payThisWeekCalculation(schedules, hourly_rate) {
+function payThisWeekCalculation(schedules, hourly_rate) { // count hours worked this week and multiply it by hourly rate
     let minutesWorked = 0;
     if (Array.isArray(schedules)) {
         for (const schedule of schedules) {
@@ -129,10 +129,11 @@ exports.admin_home = asyncHandler(async (req, res) => {
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
     const weekNumber = getISOWeek(currentWeekStart);
-    const weekIndex = parseInt(req.query.week) || weekNumber;
+    const weekIndex = parseInt(req.query.week) || weekNumber; // selected week
     const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
     const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
 
+    // find schedules for the selected week
     const schedules = await mongoose.connection.collection('schedules')
         .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
         .toArray();
@@ -190,6 +191,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || "";
             const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || "";
 
+            // regex for validating timestamp
             const validTimeStart = /^([01]\d|2[0-3]):([0-5]\d)$/.test(startInput);
             const validTimeEnd = /^([01]\d|2[0-3]):([0-5]\d)$/.test(endInput);
 
@@ -235,7 +237,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
 
             dayCounter++;
         }
-
+        // update if schedule exists or create a new document
         if (schedule) {
             await scheduleCollection.updateOne(
                 { _id: schedule._id },
@@ -254,7 +256,7 @@ exports.admin_user_creation = asyncHandler(async (req,res) => {
     if (!errors.isEmpty()) {
         return res.status(400).render('admin_user_creation', { errors: errors.array() });
     }
-
+    // check if the user already exists
     const userExists = await User.findOne({ first_name: req.body.first_name, family_name: req.body.family_name })
         .collation({ locale: "en", strength: 2 })
         .exec();
@@ -458,6 +460,7 @@ exports.admin_employee_list = asyncHandler(async (req, res) => {
     ]);
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
 
+    // make one array with both employees and admins
     const users = allEmployees.concat(allAdmins);
 
     let totalPay = 0
