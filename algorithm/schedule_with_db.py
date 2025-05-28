@@ -12,8 +12,7 @@ os.chdir(os.path.dirname(__file__))
 week_diff = int(sys.argv[1])
 print("Received param:", week_diff)
 
-# Improved readability and renamed variables to be more intuitive. Sue me.
-# - Peter
+# Improved readability and renamed variables to be more intuitive.
 
 Shift = namedtuple("Shift", ["day", "start", "end"])
 
