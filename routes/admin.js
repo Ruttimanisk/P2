@@ -27,7 +27,7 @@ router.post('/run_algorithm', async (req, res) => {
     }
 });
 
-router.get('/calendar', requireAuth, user_controller.calendar);
+router.get('/calendar', requireAuth, user_controller.admin_calendar);
 
 router.get('/home', requireAuth, user_controller.admin_home)
 

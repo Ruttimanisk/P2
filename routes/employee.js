@@ -6,7 +6,7 @@ const { requireAuth } = require("../middleware/auth");
 
 router.get('/home', requireAuth, user_controller.employee_home);
 
-router.get('/calendar', requireAuth, user_controller.calendar);
+router.get('/calendar', requireAuth, user_controller.employee_calendar);
 
 router.get('/profile', requireAuth, user_controller.profile);
 
