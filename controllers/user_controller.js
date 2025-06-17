@@ -367,6 +367,7 @@ exports.profile = asyncHandler(async (req, res) => {
 })
 
 exports.view_profile = asyncHandler(async (req, res) => {
+    // view the profile of other users
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
     let payThisWeek = 0
 

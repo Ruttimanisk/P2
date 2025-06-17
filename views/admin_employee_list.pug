@@ -44,7 +44,7 @@ block content
 
     if users && users.length
         p#totalPay Total pay this week: #{totalPay} Kroner
-        // sort users alphabetically
+        // sort users by weekly pay
         - let sortedUsers = [...users].sort((a, b) => individualPay[b] - individualPay[a])
         table#individualPayTable
             thead
