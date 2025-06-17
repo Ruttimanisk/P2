@@ -541,6 +541,7 @@ exports.absence_get = asyncHandler(async (req,res) => {
         Absence.find().populate("user").exec()
     ]);
 
+    // check if the absence has expired
     try {
         await Absence.updateMany(
             { leave_end: { $lt: new Date() }},
