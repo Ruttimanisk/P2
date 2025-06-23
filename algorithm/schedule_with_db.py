@@ -9,6 +9,7 @@ from collections import namedtuple, defaultdict
 
 os.chdir(os.path.dirname(__file__))
 
+# week_diff variable from edit schedule
 week_diff = int(sys.argv[1])
 print("Received param:", week_diff)
 
@@ -56,6 +57,7 @@ if week_diff:
 else:
     today = date.today()
 
+# dates converted to different datatypes, string, date, datetime. Required because of different types in database.
 week_start_date = today - timedelta(days=today.weekday())
 week_start_datetime = datetime.combine(week_start_date, datetime.min.time())
 week_start = week_start_date.isoformat()
@@ -110,9 +112,11 @@ for absence in absences_db:
     user_id = absence.get("user")
     start = absence.get("leave_start")
     end = absence.get("leave_end")
+    # handle absence without a defined end date
     if start and not end:
         end = next_week_start_date - timedelta(days=1)
 
+    # make dictionary with arrays for each user containing the days they are absent.
     if start and end:
         current = start.date() if isinstance(start, datetime) else start
         end = end.date() if isinstance(end, datetime) else end
@@ -210,7 +214,7 @@ for employee in employees:
     schedule_output.append(schedule)
     print(f"Schedule for {schedule['employee']} saved.")
 
-# Upload til MongoDB
+# Upload til MongoDB - replaces old shifts and schedules with the new ones
 try:
     collection = db["schedules"]
 

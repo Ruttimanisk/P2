@@ -160,21 +160,24 @@ exports.admin_home = asyncHandler(async (req, res) => {
 });
 
 exports.edit_schedule_get = asyncHandler(async (req, res) => {
-    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
-    const weekNumber = getISOWeek(currentWeekStart);
-    const weekIndex = parseInt(req.query.week) || weekNumber; // selected week
-    const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
-    const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
+    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 })); // start of current week
+    const weekNumber = getISOWeek(currentWeekStart); // weeknumber for current week
+    const weekIndex = parseInt(req.query.week) || weekNumber; // week number for displayed week
+    const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber); // start of displayed week
+    const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1); // start of week after displayed week
 
     // find schedules for the selected week
     const schedules = await mongoose.connection.collection('schedules')
         .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
         .toArray();
-    const users = await User.find().sort({ first_name: 1 }).exec();
+    const users = await User.find().sort({ first_name: 1 }).exec(); // find all users and sort by first name
 
+    // Map of schedules that can be found with the schedule.employee attribute. This attribute is a userId.
+    // When looping through users, we can find the corresponding schedule in constant time.
     const scheduleMap = new Map();
     schedules.forEach(schedule => scheduleMap.set(schedule.employee.toString(), schedule));
 
+    // prepare weekday + date for headers in the schedule
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     const datesForWeek = {}
     for(let i = 0; i < 7; i++) {
@@ -192,23 +195,26 @@ exports.edit_schedule_get = asyncHandler(async (req, res) => {
 });
 
 exports.edit_schedule_post = asyncHandler(async (req, res) => {
-    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
-    const weekNumber = getISOWeek(currentWeekStart);
-    const weekIndex = parseInt(req.body.weekIndex || req.query.week) || weekNumber;
-    const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber);
-    const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1);
+    const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 })); // start of current week
+    const weekNumber = getISOWeek(currentWeekStart); // weeknumber for current week
+    const weekIndex = parseInt(req.body.weekIndex || req.query.week) || weekNumber; // week number for displayed week
+    const displayedWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber); // start of displayed week
+    const nextWeekStart = addWeeks(currentWeekStart, weekIndex - weekNumber + 1); // start of week after displayed week
 
-    const users = await User.find().sort({ first_name: 1 }).exec();
+    const users = await User.find().sort({ first_name: 1 }).exec(); // find all users and sort by first name
     const scheduleCollection = mongoose.connection.collection('schedules');
     const shiftCollection = mongoose.connection.collection('shifts');
 
+    // find schedules for the selected week
     const schedules = await scheduleCollection
         .find({week_start_date: { $gte: format(displayedWeekStart, 'yyyy-MM-dd'), $lt: format(nextWeekStart, 'yyyy-MM-dd') }})
         .toArray();
 
+    // Map of schedules - more details in edit_schedule_get
     const scheduleMap = new Map();
     schedules.forEach(schedule => scheduleMap.set(schedule.employee.toString(), schedule));
 
+    // loop through all users, creating an updated schedule for each of them.
     for (const user of users) {
         const employeeId = user._id;
         const schedule = scheduleMap.get(employeeId.toString())
@@ -220,6 +226,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
 
         let dayCounter = 0;
 
+        // loop through days, adding the start and end to the user's schedule, while updating or creating a new shift.
         for (const day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']) {
             const startInput = req.body[`${employeeId}_week_${weekIndex}_${day}_start`] || ""; // name from input in view
             const endInput = req.body[`${employeeId}_week_${weekIndex}_${day}_end`] || "";
@@ -231,7 +238,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
             if ((startInput !== "" && !validTimeStart) || (endInput !== "" && !validTimeEnd)) {
                 continue
             }
-
+            // if input field is empty, we delete the shift
             if (startInput === "" && endInput === "") {
                 await shiftCollection.deleteOne(
                     {
@@ -244,7 +251,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                     }
                 )
             }
-
+            // otherwise, if both input fields are nonempty,  we update or insert a new shift.
             else if (startInput && endInput) {
                 await shiftCollection.updateOne(
                     {
@@ -264,7 +271,7 @@ exports.edit_schedule_post = asyncHandler(async (req, res) => {
                     { upsert: true }
                 );
             }
-
+            // add start and end for the day to the user's weekly schedule
             updatedSchedule[`${day}_start`] = startInput;
             updatedSchedule[`${day}_end`] = endInput;
 
@@ -360,6 +367,7 @@ exports.profile = asyncHandler(async (req, res) => {
 })
 
 exports.view_profile = asyncHandler(async (req, res) => {
+    // view the profile of other users
     const currentWeekStart = toUTCStartOfDay(startOfWeek(new Date(), { weekStartsOn: 1 }));
     let payThisWeek = 0
 
@@ -533,6 +541,7 @@ exports.absence_get = asyncHandler(async (req,res) => {
         Absence.find().populate("user").exec()
     ]);
 
+    // check if the absence has expired
     try {
         await Absence.updateMany(
             { leave_end: { $lt: new Date() }},
