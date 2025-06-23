@@ -26,7 +26,7 @@ block content
 
     p= "Employees:"
     if employees && employees.length
-        ul
+        ul#emp
             each employee in employees
                 li
                     a(href=`/admin/view_profile/${employee._id}`, class='hiper_link_style') !{employee.fullname}
@@ -35,7 +35,7 @@ block content
     hr
     p= "Admins:"
     if admins && admins.length
-        ul
+        ul#adm
             each admin in admins
                 li
                     a(href=`/admin/view_profile/${admin._id}`, class='hiper_link_style') !{admin.fullname}
