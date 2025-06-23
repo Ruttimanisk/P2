@@ -167,10 +167,10 @@ button:disabled {
     cursor: not-allowed;
 }
 ul#emp {
-    position: relative;
-    padding-left: 10px;
+    position: absolute;
+    margin-left: 80px;
 }
 ul#adm {
-    position: relative;
-    padding-left: 10px;
+    position: absolute;
+    margin-left: 80px;
 }
