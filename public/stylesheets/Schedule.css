@@ -166,11 +166,3 @@ button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
-ul#emp {
-    position: absolute;
-    margin-left: 80px;
-}
-ul#adm {
-    position: absolute;
-    margin-left: 80px;
-}
